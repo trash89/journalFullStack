@@ -1,62 +1,89 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
 type Query {
-  info: String!
-  feed(filter: String, skip: Int, take: Int, orderBy: LinkOrderByInput): Feed!
+  profile(Username: String!): TProfile
+  profiles: [TProfile!]!
+  client(NameContains: String!): [TClient]!
+  clients: [TClient!]!
+  project(NameContains: String!): [TProject]!
+  projects: [TProject!]!
+  subproject(NameContains: String!): [TSubproject]!
+  subprojects: [TSubproject!]!
+  journal(DescriptionContains: String!): [TJournal]!
+  journals: [TJournal!]!
 }
 
-type Feed {
-  id: ID!
-  links: [Link!]!
-  count: Int!
+type TProfile {
+  idProfile: ID!
+  Username: String!
+  Password: String!
+  Is_Admin: String!
+  client: [TClient!]!
+  journal: [TJournal!]
 }
 
-type Mutation {
-  post(url: String!, description: String!): Link!
-  signup(email: String!, password: String!, name: String!): AuthPayload
-  login(email: String!, password: String!): AuthPayload
-  vote(linkId: ID!): Vote
+type TClient {
+  idProfile: ID!
+  idClient: ID!
+  Name: String!
+  Description: String!
+  StartDate: String!
+  EndDate: String
+  profile: TProfile!
+  project: [TProject!]!
+  journal: [TJournal!]
+  subproject: [TSubproject!]
 }
 
-type Subscription {
-  newLink: Link
-  newVote: Vote
+type TProject {
+  idClient: ID!
+  idProject: ID!
+  Name: String!
+  Description: String!
+  isDefault: String!
+  StartDate: DateTime
+  EndDate: DateTime
+  Finished: String!
+  client: TClient!
+  subproject: [TSubproject!]
+  journal: [TJournal!]
 }
 
-type AuthPayload {
-  token: String
-  user: User
+type TSubproject {
+  idProject: ID!
+  idClient: ID!
+  idSubproject: ID!
+  Name: String!
+  Description: String!
+  isDefault: String!
+  StartDate: DateTime!
+  EndDate: DateTime
+  Finished: String!
+  client: TClient!
+  project: TProject!
+  journal: [TJournal!]
 }
 
-type User {
-  id: ID!
-  name: String!
-  email: String!
-  links: [Link!]!
-}
-
-type Link {
-  id: ID!
-  description: String!
-  url: String!
-  postedBy: User
-  votes: [Vote!]!
-  createdAt: DateTime!
-}
-
-type Vote {
-  id: ID!
-  link: Link!
-  user: User!
-}
-
-input LinkOrderByInput {
-  description: Sort
-  url: Sort
-  createdAt: Sort
-}
-
-enum Sort {
-  asc
-  desc
+type TJournal {
+  idProfile: ID!
+  idClient: ID!
+  idProject: ID!
+  idSubproject: ID!
+  idJournal: ID!
+  createdAt: DateTime
+  updatedAt: DateTime
+  EntryDate: DateTime
+  Description: String!
+  Todos: String
+  ThingsDone: String
+  DocUploaded: ByteArray
+  profile: TProfile!
+  client: TClient!
+  project: TProject!
+  subproject: TSubproject!
 }
 
 scalar DateTime
+scalar ByteArray

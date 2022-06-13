@@ -1,0 +1,27 @@
+type Query {
+  info: String!
+  feed: Feed!
+}
+
+type Feed {
+  id: ID!
+  links: [Link!]!
+  count: Int!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  links: [Link!]!
+}
+
+type Link {
+  id: ID!
+  description: String!
+  url: String!
+  postedBy: User
+  createdAt: DateTime!
+}
+
+scalar DateTime

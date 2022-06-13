@@ -7,47 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model client {
-  idProfile   Int
-  idClient    Int          @id @default(autoincrement())
-  Name        String       @db.VarChar(45)
-  Description String       @db.VarChar(100)
-  StartDate   DateTime     @db.DateTime(0)
-  EndDate     DateTime?    @db.DateTime(0)
-  profile     profile      @relation(fields: [idProfile], references: [idProfile], onDelete: NoAction, onUpdate: NoAction, map: "fk_Client_idProfile")
-  journal     journal[]
-  project     project[]
-  subproject  subproject[]
-
-  @@unique([idProfile, idClient], map: "Client_UNIQUE")
-  @@index([idProfile], map: "fk_Client_1_idx")
-}
-
-model journal {
-  idProfile    Int
-  idClient     Int
-  idProject    Int
-  idSubproject Int
-  idJournal    Int        @id @default(autoincrement())
-  createdAt    DateTime   @default(now()) @db.Timestamp(0)
-  updatedAt    DateTime   @db.Timestamp(0)
-  EntryDate    DateTime   @db.DateTime(0)
-  Description  String     @db.Text
-  Todos        String?    @db.Text
-  ThingsDone   String?    @db.Text
-  DocUploaded  Bytes?     @db.Blob
-  client       client     @relation(fields: [idClient], references: [idClient], onDelete: NoAction, onUpdate: NoAction, map: "fk_Journal_idClient")
-  profile      profile    @relation(fields: [idProfile], references: [idProfile], onDelete: NoAction, onUpdate: NoAction, map: "fk_Journal_idProfile")
-  project      project    @relation(fields: [idProject], references: [idProject], onDelete: NoAction, onUpdate: NoAction, map: "fk_Journal_idProject")
-  subproject   subproject @relation(fields: [idSubproject], references: [idSubproject], onDelete: NoAction, onUpdate: NoAction, map: "fk_Journal_idSubproject")
-
-  @@unique([idProfile, idClient, idProject, idSubproject, idJournal, EntryDate], map: "Journal_UNIQUE")
-  @@index([idProfile], map: "fk_Journal_1_idx")
-  @@index([idClient], map: "fk_Journal_2_idx")
-  @@index([idProject], map: "fk_Journal_3_idx")
-  @@index([idSubproject], map: "fk_Journal_4_idx")
-}
-
 model profile {
   idProfile Int       @id @default(autoincrement())
   Username  String    @unique(map: "Profile_UNIQUE") @db.VarChar(45)
@@ -57,13 +16,31 @@ model profile {
   journal   journal[]
 }
 
+
+model client {
+  idProfile   Int
+  idClient    Int          @id @default(autoincrement())
+  Name        String       @db.VarChar(45)
+  Description String       @db.VarChar(100)
+  StartDate   DateTime     @db.Date
+  EndDate     DateTime?    @db.Date
+  profile     profile      @relation(fields: [idProfile], references: [idProfile], onDelete: NoAction, onUpdate: NoAction, map: "fk_Client_idProfile")
+  journal     journal[]
+  project     project[]
+  subproject  subproject[]
+
+  @@unique([idProfile, idClient], map: "Client_UNIQUE")
+  @@index([idProfile], map: "fk_Client_1_idx")
+}
+
 model project {
   idClient    Int
   idProject   Int          @id @default(autoincrement())
   Name        String       @db.VarChar(45)
   Description String       @db.VarChar(100)
-  StartDate   DateTime     @db.DateTime(0)
-  EndDate     DateTime?    @db.DateTime(0)
+  isDefault   String       @default("N") @db.Char(1)
+  StartDate   DateTime     @db.Date
+  EndDate     DateTime?    @db.Date
   Finished    String       @default("N") @db.Char(1)
   client      client       @relation(fields: [idClient], references: [idClient], onDelete: NoAction, onUpdate: NoAction, map: "fk_Project_idClient")
   journal     journal[]
@@ -79,8 +56,9 @@ model subproject {
   idSubproject Int       @id @default(autoincrement())
   Name         String    @db.VarChar(45)
   Description  String    @db.VarChar(100)
-  StartDate    DateTime  @db.DateTime(0)
-  EndDate      DateTime? @db.DateTime(0)
+  isDefault    String    @default("N") @db.Char(1)
+  StartDate    DateTime  @db.Date
+  EndDate      DateTime? @db.Date
   Finished     String    @default("N") @db.Char(1)
   client       client    @relation(fields: [idClient], references: [idClient], onDelete: NoAction, onUpdate: NoAction, map: "fk_Subproject_idClient")
   project      project   @relation(fields: [idProject], references: [idProject], onDelete: NoAction, onUpdate: NoAction, map: "fk_Subproject_idProject")
@@ -90,3 +68,34 @@ model subproject {
   @@index([idProject], map: "fk_Subproject_1_idx")
   @@index([idClient], map: "fk_Subproject_2_idx")
 }
+
+model journal {
+  idProfile    Int
+  idClient     Int
+  idProject    Int
+  idSubproject Int
+  idJournal    Int        @id @default(autoincrement())
+  createdAt    DateTime   @default(now()) @db.Timestamp(0)
+  updatedAt    DateTime   @default(now()) @db.Timestamp(0)
+  EntryDate    DateTime   @db.DateTime(0)
+  Description  String     @db.Text
+  Todos        String?    @db.Text
+  ThingsDone   String?    @db.Text
+  DocUploaded  Bytes?     @db.Blob
+  client       client     @relation(fields: [idClient], references: [idClient], onDelete: NoAction, onUpdate: NoAction, map: "fk_Journal_idClient")
+  profile      profile    @relation(fields: [idProfile], references: [idProfile], onDelete: NoAction, onUpdate: NoAction, map: "fk_Journal_idProfile")
+  project      project    @relation(fields: [idProject], references: [idProject], onDelete: NoAction, onUpdate: NoAction, map: "fk_Journal_idProject")
+  subproject   subproject @relation(fields: [idSubproject], references: [idSubproject], onDelete: NoAction, onUpdate: NoAction, map: "fk_Journal_idSubproject")
+
+  @@unique([idProfile, idClient, idProject, idSubproject, EntryDate], map: "Journal_UNIQUE")
+  @@index([idProfile], map: "fk_Journal_1_idx")
+  @@index([idClient], map: "fk_Journal_2_idx")
+  @@index([idProject], map: "fk_Journal_3_idx")
+  @@index([idSubproject], map: "fk_Journal_4_idx")
+}
+
+model schema_migrations {
+  version BigInt  @id
+  dirty   Boolean
+}
+
