@@ -1,7 +1,7 @@
 function profile(parent, args, context) {
   return context.prisma.profile.findUnique({
     where: {
-      Username: args.Username,
+      idProfile: parseInt(args.idProfile),
     },
     include: {
       client: true,
@@ -20,9 +20,9 @@ function profiles(parent, args, context) {
 }
 
 function client(parent, args, context) {
-  return context.prisma.client.findMany({
+  return context.prisma.client.findUnique({
     where: {
-      Name: { contains: args.NameContains },
+      idClient: parseInt(args.idClient),
     },
     include: {
       profile: true,
@@ -45,9 +45,9 @@ function clients(parent, args, context) {
 }
 
 function project(parent, args, context) {
-  return context.prisma.project.findMany({
+  return context.prisma.project.findUnique({
     where: {
-      Name: { contains: args.NameContains },
+      idProject: parseInt(args.idProject),
     },
     include: {
       client: true,
@@ -68,9 +68,9 @@ function projects(parent, args, context) {
 }
 
 function subproject(parent, args, context) {
-  return context.prisma.subproject.findMany({
+  return context.prisma.subproject.findUnique({
     where: {
-      Name: { contains: args.NameContains },
+      idSubproject: parseInt(args.idSubproject),
     },
     include: {
       client: true,
@@ -90,9 +90,9 @@ function subprojects(parent, args, context) {
   });
 }
 function journal(parent, args, context) {
-  return context.prisma.journal.findMany({
+  return context.prisma.journal.findUnique({
     where: {
-      Description: { contains: args.DescriptionContains },
+      idJournal: parseInt(args.idJournal),
     },
     include: {
       profile: true,

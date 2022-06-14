@@ -16,7 +16,7 @@ USE `journal` ;
 CREATE TABLE IF NOT EXISTS `journal`.`profile` (
   `idProfile` INT NOT NULL AUTO_INCREMENT,
   `Username` VARCHAR(45) NOT NULL,
-  `Password` VARCHAR(45) NOT NULL,
+  `Password` VARCHAR(100) NOT NULL,
   `Is_Admin` CHAR(1) NOT NULL DEFAULT 'N',
   PRIMARY KEY (`idProfile`),
   UNIQUE INDEX `Profile_UNIQUE` (`Username` ASC) VISIBLE)

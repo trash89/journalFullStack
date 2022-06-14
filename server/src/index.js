@@ -15,8 +15,10 @@ const {
 } = require("apollo-server-core");
 
 const { makeExecutableSchema } = require("@graphql-tools/schema");
+const { getIdProfile } = require("./utils");
 
 const Query = require("./resolvers/Query");
+const Mutation = require("./resolvers/Mutation");
 //const User = require("./resolvers/User");
 //const Link = require("./resolvers/Link");
 
@@ -29,7 +31,7 @@ const typeDefs = fs.readFileSync(
 );
 const resolvers = {
   Query,
-  //   User,
+  Mutation,
   //   Link,
 };
 
@@ -44,6 +46,7 @@ async function startApolloServer() {
   if (process.env.NODE_ENV !== "production") {
     app.use(morgan("dev"));
   }
+  app.use(express.json());
   const httpServer = createServer(app);
 
   const server = new ApolloServer({
@@ -54,6 +57,7 @@ async function startApolloServer() {
       return {
         ...req,
         prisma,
+        idProfile: req && req.headers.authorization ? getIdProfile(req) : null,
       };
     },
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],

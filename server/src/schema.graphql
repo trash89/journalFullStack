@@ -3,16 +3,36 @@
 # https://gqlgen.com/getting-started/
 
 type Query {
-  profile(Username: String!): TProfile
+  profile(idProfile: ID!): TProfile
   profiles: [TProfile!]!
-  client(NameContains: String!): [TClient]!
+  client(idClient: ID!): TClient
   clients: [TClient!]!
-  project(NameContains: String!): [TProject]!
+  project(idProject: ID!): TProject
   projects: [TProject!]!
-  subproject(NameContains: String!): [TSubproject]!
+  subproject(idSubproject: ID!): TSubproject
   subprojects: [TSubproject!]!
-  journal(DescriptionContains: String!): [TJournal]!
+  journal(idJournal: ID!): TJournal
   journals: [TJournal!]!
+}
+
+type AuthPayload {
+  token: String
+  profile: TProfile
+}
+
+type Mutation {
+  createProfile(
+    Username: String!
+    Password: String!
+    Is_Admin: String!
+  ): TProfile!
+  login(Username: String!, Password: String!): AuthPayload!
+  updateProfile(
+    Username: String!
+    Password: String!
+    Is_Admin: String!
+  ): TProfile!
+  deleteProfile(idProfile: ID!): TProfile!
 }
 
 type TProfile {

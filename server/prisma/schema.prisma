@@ -10,7 +10,7 @@ datasource db {
 model profile {
   idProfile Int       @id @default(autoincrement())
   Username  String    @unique(map: "Profile_UNIQUE") @db.VarChar(45)
-  Password  String    @db.VarChar(45)
+  Password  String    @db.VarChar(100)
   Is_Admin  String    @default("N") @db.Char(1)
   client    client[]
   journal   journal[]
