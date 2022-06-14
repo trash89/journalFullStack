@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `journal`.`client` (
   `StartDate` DATE NOT NULL,
   `EndDate` DATE NULL DEFAULT NULL,
   PRIMARY KEY (`idClient`),
-  UNIQUE INDEX `Client_UNIQUE` (`idProfile` ASC, `idClient` ASC) VISIBLE,
+  UNIQUE INDEX `Client_UNIQUE` (`idProfile` ASC, `Name` ASC) VISIBLE,
   INDEX `fk_Client_1_idx` (`idProfile` ASC) VISIBLE,
   CONSTRAINT `fk_Client_idProfile`
     FOREIGN KEY (`idProfile`)
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `journal`.`project` (
   `EndDate` DATE NULL DEFAULT NULL,
   `Finished` CHAR(1) NOT NULL DEFAULT 'N',
   PRIMARY KEY (`idProject`),
-  UNIQUE INDEX `Project_UNIQUE` (`idClient` ASC, `idProject` ASC) VISIBLE,
+  UNIQUE INDEX `Project_UNIQUE` (`idClient` ASC, `Name` ASC) VISIBLE,
   INDEX `fk_idClient_idx` (`idClient` ASC) VISIBLE,
   CONSTRAINT `fk_Project_idClient`
     FOREIGN KEY (`idClient`)
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `journal`.`subproject` (
   `EndDate` DATE NULL DEFAULT NULL,
   `Finished` CHAR(1) NOT NULL DEFAULT 'N',
   PRIMARY KEY (`idSubproject`),
-  UNIQUE INDEX `Subproject_UNIQUE` (`idProject` ASC, `idClient` ASC, `idSubproject` ASC) VISIBLE,
+  UNIQUE INDEX `Subproject_UNIQUE` (`idProject` ASC, `idClient` ASC, `Name` ASC) VISIBLE,
   INDEX `fk_Subproject_1_idx` (`idProject` ASC) VISIBLE,
   INDEX `fk_Subproject_2_idx` (`idClient` ASC) VISIBLE,
   CONSTRAINT `fk_Subproject_idClient`
@@ -102,8 +102,8 @@ CREATE TABLE IF NOT EXISTS `journal`.`journal` (
   `idProject` INT NOT NULL,
   `idSubproject` INT NOT NULL,
   `idJournal` INT NOT NULL AUTO_INCREMENT,
-  `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NULL DEFAULT NULL,
   `EntryDate` DATETIME NOT NULL,
   `Description` TEXT NOT NULL,
   `Todos` TEXT NULL DEFAULT NULL,

@@ -1,5 +1,5 @@
-function profile(parent, args, context) {
-  return context.prisma.profile.findUnique({
+async function profile(parent, args, context) {
+  return await context.prisma.profile.findUnique({
     where: {
       idProfile: parseInt(args.idProfile),
     },
@@ -10,17 +10,8 @@ function profile(parent, args, context) {
   });
 }
 
-function profiles(parent, args, context) {
-  return context.prisma.profile.findMany({
-    include: {
-      client: true,
-      journal: true,
-    },
-  });
-}
-
-function client(parent, args, context) {
-  return context.prisma.client.findUnique({
+async function client(parent, args, context) {
+  return await context.prisma.client.findUnique({
     where: {
       idClient: parseInt(args.idClient),
     },
@@ -33,19 +24,8 @@ function client(parent, args, context) {
   });
 }
 
-function clients(parent, args, context) {
-  return context.prisma.client.findMany({
-    include: {
-      profile: true,
-      project: true,
-      subproject: true,
-      journal: true,
-    },
-  });
-}
-
-function project(parent, args, context) {
-  return context.prisma.project.findUnique({
+async function project(parent, args, context) {
+  return await context.prisma.project.findUnique({
     where: {
       idProject: parseInt(args.idProject),
     },
@@ -57,18 +37,8 @@ function project(parent, args, context) {
   });
 }
 
-function projects(parent, args, context) {
-  return context.prisma.project.findMany({
-    include: {
-      client: true,
-      subproject: true,
-      journal: true,
-    },
-  });
-}
-
-function subproject(parent, args, context) {
-  return context.prisma.subproject.findUnique({
+async function subproject(parent, args, context) {
+  return await context.prisma.subproject.findUnique({
     where: {
       idSubproject: parseInt(args.idSubproject),
     },
@@ -80,17 +50,17 @@ function subproject(parent, args, context) {
   });
 }
 
-function subprojects(parent, args, context) {
-  return context.prisma.subproject.findMany({
+async function profiles(parent, args, context) {
+  return await context.prisma.profile.findMany({
     include: {
       client: true,
-      project: true,
       journal: true,
     },
   });
 }
-function journal(parent, args, context) {
-  return context.prisma.journal.findUnique({
+
+async function journal(parent, args, context) {
+  return await context.prisma.journal.findUnique({
     where: {
       idJournal: parseInt(args.idJournal),
     },
@@ -103,8 +73,39 @@ function journal(parent, args, context) {
   });
 }
 
-function journals(parent, args, context) {
-  return context.prisma.journal.findMany({
+async function clients(parent, args, context) {
+  return await context.prisma.client.findMany({
+    include: {
+      profile: true,
+      project: true,
+      subproject: true,
+      journal: true,
+    },
+  });
+}
+
+async function projects(parent, args, context) {
+  return await context.prisma.project.findMany({
+    include: {
+      client: true,
+      subproject: true,
+      journal: true,
+    },
+  });
+}
+
+async function subprojects(parent, args, context) {
+  return await context.prisma.subproject.findMany({
+    include: {
+      client: true,
+      project: true,
+      journal: true,
+    },
+  });
+}
+
+async function journals(parent, args, context) {
+  return await context.prisma.journal.findMany({
     include: {
       profile: true,
       client: true,
@@ -116,13 +117,14 @@ function journals(parent, args, context) {
 
 module.exports = {
   profile,
-  profiles,
   client,
-  clients,
   project,
-  projects,
   subproject,
-  subprojects,
   journal,
+
+  profiles,
+  clients,
+  projects,
+  subprojects,
   journals,
 };

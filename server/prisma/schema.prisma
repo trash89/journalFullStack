@@ -16,7 +16,6 @@ model profile {
   journal   journal[]
 }
 
-
 model client {
   idProfile   Int
   idClient    Int          @id @default(autoincrement())
@@ -29,7 +28,7 @@ model client {
   project     project[]
   subproject  subproject[]
 
-  @@unique([idProfile, idClient], map: "Client_UNIQUE")
+  @@unique([idProfile, Name], map: "Client_UNIQUE")
   @@index([idProfile], map: "fk_Client_1_idx")
 }
 
@@ -46,7 +45,7 @@ model project {
   journal     journal[]
   subproject  subproject[]
 
-  @@unique([idClient, idProject], map: "Project_UNIQUE")
+  @@unique([idClient, Name], map: "Project_UNIQUE")
   @@index([idClient], map: "fk_idClient_idx")
 }
 
@@ -64,7 +63,7 @@ model subproject {
   project      project   @relation(fields: [idProject], references: [idProject], onDelete: NoAction, onUpdate: NoAction, map: "fk_Subproject_idProject")
   journal      journal[]
 
-  @@unique([idProject, idClient, idSubproject], map: "Subproject_UNIQUE")
+  @@unique([idProject, idClient, Name], map: "Subproject_UNIQUE")
   @@index([idProject], map: "fk_Subproject_1_idx")
   @@index([idClient], map: "fk_Subproject_2_idx")
 }
@@ -75,8 +74,8 @@ model journal {
   idProject    Int
   idSubproject Int
   idJournal    Int        @id @default(autoincrement())
-  createdAt    DateTime   @default(now()) @db.Timestamp(0)
-  updatedAt    DateTime   @default(now()) @db.Timestamp(0)
+  createdAt    DateTime   @default(now()) @db.DateTime(0)
+  updatedAt    DateTime?  @db.DateTime(0)
   EntryDate    DateTime   @db.DateTime(0)
   Description  String     @db.Text
   Todos        String?    @db.Text
@@ -93,9 +92,3 @@ model journal {
   @@index([idProject], map: "fk_Journal_3_idx")
   @@index([idSubproject], map: "fk_Journal_4_idx")
 }
-
-model schema_migrations {
-  version BigInt  @id
-  dirty   Boolean
-}
-

@@ -20,19 +20,41 @@ function getIdProfile(req, authToken) {
     if (!token) {
       throw new Error("No token found");
     }
-    if (authHeader) {
-      const { idProfile } = getTokenPayload(token);
-      return idProfile;
-    }
+    const { idProfile } = getTokenPayload(token);
+    return idProfile;
   } else if (authToken) {
     const { idProfile } = getTokenPayload(authToken);
     return idProfile;
   }
-
   throw new Error("Not authenticated");
+}
+
+async function checkConnected(context) {
+  const { idProfile } = context;
+  if (!idProfile) {
+    throw new Error("Not authenticated");
+  }
+  let idProfileInt;
+  try {
+    idProfileInt = parseInt(idProfile);
+  } catch (error) {
+    throw new Error(error);
+  }
+  const foundConnected = await context.prisma.profile.findUnique({
+    where: { idProfile: idProfileInt },
+  });
+  if (!foundConnected) {
+    throw new Error("No such user found");
+  }
+  const retObj = {
+    idProfileConnected: idProfileInt,
+    foundConnected,
+  };
+  return retObj;
 }
 
 module.exports = {
   APP_SECRET,
   getIdProfile,
+  checkConnected,
 };

@@ -1,17 +1,14 @@
-# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
-
 type Query {
   profile(idProfile: ID!): TProfile
-  profiles: [TProfile!]!
   client(idClient: ID!): TClient
-  clients: [TClient!]!
   project(idProject: ID!): TProject
-  projects: [TProject!]!
   subproject(idSubproject: ID!): TSubproject
-  subprojects: [TSubproject!]!
   journal(idJournal: ID!): TJournal
+
+  profiles: [TProfile!]!
+  clients: [TClient!]!
+  projects: [TProject!]!
+  subprojects: [TSubproject!]!
   journals: [TJournal!]!
 }
 
@@ -21,18 +18,97 @@ type AuthPayload {
 }
 
 type Mutation {
+  login(Username: String!, Password: String!): AuthPayload!
+
   createProfile(
     Username: String!
     Password: String!
     Is_Admin: String!
   ): TProfile!
-  login(Username: String!, Password: String!): AuthPayload!
   updateProfile(
+    idProfile: ID!
     Username: String!
     Password: String!
     Is_Admin: String!
   ): TProfile!
   deleteProfile(idProfile: ID!): TProfile!
+
+  createClient(
+    Name: String!
+    Description: String!
+    StartDate: DateTime!
+    EndDate: DateTime
+  ): TClient!
+  updateClient(
+    idClient: ID!
+    Name: String!
+    Description: String!
+    StartDate: DateTime!
+    EndDate: DateTime
+  ): TClient!
+  deleteClient(idClient: ID!): TClient!
+
+  createProject(
+    idClient: ID!
+    Name: String!
+    Description: String!
+    isDefault: String!
+    StartDate: DateTime!
+    EndDate: DateTime
+    Finished: String!
+  ): TProject!
+  updateProject(
+    idProject: ID!
+    Name: String!
+    Description: String!
+    isDefault: String!
+    StartDate: DateTime!
+    EndDate: DateTime
+    Finished: String!
+  ): TProject!
+  deleteProject(idProject: ID!): TProject!
+
+  createSubproject(
+    idProject: ID!
+    idClient: ID!
+    Name: String!
+    Description: String!
+    isDefault: String!
+    StartDate: DateTime!
+    EndDate: DateTime
+    Finished: String!
+  ): TSubproject!
+  updateSubproject(
+    idSubproject: ID!
+    Name: String!
+    Description: String!
+    isDefault: String!
+    StartDate: DateTime!
+    EndDate: DateTime
+    Finished: String!
+  ): TSubproject!
+  deleteSubproject(idSubproject: ID!): TSubproject!
+
+  createJournal(
+    idProfile: ID!
+    idClient: ID!
+    idProject: ID!
+    idSubproject: ID!
+    EntryDate: DateTime!
+    Description: String!
+    Todos: String
+    ThingsDone: String
+    DocUploaded: ByteArray
+  ): TJournal!
+  updateJournal(
+    idJournal: ID!
+    EntryDate: DateTime!
+    Description: String!
+    Todos: String
+    ThingsDone: String
+    DocUploaded: ByteArray
+  ): TJournal!
+  deleteJournal(idJournal: ID!): TJournal!
 }
 
 type TProfile {
@@ -49,8 +125,8 @@ type TClient {
   idClient: ID!
   Name: String!
   Description: String!
-  StartDate: String!
-  EndDate: String
+  StartDate: DateTime!
+  EndDate: DateTime
   profile: TProfile!
   project: [TProject!]!
   journal: [TJournal!]
@@ -63,7 +139,7 @@ type TProject {
   Name: String!
   Description: String!
   isDefault: String!
-  StartDate: DateTime
+  StartDate: DateTime!
   EndDate: DateTime
   Finished: String!
   client: TClient!
@@ -94,7 +170,7 @@ type TJournal {
   idJournal: ID!
   createdAt: DateTime
   updatedAt: DateTime
-  EntryDate: DateTime
+  EntryDate: DateTime!
   Description: String!
   Todos: String
   ThingsDone: String

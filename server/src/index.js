@@ -2,6 +2,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
 const morgan = require("morgan");
+const helmet = require("helmet");
+const xss = require("xss-clean");
 
 const { createServer } = require("http");
 const express = require("express");
@@ -19,10 +21,9 @@ const { getIdProfile } = require("./utils");
 
 const Query = require("./resolvers/Query");
 const Mutation = require("./resolvers/Mutation");
-//const User = require("./resolvers/User");
-//const Link = require("./resolvers/Link");
 
-const prisma = new PrismaClient({ log: ["query", "info"] });
+//const prisma = new PrismaClient({ log: ["query", "info"] });
+const prisma = new PrismaClient();
 
 const PORT = 4000;
 const typeDefs = fs.readFileSync(
@@ -32,7 +33,6 @@ const typeDefs = fs.readFileSync(
 const resolvers = {
   Query,
   Mutation,
-  //   Link,
 };
 
 const schema = makeExecutableSchema({
@@ -47,6 +47,15 @@ async function startApolloServer() {
     app.use(morgan("dev"));
   }
   app.use(express.json());
+
+  //app.use(express.static(path.resolve(__dirname, "./client/build")));
+  //app.use(helmet());
+  app.use(xss());
+  //app.use(mongoSanitize());
+  // app.get("*", (req, res) => {
+  //   res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
+  // });
+
   const httpServer = createServer(app);
 
   const server = new ApolloServer({
