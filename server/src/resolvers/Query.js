@@ -50,15 +50,6 @@ async function subproject(parent, args, context) {
   });
 }
 
-async function profiles(parent, args, context) {
-  return await context.prisma.profile.findMany({
-    include: {
-      client: true,
-      journal: true,
-    },
-  });
-}
-
 async function journal(parent, args, context) {
   return await context.prisma.journal.findUnique({
     where: {
@@ -73,8 +64,38 @@ async function journal(parent, args, context) {
   });
 }
 
+async function profiles(parent, args, context) {
+  const where = args.filter
+    ? {
+        Username: { contains: args.filter },
+      }
+    : {};
+  const count = await context.prisma.profile.count({ where });
+  const list = await context.prisma.profile.findMany({
+    where,
+    skip: args.skip,
+    take: args.take,
+    orderBy: args.orderBy,
+    include: {
+      client: true,
+      journal: true,
+    },
+  });
+  return { list, count };
+}
+
 async function clients(parent, args, context) {
-  return await context.prisma.client.findMany({
+  const where = args.filter
+    ? {
+        OR: [{ Name: { contains: args.filter } }, { Description: { contains: args.filter } }],
+      }
+    : {};
+  const count = await context.prisma.client.count({ where });
+  const list = await context.prisma.client.findMany({
+    where,
+    skip: args.skip,
+    take: args.take,
+    orderBy: args.orderBy,
     include: {
       profile: true,
       project: true,
@@ -82,30 +103,63 @@ async function clients(parent, args, context) {
       journal: true,
     },
   });
+  return { list, count };
 }
 
 async function projects(parent, args, context) {
-  return await context.prisma.project.findMany({
+  const where = args.filter
+    ? {
+        OR: [{ Name: { contains: args.filter } }, { Description: { contains: args.filter } }],
+      }
+    : {};
+  const count = await context.prisma.project.count({ where });
+  const list = await context.prisma.project.findMany({
+    where,
+    skip: args.skip,
+    take: args.take,
+    orderBy: args.orderBy,
     include: {
       client: true,
       subproject: true,
       journal: true,
     },
   });
+  return { list, count };
 }
 
 async function subprojects(parent, args, context) {
-  return await context.prisma.subproject.findMany({
+  const where = args.filter
+    ? {
+        OR: [{ Name: { contains: args.filter } }, { Description: { contains: args.filter } }],
+      }
+    : {};
+  const count = await context.prisma.subproject.count({ where });
+  const list = await context.prisma.subproject.findMany({
+    where,
+    skip: args.skip,
+    take: args.take,
+    orderBy: args.orderBy,
     include: {
       client: true,
       project: true,
       journal: true,
     },
   });
+  return { list, count };
 }
 
 async function journals(parent, args, context) {
-  return await context.prisma.journal.findMany({
+  const where = args.filter
+    ? {
+        OR: [{ Description: { contains: args.filter } }, { Todos: { contains: args.filter } }, { ThingsDone: { contains: args.filter } }],
+      }
+    : {};
+  const count = await context.prisma.journal.count({ where });
+  const list = await context.prisma.journal.findMany({
+    where,
+    skip: args.skip,
+    take: args.take,
+    orderBy: args.orderBy,
     include: {
       profile: true,
       client: true,
@@ -113,6 +167,7 @@ async function journals(parent, args, context) {
       subproject: true,
     },
   });
+  return { list, count };
 }
 
 module.exports = {

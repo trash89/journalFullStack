@@ -3,16 +3,17 @@ async function createClient(parent, args, context, info) {
   const { idProfileConnected, foundConnected } = await checkConnected(context);
   const newClientObj = {
     idProfile: idProfileConnected,
-    Name: args.Name,
-    Description: args.Description,
-    StartDate: args.StartDate,
-    EndDate: args.EndDate,
+    Name: args.client.Name,
+    Description: args.client.Description,
+    StartDate: args.client.StartDate,
+    EndDate: args.client.EndDate,
   };
-  const newClient = await context.prisma.client.create({
+  const createdClient = await context.prisma.client.create({
     data: { ...newClientObj },
   });
 
-  return newClient;
+  context.pubsub.publish("CREATE_CLIENT", createdClient);
+  return createdClient;
 }
 
 async function updateClient(parent, args, context, info) {
@@ -30,10 +31,10 @@ async function updateClient(parent, args, context, info) {
   const updatedClientObj = {
     idProfile: foundClient.idProfile,
     idClient: idClientInt,
-    Name: args.Name,
-    Description: args.Description,
-    StartDate: args.StartDate,
-    EndDate: args.EndDate,
+    Name: args.client.Name,
+    Description: args.client.Description,
+    StartDate: args.client.StartDate,
+    EndDate: args.client.EndDate,
   };
 
   const updatedClient = await context.prisma.client.update({
@@ -41,6 +42,7 @@ async function updateClient(parent, args, context, info) {
     data: { ...updatedClientObj },
   });
 
+  context.pubsub.publish("UPDATE_CLIENT", updatedClient);
   return updatedClient;
 }
 
@@ -66,9 +68,7 @@ async function deleteClient(parent, args, context, info) {
     (foundClient.journal && foundClient.journal.length > 0) ||
     (foundClient.subproject && foundClient.subproject.length > 0)
   ) {
-    throw new Error(
-      "Cannot delete client, projects, subprojects and/or journal entries exists"
-    );
+    throw new Error("Cannot delete client, projects, subprojects and/or journal entries exists");
   }
 
   const deletedClient = await context.prisma.client.delete({
@@ -83,6 +83,7 @@ async function deleteClient(parent, args, context, info) {
     },
   });
 
+  context.pubsub.publish("DELETED_CLIENT", deletedClient);
   return deletedClient;
 }
 

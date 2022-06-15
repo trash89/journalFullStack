@@ -2,10 +2,10 @@ const { checkConnected } = require("../utils");
 async function createJournal(parent, args, context, info) {
   await checkConnected(context);
 
-  const idProfileInt = parseInt(args.idProfile);
-  const idClientInt = parseInt(args.idClient);
-  const idProjectInt = parseInt(args.idProject);
-  const idSubprojectInt = parseInt(args.idSubproject);
+  const idProfileInt = parseInt(args.journal.idProfile);
+  const idClientInt = parseInt(args.journal.idClient);
+  const idProjectInt = parseInt(args.journal.idProject);
+  const idSubprojectInt = parseInt(args.journal.idSubproject);
 
   const createdAtToday = new Date().toISOString();
   const newJournalObj = {
@@ -15,23 +15,26 @@ async function createJournal(parent, args, context, info) {
     idSubproject: idSubprojectInt,
     createdAt: createdAtToday,
     updatedAt: null,
-    EntryDate: args.EntryDate,
-    Description: args.Description,
-    Todos: args.Todos,
-    ThingsDone: args.ThingsDone,
-    DocUploaded: args.DocUploaded,
+    EntryDate: args.journal.EntryDate,
+    Description: args.journal.Description,
+    Todos: args.journal.Todos,
+    ThingsDone: args.journal.ThingsDone,
+    DocUploaded: args.journal.DocUploaded,
   };
-  const newJournal = await context.prisma.journal.create({
+  const createdJournal = await context.prisma.journal.create({
     data: { ...newJournalObj },
   });
-  return newJournal;
+  context.pubsub.publish("CREATE_JOURNAL", createdJournal);
+  return createdJournal;
 }
 
 async function updateJournal(parent, args, context, info) {
   await checkConnected(context);
-
   const idJournalInt = parseInt(args.idJournal);
-
+  const idProfileInt = parseInt(args.journal.idProfile);
+  const idClientInt = parseInt(args.journal.idClient);
+  const idProjectInt = parseInt(args.journal.idProject);
+  const idSubprojectInt = parseInt(args.journal.idSubproject);
   const foundJournal = await context.prisma.journal.findUnique({
     where: { idJournal: idJournalInt },
   });
@@ -40,18 +43,18 @@ async function updateJournal(parent, args, context, info) {
   }
   const updatedAtToday = new Date().toISOString();
   const updatedJournalObj = {
-    idProfile: foundJournal.idProfile,
-    idClient: foundJournal.idClient,
-    idProject: foundJournal.idProject,
-    idSubproject: foundJournal.idSubproject,
+    idProfile: idProfileInt,
+    idClient: idClientInt,
+    idProject: idProjectInt,
+    idSubproject: idSubprojectInt,
     idJournal: idJournalInt,
     createdAt: foundJournal.createdAt,
     updatedAt: updatedAtToday,
-    EntryDate: args.EntryDate,
-    Description: args.Description,
-    Todos: args.Todos,
-    ThingsDone: args.ThingsDone,
-    DocUploaded: args.DocUploaded,
+    EntryDate: args.journal.EntryDate,
+    Description: args.journal.Description,
+    Todos: args.journal.Todos,
+    ThingsDone: args.journal.ThingsDone,
+    DocUploaded: args.journal.DocUploaded,
   };
 
   const updatedJournal = await context.prisma.journal.update({
@@ -59,6 +62,7 @@ async function updateJournal(parent, args, context, info) {
     data: { ...updatedJournalObj },
   });
 
+  context.pubsub.publish("UPDATE_JOURNAL", updatedJournal);
   return updatedJournal;
 }
 
@@ -85,6 +89,7 @@ async function deleteJournal(parent, args, context, info) {
     },
   });
 
+  context.pubsub.publish("DELETE_JOURNAL", deletedJournal);
   return deletedJournal;
 }
 

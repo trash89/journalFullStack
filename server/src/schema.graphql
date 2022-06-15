@@ -1,3 +1,4 @@
+# queries
 type Query {
   profile(idProfile: ID!): TProfile
   client(idClient: ID!): TClient
@@ -5,118 +6,201 @@ type Query {
   subproject(idSubproject: ID!): TSubproject
   journal(idJournal: ID!): TJournal
 
-  profiles: [TProfile!]!
-  clients: [TClient!]!
-  projects: [TProject!]!
-  subprojects: [TSubproject!]!
-  journals: [TJournal!]!
+  profiles(filter: String, skip: Int, take: Int, orderBy: ProfilesOrderByInput): TProfilesCount!
+  clients(filter: String, skip: Int, take: Int, orderBy: ClientsOrderByInput): TClientsCount!
+  projects(filter: String, skip: Int, take: Int, orderBy: ProjectsOrderByInput): TProjectsCount!
+  subprojects(filter: String, skip: Int, take: Int, orderBy: SubprojectsOrderByInput): TSubprojectsCount!
+  journals(filter: String, skip: Int, take: Int, orderBy: JournalsOrderByInput): TJournalsCount!
 }
 
+# mutations
+type Mutation {
+  login(Username: String!, Password: String!): AuthPayload!
+
+  createProfile(profile: profileInput!): TProfile!
+  updateProfile(idProfile: ID!, profile: profileInput!): TProfile!
+  deleteProfile(idProfile: ID!): TProfile!
+
+  createClient(client: clientInput!): TClient!
+  updateClient(idClient: ID!, client: clientInput!): TClient!
+  deleteClient(idClient: ID!): TClient!
+
+  createProject(project: projectInput!): TProject!
+  updateProject(idProject: ID!, project: projectInput!): TProject!
+  deleteProject(idProject: ID!): TProject!
+
+  createSubproject(subproject: subprojectInput!): TSubproject!
+  updateSubproject(idSubproject: ID!, subproject: subprojectInput!): TSubproject!
+  deleteSubproject(idSubproject: ID!): TSubproject!
+
+  createJournal(journal: journalInput!): TJournal!
+  updateJournal(idJournal: ID!, journal: journalInput!): TJournal!
+  deleteJournal(idJournal: ID!): TJournal!
+}
+
+# subscriptions
+type Subscription {
+  login: TLogin
+
+  createProfile: TProfile
+  updateProfile: TProfile
+  deleteProfile: TProfile
+
+  createClient: TClient
+  updateClient: TClient
+  deleteClient: TClient
+
+  createProject: TProject
+  updateProject: TProject
+  deleteProject: TProject
+
+  createSubproject: TSubproject
+  updateSubproject: TSubproject
+  deleteSubproject: TSubproject
+
+  createJournal: TJournal
+  updateJournal: TJournal
+  deleteJournal: TJournal
+}
+
+# scalars used in types definition
+scalar DateTime
+scalar ByteArray
+
+# enum for orderBy
+enum Sort {
+  asc
+  desc
+}
+
+# type for login subscription
+type TLogin {
+  token: String!
+  profile: TProfile!
+}
+
+# types queries including count
+type TProfilesCount {
+  list: [TProfile!]!
+  count: Int!
+}
+type TClientsCount {
+  list: [TClient!]!
+  count: Int!
+}
+type TProjectsCount {
+  list: [TProject!]!
+  count: Int!
+}
+type TSubprojectsCount {
+  list: [TSubproject!]!
+  count: Int!
+}
+type TJournalsCount {
+  list: [TJournal!]!
+  count: Int!
+}
+
+# type AuthPayload for login, include generated token with jwt
 type AuthPayload {
   token: String
   profile: TProfile
 }
 
-type Mutation {
-  login(Username: String!, Password: String!): AuthPayload!
-
-  createProfile(
-    Username: String!
-    Password: String!
-    Is_Admin: String!
-  ): TProfile!
-  updateProfile(
-    idProfile: ID!
-    Username: String!
-    Password: String!
-    Is_Admin: String!
-  ): TProfile!
-  deleteProfile(idProfile: ID!): TProfile!
-
-  createClient(
-    Name: String!
-    Description: String!
-    StartDate: DateTime!
-    EndDate: DateTime
-  ): TClient!
-  updateClient(
-    idClient: ID!
-    Name: String!
-    Description: String!
-    StartDate: DateTime!
-    EndDate: DateTime
-  ): TClient!
-  deleteClient(idClient: ID!): TClient!
-
-  createProject(
-    idClient: ID!
-    Name: String!
-    Description: String!
-    isDefault: String!
-    StartDate: DateTime!
-    EndDate: DateTime
-    Finished: String!
-  ): TProject!
-  updateProject(
-    idProject: ID!
-    Name: String!
-    Description: String!
-    isDefault: String!
-    StartDate: DateTime!
-    EndDate: DateTime
-    Finished: String!
-  ): TProject!
-  deleteProject(idProject: ID!): TProject!
-
-  createSubproject(
-    idProject: ID!
-    idClient: ID!
-    Name: String!
-    Description: String!
-    isDefault: String!
-    StartDate: DateTime!
-    EndDate: DateTime
-    Finished: String!
-  ): TSubproject!
-  updateSubproject(
-    idSubproject: ID!
-    Name: String!
-    Description: String!
-    isDefault: String!
-    StartDate: DateTime!
-    EndDate: DateTime
-    Finished: String!
-  ): TSubproject!
-  deleteSubproject(idSubproject: ID!): TSubproject!
-
-  createJournal(
-    idProfile: ID!
-    idClient: ID!
-    idProject: ID!
-    idSubproject: ID!
-    EntryDate: DateTime!
-    Description: String!
-    Todos: String
-    ThingsDone: String
-    DocUploaded: ByteArray
-  ): TJournal!
-  updateJournal(
-    idJournal: ID!
-    EntryDate: DateTime!
-    Description: String!
-    Todos: String
-    ThingsDone: String
-    DocUploaded: ByteArray
-  ): TJournal!
-  deleteJournal(idJournal: ID!): TJournal!
+# inputs for orderBy clauses
+input ProfilesOrderByInput {
+  Username: Sort
+  Is_Admin: Sort
 }
 
+input ClientsOrderByInput {
+  Name: Sort
+  Description: Sort
+  StartDate: Sort
+  EndDate: Sort
+}
+
+input ProjectsOrderByInput {
+  Name: Sort
+  Description: Sort
+  isDefault: Sort
+  StartDate: Sort
+  EndDate: Sort
+  Finished: Sort
+}
+
+input SubprojectsOrderByInput {
+  Name: Sort
+  Description: Sort
+  isDefault: Sort
+  StartDate: Sort
+  EndDate: Sort
+  Finished: Sort
+}
+
+input JournalsOrderByInput {
+  createdAt: Sort
+  updatedAt: Sort
+  EntryDate: Sort
+  Description: Sort
+  Todos: Sort
+  ThingsDone: Sort
+}
+
+# inputs for create,update...
+input profileInput {
+  Username: String!
+  Password: String!
+  Is_Admin: String!
+}
+
+input clientInput {
+  Name: String!
+  Description: String!
+  StartDate: DateTime!
+  EndDate: DateTime
+}
+
+input projectInput {
+  idClient: ID!
+  Name: String!
+  Description: String!
+  isDefault: String!
+  StartDate: DateTime!
+  EndDate: DateTime
+  Finished: String!
+}
+
+input subprojectInput {
+  idProject: ID!
+  idClient: ID!
+  Name: String!
+  Description: String!
+  isDefault: String!
+  StartDate: DateTime!
+  EndDate: DateTime
+  Finished: String!
+}
+
+input journalInput {
+  idProfile: ID!
+  idClient: ID!
+  idProject: ID!
+  idSubproject: ID!
+  EntryDate: DateTime!
+  Description: String!
+  Todos: String
+  ThingsDone: String
+  DocUploaded: ByteArray
+}
+
+# type definitions for objects
 type TProfile {
   idProfile: ID!
   Username: String!
   Password: String!
   Is_Admin: String!
-  client: [TClient!]!
+  client: [TClient!]
   journal: [TJournal!]
 }
 
@@ -128,9 +212,9 @@ type TClient {
   StartDate: DateTime!
   EndDate: DateTime
   profile: TProfile!
-  project: [TProject!]!
-  journal: [TJournal!]
+  project: [TProject!]
   subproject: [TSubproject!]
+  journal: [TJournal!]
 }
 
 type TProject {
@@ -180,6 +264,3 @@ type TJournal {
   project: TProject!
   subproject: TSubproject!
 }
-
-scalar DateTime
-scalar ByteArray

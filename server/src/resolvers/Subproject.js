@@ -1,27 +1,31 @@
 const { checkConnected } = require("../utils");
 async function createSubproject(parent, args, context, info) {
   await checkConnected(context);
-  const idClientInt = parseInt(args.idClient);
-  const idProjectInt = parseInt(args.idProject);
+  const idClientInt = parseInt(args.subproject.idClient);
+  const idProjectInt = parseInt(args.subproject.idProject);
   const newSubprojectObj = {
     idClient: idClientInt,
     idProject: idProjectInt,
-    Name: args.Name,
-    Description: args.Description,
-    isDefault: args.isDefault,
-    StartDate: args.StartDate,
-    EndDate: args.EndDate,
-    Finished: args.Finished,
+    Name: args.subproject.Name,
+    Description: args.subproject.Description,
+    isDefault: args.subproject.isDefault,
+    StartDate: args.subproject.StartDate,
+    EndDate: args.subproject.EndDate,
+    Finished: args.subproject.Finished,
   };
-  const newSubproject = await context.prisma.subproject.create({
+  const createdSubproject = await context.prisma.subproject.create({
     data: { ...newSubprojectObj },
   });
-  return newSubproject;
+
+  context.pubsub.publish("CREATE_SUBPROJECT", createdSubproject);
+  return createdSubproject;
 }
 
 async function updateSubproject(parent, args, context, info) {
   await checkConnected(context);
   const idSubprojectInt = parseInt(args.idSubproject);
+  const idProjectInt = parseInt(args.subproject.idProject);
+  const idClientInt = parseInt(args.subproject.idClient);
   const foundSubproject = await context.prisma.subproject.findUnique({
     where: { idSubproject: idSubprojectInt },
   });
@@ -29,21 +33,22 @@ async function updateSubproject(parent, args, context, info) {
     throw new Error("Subproject not found");
   }
   const updatedSubprojectObj = {
-    idClient: foundSubproject.idClient,
+    idProject: idProjectInt,
+    idClient: idClientInt,
     idSubproject: idSubprojectInt,
-    Name: args.Name,
-    Description: args.Description,
-    isDefault: args.isDefault,
-    StartDate: args.StartDate,
-    EndDate: args.EndDate,
-    Finished: args.Finished,
+    Name: args.subproject.Name,
+    Description: args.subproject.Description,
+    isDefault: args.subproject.isDefault,
+    StartDate: args.subproject.StartDate,
+    EndDate: args.subproject.EndDate,
+    Finished: args.subproject.Finished,
   };
 
   const updatedSubproject = await context.prisma.subproject.update({
     where: { idSubproject: idSubprojectInt },
     data: { ...updatedSubprojectObj },
   });
-
+  context.pubsub.publish("UPDATE_SUBPROJECT", updatedSubproject);
   return updatedSubproject;
 }
 
@@ -77,7 +82,7 @@ async function deleteSubproject(parent, args, context, info) {
       Finished: true,
     },
   });
-
+  context.pubsub.publish("DELETE_SUBPROJECT", deletedSubproject);
   return deletedSubproject;
 }
 
