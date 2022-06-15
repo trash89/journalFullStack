@@ -12,13 +12,22 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-
-const pages = ["Journal", "Clients", "Projects", "Subprojects"];
-const settings = ["Profile", "Logout"];
+import { useRouter } from "next/router";
+const pages = [
+  { id: 0, text: "Journal", path: "/journal" },
+  { id: 1, text: "Clients", path: "/clients" },
+  { id: 2, text: "Projects", path: "/projects" },
+  { id: 3, text: "Subprojects", path: "/subprojects" },
+];
+const userLinks = [
+  { id: 0, text: "Profile", path: "/profile" },
+  { id: 1, text: "Logout", path: "/logout" },
+];
 
 const MenuAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const router = useRouter();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -27,14 +36,24 @@ const MenuAppBar = () => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = (e) => {
-    console.log(e.target.value);
-    setAnchorElNav(null);
+  const handleCloseNavMenu = (event, reason) => {
+    if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
+      setAnchorElNav(null);
+    } else {
+      const value = event.currentTarget.value;
+      setAnchorElNav(null);
+      router.push(pages[value].path);
+    }
   };
 
-  const handleCloseUserMenu = (e) => {
-    console.log(e.target.value);
-    setAnchorElUser(null);
+  const handleCloseUserMenu = (event, reason) => {
+    if (reason && (reason === "backdropClick" || reason === "escapeKeyDown")) {
+      setAnchorElUser(null);
+    } else {
+      const value = event.currentTarget.value;
+      setAnchorElUser(null);
+      router.push(userLinks[value].path);
+    }
   };
 
   return (
@@ -57,7 +76,7 @@ const MenuAppBar = () => {
               textDecoration: "none",
             }}
           >
-            LOGO
+            JOURNAL
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -90,8 +109,8 @@ const MenuAppBar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu} value={page}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem key={page.id} onClick={handleCloseNavMenu} value={page.id}>
+                  <Typography textAlign="center">{page.text}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -113,12 +132,12 @@ const MenuAppBar = () => {
               textDecoration: "none",
             }}
           >
-            LOGO
+            JOURNAL
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: "white", display: "block" }}>
-                {page}
+              <Button key={page.id} onClick={handleCloseNavMenu} sx={{ my: 2, color: "white", display: "block" }} value={page.id}>
+                {page.text}
               </Button>
             ))}
           </Box>
@@ -145,11 +164,13 @@ const MenuAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu} value={setting}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              {userLinks.map((link) => {
+                return (
+                  <MenuItem key={link.id} onClick={handleCloseUserMenu} value={link.id}>
+                    <Typography textAlign="center">{link.text}</Typography>
+                  </MenuItem>
+                );
+              })}
             </Menu>
           </Box>
         </Toolbar>
