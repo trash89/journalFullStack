@@ -12,7 +12,13 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+
+import Link from "next/link";
+import useUser from "../lib/useUser";
 import { useRouter } from "next/router";
+import Image from "next/image";
+import fetchJson from "../lib/fetchJson";
+
 const pages = [
   { id: 0, text: "Journal", path: "/journal" },
   { id: 1, text: "Clients", path: "/clients" },
@@ -27,6 +33,8 @@ const userLinks = [
 const MenuAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const { user, mutateUser } = useUser();
   const router = useRouter();
 
   const handleOpenNavMenu = (event) => {

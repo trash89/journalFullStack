@@ -2,13 +2,15 @@ import "normalize.css";
 //import "../styles/globals.css";
 import * as React from "react";
 import Head from "next/head";
-import PropTypes from "prop-types";
 import { themeOptions } from "../components/MUITheme";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { store } from "../components/store";
 import { Provider } from "react-redux";
 import { CacheProvider } from "@emotion/react";
+
+import { SWRConfig } from "swr";
+import fetchJson from "../lib/fetchJson";
 
 import createEmotionCache from "../components/createEmotionCache";
 import Layout from "../components/Layout";
@@ -36,18 +38,21 @@ export default function MyApp(props) {
             <meta name="viewport" content="initial-scale=1, width=device-width" />
           </Head>
           <ThemeProvider theme={theme}>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
+            <SWRConfig
+              value={{
+                fetcher: fetchJson,
+                onError: (err) => {
+                  console.error(err);
+                },
+              }}
+            >
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </SWRConfig>
           </ThemeProvider>
         </CacheProvider>
       </ApolloProvider>
     </Provider>
   );
 }
-
-MyApp.propTypes = {
-  Component: PropTypes.elementType.isRequired,
-  emotionCache: PropTypes.object,
-  pageProps: PropTypes.object.isRequired,
-};
