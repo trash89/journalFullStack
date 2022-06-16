@@ -14,10 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 
 import Link from "next/link";
-import useUser from "../lib/useUser";
 import { useRouter } from "next/router";
-import Image from "next/image";
-import fetchJson from "../lib/fetchJson";
 
 const pages = [
   { id: 0, text: "Journal", path: "/journal" },
@@ -26,15 +23,15 @@ const pages = [
   { id: 3, text: "Subprojects", path: "/subprojects" },
 ];
 const userLinks = [
-  { id: 0, text: "Profile", path: "/profile" },
-  { id: 1, text: "Logout", path: "/logout" },
+  { id: 0, text: "Register", path: "/profile" },
+  { id: 1, text: "Login", path: "/login" },
+  { id: 2, text: "Logout", path: "/logout" },
 ];
 
 const MenuAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const { user, mutateUser } = useUser();
   const router = useRouter();
 
   const handleOpenNavMenu = (event) => {
