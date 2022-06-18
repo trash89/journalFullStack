@@ -1,14 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const token = localStorage.getItem("token");
-const user = localStorage.getItem("user");
+const getStorLocal = (item) => {
+  if (typeof localStorage !== "undefined") {
+    return localStorage.getItem(item);
+  }
+  return null;
+};
+const setStorLocal = (item, value) => {
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem(item, value);
+  }
+};
+
+const token = getStorLocal("token");
+const user = getStorLocal("user");
 
 const initialState = {
   user: user ? JSON.parse(user) : null,
   token: token,
 };
 
-const modalSlice = createSlice({
+const userSlice = createSlice({
   name: "User",
   initialState,
   reducers: {

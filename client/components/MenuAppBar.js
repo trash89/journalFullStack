@@ -11,7 +11,8 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
+import NotesIcon from "@mui/icons-material/Notes";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -23,7 +24,7 @@ const pages = [
   { id: 3, text: "Subprojects", path: "/subprojects" },
 ];
 const userLinks = [
-  { id: 0, text: "Register", path: "/profile" },
+  { id: 0, text: "Register", path: "/register" },
   { id: 1, text: "Login", path: "/login" },
   { id: 2, text: "Logout", path: "/logout" },
 ];
@@ -65,7 +66,7 @@ const MenuAppBar = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <NotesIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -120,7 +121,7 @@ const MenuAppBar = () => {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <NotesIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -150,7 +151,9 @@ const MenuAppBar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar>U</Avatar>
+                <Avatar>
+                  <AccountCircleIcon />
+                </Avatar>
               </IconButton>
             </Tooltip>
             <Menu
