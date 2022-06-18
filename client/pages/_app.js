@@ -1,5 +1,5 @@
 import "normalize.css";
-//import "../styles/globals.css";
+import "../styles/globals.css";
 import * as React from "react";
 import Head from "next/head";
 import { themeOptions } from "../components/MUITheme";

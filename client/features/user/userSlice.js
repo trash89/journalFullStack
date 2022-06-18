@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 const getStorLocal = (item) => {
   if (typeof localStorage !== "undefined") {
@@ -18,6 +19,8 @@ const user = getStorLocal("user");
 const initialState = {
   user: user ? JSON.parse(user) : null,
   token: token,
+  isLoading: false,
+  isSidebarOpen: false,
 };
 
 const userSlice = createSlice({
@@ -28,12 +31,23 @@ const userSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
     },
-    logoutUser: (state, action) => {
+    registerUser: (state, action) => {
+      state.user = action.payload.user;
+      state.token = action.payload.user;
+    },
+    toggleSidebar: (state) => {
+      state.isSidebarOpen = !state.isSidebarOpen;
+    },
+    logoutUser: (state, { payload }) => {
       state.user = null;
-      state.token = null;
+      state.isSidebarOpen = false;
+      //removeUserFromLocalStorage();
+      if (payload) {
+        toast.success(payload);
+      }
     },
   },
 });
 
-export const { loginUser, logoutUser } = userSlice.actions;
+export const { loginUser, registerUser } = userSlice.actions;
 export default userSlice.reducer;
