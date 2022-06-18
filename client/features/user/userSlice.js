@@ -17,7 +17,8 @@ const token = getStorLocal("token");
 const user = getStorLocal("user");
 
 const initialState = {
-  user: user ? JSON.parse(user) : null,
+  Username: user ? JSON.parse(user) : null,
+  Password: "",
   token: token,
   isLoading: false,
   isSidebarOpen: false,
@@ -28,8 +29,9 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     loginUser: (state, action) => {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
+      console.log("action=", action);
+      state.user = action.payload.Username;
+      state.Password = action.payload.Password;
     },
     registerUser: (state, action) => {
       state.user = action.payload.user;

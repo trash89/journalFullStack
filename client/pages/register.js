@@ -38,10 +38,11 @@ const Register = () => {
       return;
     }
     if (isMember) {
+      console.log("here3");
       dispatch(loginUser({ Username: Username, Password: Password }));
       return;
     }
-    console.log("here3");
+    console.log("here4");
     dispatch(registerUser({ Username, Password }));
   };
   useEffect(() => {
