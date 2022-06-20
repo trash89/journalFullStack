@@ -13,9 +13,9 @@ export const registerUser = createAsyncThunk("user/registerUser", async (user, t
   return registerUserThunk("/auth/register", user, thunkAPI);
 });
 
-export const loginUser = createAsyncThunk("user/loginUser", async (user, thunkAPI) => {
-  return loginUserThunk("/auth/login", user, thunkAPI);
-});
+// export const loginUser = createAsyncThunk("user/loginUser", async (user, thunkAPI) => {
+//   return loginUserThunk("/auth/login", user, thunkAPI);
+// });
 
 export const updateUser = createAsyncThunk("user/updateUser", async (user, thunkAPI) => {
   return updateUserThunk("/auth/updateUser", user, thunkAPI);
@@ -27,6 +27,13 @@ const userSlice = createSlice({
   reducers: {
     toggleSidebar: (state) => {
       state.isSidebarOpen = !state.isSidebarOpen;
+    },
+    loginUser: (state, { payload }) => {
+      state.user = payload;
+      state.isSidebarOpen = false;
+      if (payload) {
+        toast.success(payload);
+      }
     },
     logoutUser: (state, { payload }) => {
       state.user = null;
@@ -52,21 +59,24 @@ const userSlice = createSlice({
       state.isLoading = false;
       toast.error(payload);
     },
-    [loginUser.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [loginUser.fulfilled]: (state, { payload }) => {
-      const { user } = payload;
-      state.isLoading = false;
-      state.user = user;
-      addUserToLocalStorage(user);
+    // [loginUser.pending]: (state) => {
+    //   console.log("loginUser.pending");
+    //   state.isLoading = true;
+    // },
+    // [loginUser.fulfilled]: (state, { payload }) => {
+    //   const { user } = payload;
+    //   console.log("loginUser.fulfilled,user=", user);
+    //   state.isLoading = false;
+    //   state.user = user;
+    //   addUserToLocalStorage(user);
 
-      toast.success(`Welcome Back ${user.name}`);
-    },
-    [loginUser.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload);
-    },
+    //   toast.success(`Welcome Back ${user.name}`);
+    // },
+    // [loginUser.rejected]: (state, { payload }) => {
+    //   console.log("loginUser.rejected,payload=", payload);
+    //   state.isLoading = false;
+    //   toast.error(payload);
+    // },
     [updateUser.pending]: (state) => {
       state.isLoading = true;
     },
@@ -88,5 +98,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { toggleSidebar, logoutUser } = userSlice.actions;
+export const { toggleSidebar, logoutUser, loginUser } = userSlice.actions;
 export default userSlice.reducer;

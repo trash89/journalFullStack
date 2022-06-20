@@ -6,7 +6,7 @@ import App from "./App";
 import "normalize.css";
 import "./index.css";
 
-import { themeOptions } from "./components/MUITheme";
+import { themeOptions } from "./MUITheme";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 
@@ -24,12 +24,12 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <ApolloProvider client={clientApollo}>
-        <ThemeProvider theme={theme}>
+    <ApolloProvider client={clientApollo}>
+      <ThemeProvider theme={theme}>
+        <Provider store={store}>
           <App />
-        </ThemeProvider>
-      </ApolloProvider>
-    </Provider>
+        </Provider>
+      </ThemeProvider>
+    </ApolloProvider>
   </React.StrictMode>
 );

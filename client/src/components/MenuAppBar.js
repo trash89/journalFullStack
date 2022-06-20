@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import NotesIcon from "@mui/icons-material/Notes";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useNavigate } from "react-router-dom";
 
 const pages = [
   { id: 0, text: "Journal", path: "/journal" },
@@ -29,7 +30,7 @@ const userLinks = [
 const MenuAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+  let navigate = useNavigate();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -43,7 +44,7 @@ const MenuAppBar = () => {
     } else {
       const value = event.currentTarget.value;
       setAnchorElNav(null);
-      //router.push(pages[value].path);
+      navigate(pages[value].path);
     }
   };
 
@@ -53,7 +54,7 @@ const MenuAppBar = () => {
     } else {
       const value = event.currentTarget.value;
       setAnchorElUser(null);
-      //router.push(userLinks[value].path);
+      navigate(userLinks[value].path);
     }
   };
 
