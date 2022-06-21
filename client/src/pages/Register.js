@@ -100,7 +100,7 @@ function Register() {
       navigate("/");
     }
   }, [user]);
-  if (!isMounted) return <>Mounting...</>;
+  if (!isMounted) return <></>;
   return (
     <Wrapper className="full-page">
       <form className="form" onSubmit={onSubmit}>

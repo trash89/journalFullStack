@@ -7,5 +7,7 @@ import Subprojects from "./Subprojects";
 import Profile from "./Profile";
 import Register from "./Register";
 import Error from "./Error";
+import SharedProfileLayout from "./SharedProfileLayout";
+import SingleProfile from "./SingleProfile";
 
-export { Journal, ProtectedRoute, SharedLayout, Clients, Projects, Subprojects, Profile, Register, Error };
+export { Journal, ProtectedRoute, SharedLayout, Clients, Projects, Subprojects, Profile, Register, Error, SingleProfile, SharedProfileLayout };

@@ -21,9 +21,10 @@ const pages = [
   { id: 1, text: "Clients", path: "/clients" },
   { id: 2, text: "Projects", path: "/projects" },
   { id: 3, text: "Subprojects", path: "/subprojects" },
+  { id: 4, text: "Profiles", path: "/profiles" },
 ];
 const userLinks = [
-  { id: 0, text: "Profile", path: "/profile" },
+  { id: 0, text: "Profiles", path: "/profiles" },
   { id: 1, text: "Logout", path: "/logout" },
 ];
 
