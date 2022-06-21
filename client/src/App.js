@@ -17,12 +17,12 @@ function App() {
           }
         >
           <Route index element={<Journal />} />
+          <Route path="journal" element={<Journal />} />
           <Route path="clients" element={<Clients />} />
           <Route path="projects" element={<Projects />} />
           <Route path="subprojects" element={<Subprojects />} />
           <Route path="profile" element={<Profile />} />
         </Route>
-        <Route path="journal" element={<Journal />} />
         <Route path="register" element={<Register />} />
         <Route path="*" element={<Error />} />
       </Routes>

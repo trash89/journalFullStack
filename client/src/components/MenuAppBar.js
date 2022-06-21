@@ -12,8 +12,9 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import NotesIcon from "@mui/icons-material/Notes";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../features/user/userSlice";
 
 const pages = [
   { id: 0, text: "Journal", path: "/journal" },
@@ -22,15 +23,18 @@ const pages = [
   { id: 3, text: "Subprojects", path: "/subprojects" },
 ];
 const userLinks = [
-  { id: 0, text: "Register", path: "/register" },
-  { id: 1, text: "Login", path: "/login" },
-  { id: 2, text: "Logout", path: "/logout" },
+  { id: 0, text: "Profile", path: "/profile" },
+  { id: 1, text: "Logout", path: "/logout" },
 ];
 
 const MenuAppBar = () => {
+  const { user } = useSelector((store) => store.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  let navigate = useNavigate();
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -54,7 +58,15 @@ const MenuAppBar = () => {
     } else {
       const value = event.currentTarget.value;
       setAnchorElUser(null);
-      navigate(userLinks[value].path);
+      if (value === 0) {
+        // profile, go to profile page
+        navigate(userLinks[value].path);
+      } else {
+        if (value === 1) {
+          // logout
+          dispatch(logoutUser());
+        }
+      }
     }
   };
 
@@ -148,7 +160,8 @@ const MenuAppBar = () => {
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar>
-                  <AccountCircleIcon />
+                  {/* <AccountCircleIcon /> */}
+                  {user && <>{user.Username}</>}
                 </Avatar>
               </IconButton>
             </Tooltip>
