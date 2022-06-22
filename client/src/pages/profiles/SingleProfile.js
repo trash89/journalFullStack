@@ -91,7 +91,7 @@ const SingleProfile = () => {
         toast.success(`Success, please reconnect, ${updateProfile.Username} !`);
         navigate("/register");
       } else {
-        toast.success(`Success, ${updateProfile.Username} !`);
+        toast.success(`Success saving profile, ${updateProfile.Username} !`);
         navigate("/profiles");
       }
     },

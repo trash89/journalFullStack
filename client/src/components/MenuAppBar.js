@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../features/user/userSlice";
 
 const pages = [
-  { id: 0, text: "Journal", path: "/journal" },
+  { id: 0, text: "Journal", path: "/journals" },
   { id: 1, text: "Clients", path: "/clients" },
   { id: 2, text: "Projects", path: "/projects" },
   { id: 3, text: "Subprojects", path: "/subprojects" },

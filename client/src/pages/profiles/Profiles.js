@@ -26,7 +26,7 @@ const PROFILES_QUERY = gql`
   }
 `;
 
-const Profile = () => {
+const Profiles = () => {
   const isMounted = useIsMounted();
   const { user } = useSelector((store) => store.user);
 
@@ -64,4 +64,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Profiles;

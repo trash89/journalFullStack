@@ -1,6 +1,22 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { Journal, Clients, Projects, Subprojects, Profile, SharedLayout, Error, Register, ProtectedRoute, SharedProfileLayout, SingleProfile } from "./pages";
+import {
+  SharedLayout,
+  SharedPagesLayout,
+  Error,
+  Register,
+  ProtectedRoute,
+  Journals,
+  SingleJournal,
+  Projects,
+  SingleProject,
+  Subprojects,
+  SingleSubproject,
+  Profiles,
+  SingleProfile,
+  Clients,
+  SingleClient,
+} from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -16,14 +32,30 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Journal />} />
-          <Route path="journal" element={<Journal />} />
-          <Route path="clients" element={<Clients />} />
-          <Route path="projects" element={<Projects />} />
-          <Route path="subprojects" element={<Subprojects />} />
+          <Route index element={<Journals />} />
 
-          <Route path="profiles" element={<SharedProfileLayout />}>
-            <Route index element={<Profile />} />
+          <Route path="journals" element={<SharedPagesLayout title="journals" />}>
+            <Route index element={<Journals />} />
+            <Route path=":idJournal" element={<SingleJournal />} />
+          </Route>
+
+          <Route path="projects" element={<SharedPagesLayout title="projects" />}>
+            <Route index element={<Projects />} />
+            <Route path=":idProject" element={<SingleProject />} />
+          </Route>
+
+          <Route path="subprojects" element={<SharedPagesLayout title="subprojects" />}>
+            <Route index element={<Subprojects />} />
+            <Route path=":idSubproject" element={<SingleSubproject />} />
+          </Route>
+
+          <Route path="clients" element={<SharedPagesLayout title="clients" />}>
+            <Route index element={<Clients />} />
+            <Route path=":idClient" element={<SingleClient />} />
+          </Route>
+
+          <Route path="profiles" element={<SharedPagesLayout title="profiles" />}>
+            <Route index element={<Profiles />} />
             <Route path=":idProfile" element={<SingleProfile />} />
           </Route>
         </Route>
