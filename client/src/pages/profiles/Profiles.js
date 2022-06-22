@@ -15,7 +15,7 @@ import { useIsMounted } from "../../hooks";
 
 const PROFILES_QUERY = gql`
   query profilesQuery {
-    profiles {
+    profiles(skip: 0, take: 10, orderBy: { Username: asc }) {
       count
       list {
         idProfile

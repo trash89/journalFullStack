@@ -1,3 +1,5 @@
 import Subprojects from "./Subprojects";
 import SingleSubproject from "./SingleSubproject";
-export { Subprojects, SingleSubproject };
+import NewSubproject from "./NewSubproject";
+
+export { Subprojects, SingleSubproject, NewSubproject };

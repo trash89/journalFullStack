@@ -15,7 +15,7 @@ import { useIsMounted } from "../../hooks";
 
 const PROJECTS_QUERY = gql`
   query projectsQuery {
-    projects {
+    projects(skip: 0, take: 10, orderBy: { Name: asc }) {
       count
       list {
         idClient
@@ -45,40 +45,43 @@ const Projects = () => {
     return <Navigate to="/register" />;
   }
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="projects" size="small" padding="checkbox">
-        <TableHead>
-          <TableRow>
-            <TableCell align="left">Action</TableCell>
-            <TableCell align="right">Client</TableCell>
-            <TableCell align="left">Name</TableCell>
-            <TableCell align="left">Description</TableCell>
-            <TableCell align="left">Default?</TableCell>
-            <TableCell align="right">Start Date</TableCell>
-            <TableCell align="right">End Date</TableCell>
-            <TableCell align="left">Finished?</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data?.projects?.list.map((row) => {
-            return (
-              <TableRow key={row.idProject} sx={{ "&:last-child td, &:last-child th": { border: 0 } }} hover={true}>
-                <TableCell align="left">
-                  <Link to={`/projects/${row.idProject}`}>edit</Link>
-                </TableCell>
-                <TableCell align="right">{row.client.Name}</TableCell>
-                <TableCell align="left">{row.Name}</TableCell>
-                <TableCell align="left">{row.Description}</TableCell>
-                <TableCell align="left">{row.isDefault}</TableCell>
-                <TableCell align="right">{row.StartDate}</TableCell>
-                <TableCell align="right">{row.EndDate}</TableCell>
-                <TableCell align="right">{row.Finished}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <Link to="newproject">Add Project</Link>
+      <TableContainer component={Paper}>
+        <Table aria-label="projects" size="small" padding="checkbox">
+          <TableHead>
+            <TableRow>
+              <TableCell align="left">Action</TableCell>
+              <TableCell align="right">Client</TableCell>
+              <TableCell align="left">Name</TableCell>
+              <TableCell align="left">Description</TableCell>
+              <TableCell align="left">Default?</TableCell>
+              <TableCell align="right">Start Date</TableCell>
+              <TableCell align="right">End Date</TableCell>
+              <TableCell align="left">Finished?</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data?.projects?.list.map((row) => {
+              return (
+                <TableRow key={row.idProject} sx={{ "&:last-child td, &:last-child th": { border: 0 } }} hover={true}>
+                  <TableCell align="left">
+                    <Link to={`/projects/${row.idProject}`}>edit</Link>
+                  </TableCell>
+                  <TableCell align="right">{row.client.Name}</TableCell>
+                  <TableCell align="left">{row.Name}</TableCell>
+                  <TableCell align="left">{row.Description}</TableCell>
+                  <TableCell align="left">{row.isDefault}</TableCell>
+                  <TableCell align="right">{row.StartDate}</TableCell>
+                  <TableCell align="right">{row.EndDate}</TableCell>
+                  <TableCell align="right">{row.Finished}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
 

@@ -1,3 +1,4 @@
 import Clients from "./Clients";
 import SingleClient from "./SingleClient";
-export { Clients, SingleClient };
+import NewClient from "./NewClient";
+export { Clients, SingleClient, NewClient };

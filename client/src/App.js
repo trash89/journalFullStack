@@ -10,12 +10,15 @@ import {
   SingleJournal,
   Projects,
   SingleProject,
+  NewProject,
   Subprojects,
   SingleSubproject,
+  NewSubproject,
   Profiles,
   SingleProfile,
   Clients,
   SingleClient,
+  NewClient,
 } from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -49,16 +52,19 @@ function App() {
           <Route path="projects" element={<SharedPagesLayout title="projects" />}>
             <Route index element={<Projects />} />
             <Route path=":idProject" element={<SingleProject />} />
+            <Route path="newproject" element={<NewProject />} />
           </Route>
 
           <Route path="subprojects" element={<SharedPagesLayout title="subprojects" />}>
             <Route index element={<Subprojects />} />
             <Route path=":idSubproject" element={<SingleSubproject />} />
+            <Route path="newsubproject" element={<NewSubproject />} />
           </Route>
 
           <Route path="clients" element={<SharedPagesLayout title="clients" />}>
             <Route index element={<Clients />} />
             <Route path=":idClient" element={<SingleClient />} />
+            <Route path="newclient" element={<NewClient />} />
           </Route>
 
           <Route path="profiles" element={<SharedPagesLayout title="profiles" />}>

@@ -15,7 +15,7 @@ import { useIsMounted } from "../../hooks";
 
 const SUBPROJECTS_QUERY = gql`
   query subprojectsQuery {
-    subprojects {
+    subprojects(skip: 0, take: 10, orderBy: { Name: asc }) {
       count
       list {
         idProject
@@ -50,42 +50,45 @@ const Subprojects = () => {
     return <Navigate to="/register" />;
   }
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="subprojects" size="small" padding="checkbox">
-        <TableHead>
-          <TableRow>
-            <TableCell align="left">Action</TableCell>
-            <TableCell align="right">Client</TableCell>
-            <TableCell align="right">Project</TableCell>
-            <TableCell align="left">Name</TableCell>
-            <TableCell align="left">Description</TableCell>
-            <TableCell align="left">Default?</TableCell>
-            <TableCell align="right">Start Date</TableCell>
-            <TableCell align="right">End Date</TableCell>
-            <TableCell align="left">Finished?</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data?.subprojects?.list.map((row) => {
-            return (
-              <TableRow key={row.idSubproject} sx={{ "&:last-child td, &:last-child th": { border: 0 } }} hover={true}>
-                <TableCell align="left">
-                  <Link to={`/subprojects/${row.idSubproject}`}>edit</Link>
-                </TableCell>
-                <TableCell align="right">{row.client.Name}</TableCell>
-                <TableCell align="right">{row.project.Name}</TableCell>
-                <TableCell align="left">{row.Name}</TableCell>
-                <TableCell align="left">{row.Description}</TableCell>
-                <TableCell align="left">{row.isDefault}</TableCell>
-                <TableCell align="right">{row.StartDate}</TableCell>
-                <TableCell align="right">{row.EndDate}</TableCell>
-                <TableCell align="right">{row.Finished}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <Link to="newsubproject">Add Subproject</Link>
+      <TableContainer component={Paper}>
+        <Table aria-label="subprojects" size="small" padding="checkbox">
+          <TableHead>
+            <TableRow>
+              <TableCell align="left">Action</TableCell>
+              <TableCell align="right">Client</TableCell>
+              <TableCell align="right">Project</TableCell>
+              <TableCell align="left">Name</TableCell>
+              <TableCell align="left">Description</TableCell>
+              <TableCell align="left">Default?</TableCell>
+              <TableCell align="right">Start Date</TableCell>
+              <TableCell align="right">End Date</TableCell>
+              <TableCell align="left">Finished?</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data?.subprojects?.list.map((row) => {
+              return (
+                <TableRow key={row.idSubproject} sx={{ "&:last-child td, &:last-child th": { border: 0 } }} hover={true}>
+                  <TableCell align="left">
+                    <Link to={`/subprojects/${row.idSubproject}`}>edit</Link>
+                  </TableCell>
+                  <TableCell align="right">{row.client.Name}</TableCell>
+                  <TableCell align="right">{row.project.Name}</TableCell>
+                  <TableCell align="left">{row.Name}</TableCell>
+                  <TableCell align="left">{row.Description}</TableCell>
+                  <TableCell align="left">{row.isDefault}</TableCell>
+                  <TableCell align="right">{row.StartDate}</TableCell>
+                  <TableCell align="right">{row.EndDate}</TableCell>
+                  <TableCell align="right">{row.Finished}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
 

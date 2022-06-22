@@ -1,4 +1,5 @@
-import * as React from "react";
+import { useState } from "react";
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
@@ -15,26 +15,15 @@ import NotesIcon from "@mui/icons-material/Notes";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../features/user/userSlice";
-
-const pages = [
-  { id: 0, text: "Journal", path: "/journals" },
-  { id: 1, text: "Clients", path: "/clients" },
-  { id: 2, text: "Projects", path: "/projects" },
-  { id: 3, text: "Subprojects", path: "/subprojects" },
-  { id: 4, text: "Profiles", path: "/profiles" },
-];
-const userLinks = [
-  { id: 0, text: "Profiles", path: "/profiles" },
-  { id: 1, text: "Logout", path: "/logout" },
-];
+import { links, userLinks } from "../utils/links";
 
 const MenuAppBar = () => {
   const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -49,7 +38,7 @@ const MenuAppBar = () => {
     } else {
       const value = event.currentTarget.value;
       setAnchorElNav(null);
-      navigate(pages[value].path);
+      navigate(links[value].path);
     }
   };
 
@@ -123,7 +112,7 @@ const MenuAppBar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
+              {links.map((page) => (
                 <MenuItem key={page.id} onClick={handleCloseNavMenu} value={page.id}>
                   <Typography textAlign="center">{page.text}</Typography>
                 </MenuItem>
@@ -150,7 +139,7 @@ const MenuAppBar = () => {
             JOURNAL
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {links.map((page) => (
               <Button key={page.id} onClick={handleCloseNavMenu} sx={{ my: 2, color: "white", display: "block" }} value={page.id}>
                 {page.text}
               </Button>
@@ -158,12 +147,9 @@ const MenuAppBar = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title="User">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar>
-                  {/* <AccountCircleIcon /> */}
-                  {user && <>{user.Username}</>}
-                </Avatar>
+                {user && <>{user.Username}</>}
               </IconButton>
             </Tooltip>
             <Menu
