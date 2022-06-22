@@ -8,7 +8,7 @@ import "./index.css";
 
 import { themeOptions } from "./MUITheme";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache, defaultDataIdFromObject } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { getUserFromLocalStorage } from "./utils/localStorage";
 
@@ -34,7 +34,36 @@ const authLink = setContext((_, { headers }) => {
 
 const clientApollo = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    dataIdFromObject(responseObject) {
+      switch (responseObject.__typename) {
+        case "TProfile":
+          return `TProfile:${responseObject.idProfile}`;
+        case "TProfilesCount":
+          return `TProfilesCount:${responseObject.count}`;
+        case "AuthPayload":
+          return `AuthPayload:${responseObject.token}`;
+        default: {
+          console.log("Typename=", responseObject.__typename, "ID=", defaultDataIdFromObject(responseObject));
+          return defaultDataIdFromObject(responseObject);
+        }
+      }
+    },
+  }),
+  queryDeduplication: false,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: "cache-and-network",
+    },
+    query: {
+      fetchPolicy: "cache-and-network",
+      errorPolicy: "all",
+    },
+    mutate: {
+      fetchPolicy: "network-only",
+      errorPolicy: "all",
+    },
+  },
 });
 
 const container = document.getElementById("root");

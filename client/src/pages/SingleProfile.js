@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +8,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
 import { logoutUser } from "../features/user/userSlice";
 import { useIsMounted, useIsAdmin } from "../hooks";
@@ -20,11 +21,23 @@ const UPDATE_MUTATION = gql`
     }
   }
 `;
+const DELETE_MUTATION = gql`
+  mutation deleteMutation($idProfile: ID!) {
+    deleteProfile(idProfile: $idProfile) {
+      idProfile
+      Username
+    }
+  }
+`;
+
 const PROFILES_QUERY = gql`
   query profilesQuery {
     profiles {
+      count
       list {
         idProfile
+        Username
+        Is_Admin
       }
     }
   }
@@ -40,93 +53,94 @@ const EDIT_PROFILE_QUERY = gql`
   }
 `;
 const verifyProfileInList = (idProfile, list) => {
-  return list?.includes(idProfile);
+  if (list) {
+    return list?.includes(idProfile);
+  }
+  return false;
 };
 const SingleProfile = () => {
   const isMounted = useIsMounted();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading, user } = useSelector((store) => store.user);
+  const { user } = useSelector((store) => store.user);
   const idProfileConnected = parseInt(user.idProfile || -1);
   const isAdmin = useIsAdmin(idProfileConnected);
 
   const { idProfile } = useParams();
-  const { data: profilesList, refetch: refetchProfilesList } = useQuery(PROFILES_QUERY);
+
+  const { data: profilesList } = useQuery(PROFILES_QUERY);
   const profilesArray = profilesList?.profiles?.list?.map((profile) => profile?.idProfile);
 
   const isProfileInList = verifyProfileInList(idProfile, profilesArray);
 
-  const { data: editProfile, refetch: refetchEditProfile } = useQuery(EDIT_PROFILE_QUERY, {
+  const { data: editProfile } = useQuery(EDIT_PROFILE_QUERY, {
     variables: { idProfile: parseInt(idProfile) },
   });
 
   const [input, setInput] = useState({
-    Username: editProfile?.profile?.Username || "",
     Password: "",
   });
   const [isErrorInput, setIsErrorInput] = useState({
-    Username: false,
     Password: false,
   });
 
   const [updateProfile, { error: updateError }] = useMutation(UPDATE_MUTATION, {
-    onCompleted: () => {
-      dispatch(logoutUser());
-      toast.success(`Success, please reconnect, ${input.Username} !`);
-      navigate("/register");
+    onCompleted: ({ updateProfile }) => {
+      if (parseInt(editProfile.profile.idProfile) === idProfileConnected) {
+        dispatch(logoutUser());
+        toast.success(`Success, please reconnect, ${updateProfile.Username} !`);
+        navigate("/register");
+      } else {
+        toast.success(`Success, ${updateProfile.Username} !`);
+        navigate("/profiles");
+      }
     },
   });
+  const [deleteProfile, { error: deleteError }] = useMutation(DELETE_MUTATION, {
+    onCompleted: ({ deleteProfile }) => {
+      toast.success(`Success, ${deleteProfile.Username} !`);
+      navigate("/profiles");
+    },
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { Username, Password } = input;
-    if (!Username || !Password) {
+    const { Password } = input;
+    if (!Password) {
       setIsErrorInput({ ...isErrorInput, Password: true });
       toast.error("please fill out all fields");
       return;
     }
-    console.log("input.Username=", input.Username);
-    console.log("input.Password=", input.Password);
     updateProfile({
       variables: {
-        idProfile: parseInt(editProfile.idProfile),
-        Username: input.Username,
+        idProfile: parseInt(editProfile.profile.idProfile),
+        Username: editProfile?.profile?.Username,
         Password: input.Password,
       },
     });
   };
-
-  const handleUsername = (e) => {
-    setInput({ ...input, Username: e.target.value });
-    if (isErrorInput.Username) setIsErrorInput({ ...isErrorInput, Username: false });
+  const handleDelete = (e) => {
+    e.preventDefault();
+    deleteProfile({
+      variables: {
+        idProfile: parseInt(editProfile.profile.idProfile),
+      },
+    });
   };
+
   const handlePassword = (e) => {
     setInput({ ...input, Password: e.target.value });
     if (isErrorInput.Password) setIsErrorInput({ ...isErrorInput, Password: false });
   };
-  useEffect(() => {
-    refetchProfilesList();
-    refetchEditProfile({ idProfile: parseInt(idProfile) });
-  }, []);
 
   if (!isMounted) return <></>;
   if (!isProfileInList) return <>You cannot update this profile</>;
   return (
     <Paper elevation={4}>
-      <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" padding={1} spacing={0}>
+      <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" padding={1} spacing={1}>
+        <Typography>Username : {editProfile?.profile?.Username}</Typography>
         <TextField
-          error={isErrorInput.Username}
           autoFocus
-          margin="dense"
-          id="Username"
-          label="Username"
-          type="text"
-          disabled
-          value={input.Username}
-          required
-          variant="standard"
-          onChange={handleUsername}
-        />
-        <TextField
           error={isErrorInput.Password}
           margin="dense"
           id="Password"
@@ -137,9 +151,9 @@ const SingleProfile = () => {
           variant="standard"
           onChange={handlePassword}
         />
-        <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={1} spacing={1}>
+        <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
           <Button
-            variant="contained"
+            variant="text"
             size="small"
             onClick={() => {
               navigate("/profiles");
@@ -147,30 +161,20 @@ const SingleProfile = () => {
           >
             cancel
           </Button>
-          <Button variant="contained" size="small" onClick={handleSubmit}>
-            save changes
+          <Button variant="text" size="small" onClick={handleSubmit}>
+            save
           </Button>
+          {isAdmin === "Y" && parseInt(editProfile.profile.idProfile) !== idProfileConnected && (
+            <Button variant="text" size="small" onClick={handleDelete}>
+              delete
+            </Button>
+          )}
         </Stack>
+        {updateError && <>{updateError?.message}</>}
+        {deleteError && <>{deleteError?.message}</>}
       </Stack>
     </Paper>
   );
 };
 
 export default SingleProfile;
-// if (isAdmin === "N") {
-//   return (
-//     <Wrapper>
-//       <form className="form" onSubmit={handleSubmit}>
-//         <h3>profile</h3>
-//         <div className="form-center">
-//           <FormRow type="text" name="Username" value={userData.Username} handleChange={handleChange} />
-//           <FormRow type="password" name="Password" value={userData.Password} handleChange={handleChange} />
-//           <button type="submit" className="btn btn-block" disabled={isLoading}>
-//             {isLoading ? "Please Wait..." : "save changes"}
-//           </button>
-//           {updateError && <>{updateError.message}</>}
-//         </div>
-//       </form>
-//     </Wrapper>
-//   );
-// } else {

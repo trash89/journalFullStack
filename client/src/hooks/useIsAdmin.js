@@ -3,6 +3,8 @@ import { gql, useQuery } from "@apollo/client";
 const PROFILE_QUERY = gql`
   query profileQuery($idProfile: ID!) {
     profile(idProfile: $idProfile) {
+      idProfile
+      Username
       Is_Admin
     }
   }

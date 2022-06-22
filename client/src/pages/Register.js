@@ -115,7 +115,7 @@ function Register() {
           type="button"
           className="btn btn-block btn-hipster"
           disabled={isLoading}
-          onClick={() => login({ variables: { Username: "demo@gmail.com", Password: "secret" } })}
+          onClick={() => login({ variables: { Username: "demo", Password: "secret" } })}
         >
           {isLoading ? "loading..." : "demo app"}
         </button>
