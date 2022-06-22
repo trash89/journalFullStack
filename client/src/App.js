@@ -6,7 +6,7 @@ import {
   Error,
   Register,
   ProtectedRoute,
-  Journals,
+  Journal,
   SingleJournal,
   Projects,
   SingleProject,
@@ -22,8 +22,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 const IndexJournals = () => {
   return (
-    <SharedPagesLayout title="journals">
-      <Journals />
+    <SharedPagesLayout title="journal">
+      <Journal />
     </SharedPagesLayout>
   );
 };
@@ -41,8 +41,8 @@ function App() {
         >
           <Route index element={<IndexJournals />} />
 
-          <Route path="journals" element={<SharedPagesLayout title="journals" />}>
-            <Route index element={<Journals />} />
+          <Route path="journals" element={<SharedPagesLayout title="journal" />}>
+            <Route index element={<Journal />} />
             <Route path=":idJournal" element={<SingleJournal />} />
           </Route>
 

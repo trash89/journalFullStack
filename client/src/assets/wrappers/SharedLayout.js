@@ -1,21 +1,21 @@
 import styled from "styled-components";
 
 const Wrapper = styled.section`
-  .dashboard {
+  .principal {
     display: grid;
     grid-template-columns: 1fr;
   }
-  .dashboard-page {
-    width: 90vw;
+  .principal-page {
+    width: 95vw;
     margin: 0 auto;
-    padding: 2rem 0;
+    padding: 0.1rem 0;
   }
   @media (min-width: 992px) {
-    .dashboard {
+    .principal {
       grid-template-columns: auto 1fr;
     }
-    .dashboard-page {
-      width: 90%;
+    .principal-page {
+      width: 95%;
     }
   }
 `;

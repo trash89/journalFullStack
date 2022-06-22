@@ -41,6 +41,22 @@ const clientApollo = new ApolloClient({
           return `TProfile:${responseObject.idProfile}`;
         case "TProfilesCount":
           return `TProfilesCount:${responseObject.count}`;
+        case "TClient":
+          return `TClient:${responseObject.idClient}`;
+        case "TClientsCount":
+          return `TClientsCount:${responseObject.count}`;
+        case "TProject":
+          return `TProject:${responseObject.idProject}`;
+        case "TProjectsCount":
+          return `TProjectsCount:${responseObject.count}`;
+        case "TSubproject":
+          return `TSubproject:${responseObject.idSubproject}`;
+        case "TSubprojectsCount":
+          return `TSubprojectsCount:${responseObject.count}`;
+        case "TJournal":
+          return `TJournal:${responseObject.idJournal}`;
+        case "TJournalsCount":
+          return `TJournalsCount:${responseObject.count}`;
         case "AuthPayload":
           return `AuthPayload:${responseObject.token}`;
         default: {

@@ -13,60 +13,80 @@ import Paper from "@mui/material/Paper";
 
 import { useIsMounted } from "../../hooks";
 
-const CLIENTS_QUERY = gql`
-  query clientsQuery {
-    clients {
+const JOURNALS_QUERY = gql`
+  query journalsQuery {
+    journals(skip: 0, take: 10, orderBy: { EntryDate: desc }) {
       count
       list {
         idProfile
         idClient
-        Name
+        idProject
+        idSubproject
+        idJournal
+        createdAt
+        updatedAt
+        EntryDate
         Description
-        StartDate
-        EndDate
+        Todos
+        ThingsDone
+        DocUploaded
         profile {
           idProfile
           Username
+        }
+        client {
+          idClient
+          Name
+        }
+        project {
+          idProject
+          Name
+        }
+        subproject {
+          idSubproject
+          Name
         }
       }
     }
   }
 `;
 
-const Clients = () => {
+const Journal = () => {
   const isMounted = useIsMounted();
   const { user } = useSelector((store) => store.user);
 
-  const { data } = useQuery(CLIENTS_QUERY);
+  const { data } = useQuery(JOURNALS_QUERY);
   if (!isMounted) return <></>;
   if (!user) {
     return <Navigate to="/register" />;
   }
   return (
     <TableContainer component={Paper}>
-      <Table aria-label="clients" size="small" padding="checkbox">
+      <Table aria-label="journals" size="small" padding="checkbox">
         <TableHead>
           <TableRow>
             <TableCell align="left">Action</TableCell>
             <TableCell align="right">Profile</TableCell>
-            <TableCell align="left">Name</TableCell>
+            <TableCell align="right">Client</TableCell>
+            <TableCell align="right">Project</TableCell>
+            <TableCell align="right">Subproject</TableCell>
+            <TableCell align="left">Entry Date</TableCell>
             <TableCell align="left">Description</TableCell>
-            <TableCell align="right">Start Date</TableCell>
-            <TableCell align="right">End Date</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.clients?.list.map((row) => {
+          {data?.journals?.list.map((row) => {
             return (
-              <TableRow key={row.idClient} sx={{ "&:last-child td, &:last-child th": { border: 0 } }} hover={true}>
+              <TableRow key={row.idJournal} sx={{ "&:last-child td, &:last-child th": { border: 0 } }} hover={true}>
                 <TableCell align="left">
-                  <Link to={`/clients/${row.idClient}`}>edit</Link>
+                  <Link to={`/journals/${row.idJournal}`}>edit</Link>
                 </TableCell>
                 <TableCell align="right">{row.profile.Username}</TableCell>
-                <TableCell align="left">{row.Name}</TableCell>
+                <TableCell align="right">{row.client.Name}</TableCell>
+                <TableCell align="right">{row.project.Name}</TableCell>
+                <TableCell align="right">{row.subproject.Name}</TableCell>
+                <TableCell align="left">{row.EntryDate}</TableCell>
                 <TableCell align="left">{row.Description}</TableCell>
-                <TableCell align="right">{row.StartDate}</TableCell>
-                <TableCell align="right">{row.EndDate}</TableCell>
               </TableRow>
             );
           })}
@@ -76,4 +96,4 @@ const Clients = () => {
   );
 };
 
-export default Clients;
+export default Journal;

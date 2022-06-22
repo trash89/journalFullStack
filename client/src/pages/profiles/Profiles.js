@@ -38,7 +38,7 @@ const Profiles = () => {
   }
   return (
     <TableContainer component={Paper}>
-      <Table aria-label="profiles" size="small" padding="normal">
+      <Table aria-label="profiles" size="small" padding="checkbox">
         <TableHead>
           <TableRow>
             <TableCell align="left">Action</TableCell>

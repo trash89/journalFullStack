@@ -1,3 +1,3 @@
-import Journals from "./Journals";
+import Journal from "./Journal";
 import SingleJournal from "./SingleJournal";
-export { Journals, SingleJournal };
+export { Journal, SingleJournal };

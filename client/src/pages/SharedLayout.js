@@ -4,12 +4,12 @@ import Wrapper from "../assets/wrappers/SharedLayout";
 const SharedLayout = () => {
   return (
     <Wrapper>
-      <main className="dashboard">
+      <main className="principal">
         <SmallSidebar />
         <BigSidebar />
         <div>
           <MenuAppBar />
-          <div className="dashboard-page">
+          <div className="principal-page">
             <Outlet />
           </div>
         </div>
