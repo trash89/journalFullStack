@@ -4,10 +4,8 @@ import SharedLayout from "./SharedLayout";
 import Clients from "./Clients";
 import Projects from "./Projects";
 import Subprojects from "./Subprojects";
-import Profile from "./Profile";
+import { Profile, SingleProfile, SharedProfileLayout } from "./profile";
 import Register from "./Register";
 import Error from "./Error";
-import SharedProfileLayout from "./SharedProfileLayout";
-import SingleProfile from "./SingleProfile";
 
 export { Journal, ProtectedRoute, SharedLayout, Clients, Projects, Subprojects, Profile, Register, Error, SingleProfile, SharedProfileLayout };

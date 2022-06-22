@@ -10,8 +10,8 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-import { logoutUser } from "../features/user/userSlice";
-import { useIsMounted, useIsAdmin } from "../hooks";
+import { logoutUser } from "../../features/user/userSlice";
+import { useIsMounted, useIsAdmin } from "../../hooks";
 
 const UPDATE_MUTATION = gql`
   mutation updateMutation($idProfile: ID!, $Username: String!, $Password: String!) {

@@ -11,7 +11,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-import { useIsMounted } from "../hooks";
+import { useIsMounted } from "../../hooks";
 
 const PROFILES_QUERY = gql`
   query profilesQuery {
