@@ -5,7 +5,7 @@ import { Journal, SingleJournal } from "./journals/";
 import { Clients, SingleClient, NewClient } from "./clients";
 import { Projects, SingleProject, NewProject } from "./projects";
 import { Subprojects, SingleSubproject, NewSubproject } from "./subprojects";
-import { Profiles, SingleProfile } from "./profiles";
+import { Profiles, SingleProfile, NewProfile } from "./profiles";
 import Register from "./Register";
 import Error from "./Error";
 
@@ -25,6 +25,7 @@ export {
   NewSubproject,
   Profiles,
   SingleProfile,
+  NewProfile,
   Clients,
   SingleClient,
   NewClient,

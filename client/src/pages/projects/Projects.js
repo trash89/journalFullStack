@@ -3,19 +3,23 @@ import { Link, Navigate } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import { useSelector } from "react-redux";
 
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import { Table, Header, HeaderRow, HeaderCell, Body, Row, Cell } from "@table-library/react-table-library/table";
+import { useTheme } from "@table-library/react-table-library/theme";
+import { useSort, HeaderCellSort } from "@table-library/react-table-library/sort";
+import { usePagination } from "@table-library/react-table-library/pagination";
+
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+
+import moment from "moment";
 
 import { useIsMounted } from "../../hooks";
+import { dateFormat, TABLE_THEME, PAGINATION_STATE } from "../../utils/constants";
+import { PaginationTable } from "../../components";
 
 const PROJECTS_QUERY = gql`
   query projectsQuery {
-    projects(skip: 0, take: 10, orderBy: { Name: asc }) {
+    projects {
       count
       list {
         idClient
@@ -39,49 +43,90 @@ const Projects = () => {
   const isMounted = useIsMounted();
   const { user } = useSelector((store) => store.user);
 
+  const theme = useTheme(TABLE_THEME);
+
   const { data } = useQuery(PROJECTS_QUERY);
+  const dataTable = { nodes: data?.projects?.list };
+
+  const sort = useSort(dataTable, null, {
+    sortFns: {
+      CLIENT: (array) => array.sort((a, b) => a.client.Name.localeCompare(b.client.Name)),
+      PROJECT: (array) => array.sort((a, b) => a.Name.localeCompare(b.Name)),
+      DESCRIPTION: (array) => array.sort((a, b) => a.Description.localeCompare(b.Description)),
+      ISDEFAULT: (array) => array.sort((a, b) => a.isDefault.localeCompare(b.isDefault)),
+      STARTDATE: (array) => array.sort((a, b) => Date(a.StartDate) < Date(b.StartDate)),
+      ENDDATE: (array) => array.sort((a, b) => Date(a.EndDate) < Date(b.EndDate)),
+      FINISHED: (array) => array.sort((a, b) => a.Finished.localeCompare(b.Finished)),
+    },
+  });
+  const pagination = usePagination(dataTable, PAGINATION_STATE);
+
   if (!isMounted) return <></>;
   if (!user) {
     return <Navigate to="/register" />;
   }
+  if (!dataTable.nodes || dataTable.nodes === undefined) return <></>;
   return (
-    <>
-      <Link to="newproject">Add Project</Link>
-      <TableContainer component={Paper}>
-        <Table aria-label="projects" size="small" padding="checkbox">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Action</TableCell>
-              <TableCell align="right">Client</TableCell>
-              <TableCell align="left">Name</TableCell>
-              <TableCell align="left">Description</TableCell>
-              <TableCell align="left">Default?</TableCell>
-              <TableCell align="right">Start Date</TableCell>
-              <TableCell align="right">End Date</TableCell>
-              <TableCell align="left">Finished?</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data?.projects?.list.map((row) => {
-              return (
-                <TableRow key={row.idProject} sx={{ "&:last-child td, &:last-child th": { border: 0 } }} hover={true}>
-                  <TableCell align="left">
-                    <Link to={`/projects/${row.idProject}`}>edit</Link>
-                  </TableCell>
-                  <TableCell align="right">{row.client.Name}</TableCell>
-                  <TableCell align="left">{row.Name}</TableCell>
-                  <TableCell align="left">{row.Description}</TableCell>
-                  <TableCell align="left">{row.isDefault}</TableCell>
-                  <TableCell align="right">{row.StartDate}</TableCell>
-                  <TableCell align="right">{row.EndDate}</TableCell>
-                  <TableCell align="right">{row.Finished}</TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </>
+    <div style={{ height: "350px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <span>
+          <Link to="/projects/newproject">
+            <AddIcon />
+          </Link>
+        </span>
+        <span>Total: {data.projects.count}</span>
+      </div>
+
+      <Table data={dataTable} theme={theme} sort={sort} pagination={pagination}>
+        {(tableList) => (
+          <>
+            <Header>
+              <HeaderRow>
+                <HeaderCell>Actions</HeaderCell>
+                <HeaderCellSort sortKey="CLIENT">Client</HeaderCellSort>
+                <HeaderCellSort sortKey="PROJECT">Project</HeaderCellSort>
+                <HeaderCellSort sortKey="DESCRIPTION">Description</HeaderCellSort>
+                <HeaderCellSort sortKey="ISDEFAULT">Default?</HeaderCellSort>
+                <HeaderCellSort sortKey="STARTDATE">Start Date</HeaderCellSort>
+                <HeaderCellSort sortKey="ENDDATE">End Date</HeaderCellSort>
+                <HeaderCellSort sortKey="FINISHED">Finished?</HeaderCellSort>
+              </HeaderRow>
+            </Header>
+            <Body>
+              {tableList.map((item) => {
+                const localItem = {
+                  id: parseInt(item.idProject),
+                  client: item.client.Name,
+                  project: item.Name,
+                  description: item.Description,
+                  isDefault: item.isDefault === "Y" ? "Yes" : "No",
+                  StartDate: new moment(item.StartDate).format(dateFormat),
+                  EndDate: item.EndDate === null ? "" : new moment(item.EndDate).format(dateFormat),
+                  Finished: item.Finished === "Y" ? "Yes" : "No",
+                };
+                return (
+                  <Row key={localItem.id} item={localItem}>
+                    <Cell>
+                      <Link to={`/projects/${localItem.id}`}>
+                        <EditIcon />
+                      </Link>
+                    </Cell>
+                    <Cell>{localItem.client}</Cell>
+                    <Cell>{localItem.project}</Cell>
+                    <Cell>{localItem.description}</Cell>
+                    <Cell>{localItem.isDefault}</Cell>
+                    <Cell>{localItem.StartDate}</Cell>
+                    <Cell>{localItem.EndDate}</Cell>
+                    <Cell>{localItem.Finished}</Cell>
+                  </Row>
+                );
+              })}
+            </Body>
+          </>
+        )}
+      </Table>
+      <PaginationTable pagination={pagination} data={dataTable} />
+    </div>
   );
 };
 

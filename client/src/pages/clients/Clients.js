@@ -64,9 +64,14 @@ const Clients = () => {
   if (!dataTable.nodes || dataTable.nodes === undefined) return <></>;
   return (
     <div style={{ height: "350px" }}>
-      <Link to="/clients/newclient">
-        <AddIcon />
-      </Link>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <span>
+          <Link to="/projects/newclient">
+            <AddIcon />
+          </Link>
+        </span>
+        <span>Total: {data.clients.count}</span>
+      </div>
       <Table data={dataTable} theme={theme} sort={sort} pagination={pagination}>
         {(tableList) => (
           <>

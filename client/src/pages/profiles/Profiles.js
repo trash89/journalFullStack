@@ -3,19 +3,21 @@ import { Link, Navigate } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import { useSelector } from "react-redux";
 
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import { Table, Header, HeaderRow, HeaderCell, Body, Row, Cell } from "@table-library/react-table-library/table";
+import { useTheme } from "@table-library/react-table-library/theme";
+import { useSort, HeaderCellSort } from "@table-library/react-table-library/sort";
+import { usePagination } from "@table-library/react-table-library/pagination";
+
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
 
 import { useIsMounted } from "../../hooks";
+import { TABLE_THEME, PAGINATION_STATE } from "../../utils/constants";
+import { PaginationTable } from "../../components";
 
 const PROFILES_QUERY = gql`
   query profilesQuery {
-    profiles(skip: 0, take: 10, orderBy: { Username: asc }) {
+    profiles {
       count
       list {
         idProfile
@@ -30,37 +32,70 @@ const Profiles = () => {
   const isMounted = useIsMounted();
   const { user } = useSelector((store) => store.user);
 
+  const theme = useTheme(TABLE_THEME);
+
   const { data } = useQuery(PROFILES_QUERY);
+  const dataTable = { nodes: data?.profiles?.list };
+
+  const sort = useSort(dataTable, null, {
+    sortFns: {
+      USERNAME: (array) => array.sort((a, b) => a.Username.localeCompare(b.Username)),
+      IS_ADMIN: (array) => array.sort((a, b) => a.Is_Admin.localeCompare(b.Is_Admin)),
+    },
+  });
+  const pagination = usePagination(dataTable, PAGINATION_STATE);
 
   if (!isMounted) return <></>;
   if (!user) {
     return <Navigate to="/register" />;
   }
+  if (!dataTable.nodes || dataTable.nodes === undefined) return <></>;
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="profiles" size="small" padding="checkbox">
-        <TableHead>
-          <TableRow>
-            <TableCell align="left">Action</TableCell>
-            <TableCell align="left">Username</TableCell>
-            <TableCell align="right">Admin?</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data?.profiles?.list.map((row) => {
-            return (
-              <TableRow key={row.idProfile} sx={{ "&:last-child td, &:last-child th": { border: 0 } }} hover={true}>
-                <TableCell align="left">
-                  <Link to={`/profiles/${row.idProfile}`}>edit</Link>
-                </TableCell>
-                <TableCell align="left">{row.Username}</TableCell>
-                <TableCell align="right">{row.Is_Admin}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
+    <div style={{ height: "350px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <span>
+          <Link to="/profiles/newprofile">
+            <AddIcon />
+          </Link>
+        </span>
+        <span>Total: {data.profiles.count}</span>
+      </div>
+
+      <Table data={dataTable} theme={theme} sort={sort} pagination={pagination}>
+        {(tableList) => (
+          <>
+            <Header>
+              <HeaderRow>
+                <HeaderCell>Actions</HeaderCell>
+                <HeaderCellSort sortKey="USERNAME">Username</HeaderCellSort>
+                <HeaderCellSort sortKey="IS_ADMIN">Admin?</HeaderCellSort>
+              </HeaderRow>
+            </Header>
+            <Body>
+              {tableList.map((item) => {
+                const localItem = {
+                  id: parseInt(item.idProfile),
+                  Username: item.Username,
+                  Is_Admin: item.Is_Admin,
+                };
+                return (
+                  <Row key={localItem.id} item={localItem}>
+                    <Cell>
+                      <Link to={`/profiles/${localItem.id}`}>
+                        <EditIcon />
+                      </Link>
+                    </Cell>
+                    <Cell>{localItem.Username}</Cell>
+                    <Cell>{localItem.Is_Admin}</Cell>
+                  </Row>
+                );
+              })}
+            </Body>
+          </>
+        )}
       </Table>
-    </TableContainer>
+      <PaginationTable pagination={pagination} data={dataTable} />
+    </div>
   );
 };
 

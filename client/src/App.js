@@ -16,6 +16,7 @@ import {
   NewSubproject,
   Profiles,
   SingleProfile,
+  NewProfile,
   Clients,
   SingleClient,
   NewClient,
@@ -70,6 +71,7 @@ function App() {
           <Route path="profiles" element={<SharedPagesLayout title="profiles" />}>
             <Route index element={<Profiles />} />
             <Route path=":idProfile" element={<SingleProfile />} />
+            <Route path="newprofile" element={<NewProfile />} />
           </Route>
         </Route>
         <Route path="register" element={<Register />} />
