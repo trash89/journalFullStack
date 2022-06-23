@@ -8,6 +8,7 @@ import {
   ProtectedRoute,
   Journal,
   SingleJournal,
+  NewJournal,
   Projects,
   SingleProject,
   NewProject,
@@ -48,6 +49,7 @@ function App() {
           <Route path="journals" element={<SharedPagesLayout title="journal" />}>
             <Route index element={<Journal />} />
             <Route path=":idJournal" element={<SingleJournal />} />
+            <Route path="newjournal" element={<NewJournal />} />
           </Route>
 
           <Route path="projects" element={<SharedPagesLayout title="projects" />}>

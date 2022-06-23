@@ -1,7 +1,7 @@
 import ProtectedRoute from "./ProtectedRoute";
 import SharedLayout from "./SharedLayout";
 import SharedPagesLayout from "./SharedPagesLayout";
-import { Journal, SingleJournal } from "./journals/";
+import { Journal, SingleJournal, NewJournal } from "./journals/";
 import { Clients, SingleClient, NewClient } from "./clients";
 import { Projects, SingleProject, NewProject } from "./projects";
 import { Subprojects, SingleSubproject, NewSubproject } from "./subprojects";
@@ -17,6 +17,7 @@ export {
   SharedPagesLayout,
   Journal,
   SingleJournal,
+  NewJournal,
   Projects,
   SingleProject,
   NewProject,

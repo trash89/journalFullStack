@@ -32,7 +32,23 @@ const Profiles = () => {
   const isMounted = useIsMounted();
   const { user } = useSelector((store) => store.user);
 
-  const theme = useTheme(TABLE_THEME);
+  const theme = useTheme({
+    ...TABLE_THEME,
+    BaseCell: `
+        &:nth-of-type(1) {
+          min-width: 5%;
+          width: 5%;
+        }
+        &:nth-of-type(2) {
+          min-width: 80%;
+          width: 80%;
+        }
+        &:nth-of-type(3) {
+          min-width: 15%;
+          width: 15%;
+        }
+      `,
+  });
 
   const { data } = useQuery(PROFILES_QUERY);
   const dataTable = { nodes: data?.profiles?.list };
@@ -61,7 +77,7 @@ const Profiles = () => {
         <span>Total: {data.profiles.count}</span>
       </div>
 
-      <Table data={dataTable} theme={theme} sort={sort} pagination={pagination}>
+      <Table data={dataTable} theme={theme} sort={sort} pagination={pagination} layout={{ custom: true }}>
         {(tableList) => (
           <>
             <Header>

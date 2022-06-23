@@ -41,7 +41,35 @@ const Clients = () => {
   const isMounted = useIsMounted();
   const { user } = useSelector((store) => store.user);
 
-  const theme = useTheme(TABLE_THEME);
+  const theme = useTheme({
+    ...TABLE_THEME,
+    BaseCell: `
+        &:nth-of-type(1) {
+          min-width: 5%;
+          width: 5%;
+        }
+        &:nth-of-type(2) {
+          min-width: 7%;
+          width: 7%;
+        }
+        &:nth-of-type(3) {
+          min-width: 15%;
+          width: 15%;
+        }
+        &:nth-of-type(4) {
+          min-width: 59%;
+          width: 59%;
+        }
+        &:nth-of-type(5) {
+          min-width: 7%;
+          width: 7%;
+        }
+        &:nth-of-type(6) {
+          min-width: 7%;
+          width: 7%;
+        }
+      `,
+  });
 
   const { data } = useQuery(CLIENTS_QUERY);
   const dataTable = { nodes: data?.clients?.list };
@@ -51,8 +79,8 @@ const Clients = () => {
       IDPROFILE: (array) => array.sort((a, b) => a.idProfile < b.idProfile),
       CLIENT: (array) => array.sort((a, b) => a.Name.localeCompare(b.Name)),
       DESCRIPTION: (array) => array.sort((a, b) => a.Description.localeCompare(b.Description)),
-      STARTDATE: (array) => array.sort((a, b) => Date(a.StartDate) < Date(b.StartDate)),
-      ENDDATE: (array) => array.sort((a, b) => Date(a.EndDate) < Date(b.EndDate)),
+      STARTDATE: (array) => array.sort((a, b) => new Date(a.StartDate) - new Date(b.StartDate)),
+      ENDDATE: (array) => array.sort((a, b) => new Date(a.EndDate) - new Date(b.EndDate)),
     },
   });
   const pagination = usePagination(dataTable, PAGINATION_STATE);
@@ -66,13 +94,13 @@ const Clients = () => {
     <div style={{ height: "350px" }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <span>
-          <Link to="/projects/newclient">
+          <Link to="/clients/newclient">
             <AddIcon />
           </Link>
         </span>
         <span>Total: {data.clients.count}</span>
       </div>
-      <Table data={dataTable} theme={theme} sort={sort} pagination={pagination}>
+      <Table data={dataTable} theme={theme} sort={sort} pagination={pagination} layout={{ custom: true }}>
         {(tableList) => (
           <>
             <Header>

@@ -43,7 +43,43 @@ const Projects = () => {
   const isMounted = useIsMounted();
   const { user } = useSelector((store) => store.user);
 
-  const theme = useTheme(TABLE_THEME);
+  const theme = useTheme({
+    ...TABLE_THEME,
+    BaseCell: `
+        &:nth-of-type(1) {
+          min-width: 5%;
+          width: 5%;
+        }
+        &:nth-of-type(2) {
+          min-width: 15%;
+          width: 15%;
+        }
+        &:nth-of-type(3) {
+          min-width: 15%;
+          width: 15%;
+        }
+        &:nth-of-type(4) {
+          min-width: 39%;
+          width: 39%;
+        }
+        &:nth-of-type(5) {
+          min-width: 5%;
+          width: 5%;
+        }
+        &:nth-of-type(6) {
+          min-width: 7%;
+          width: 7%;
+        }
+        &:nth-of-type(7) {
+          min-width: 7%;
+          width: 7%;
+        }
+        &:nth-of-type(8) {
+          min-width: 7%;
+          width: 7%;
+        }
+      `,
+  });
 
   const { data } = useQuery(PROJECTS_QUERY);
   const dataTable = { nodes: data?.projects?.list };
@@ -54,8 +90,8 @@ const Projects = () => {
       PROJECT: (array) => array.sort((a, b) => a.Name.localeCompare(b.Name)),
       DESCRIPTION: (array) => array.sort((a, b) => a.Description.localeCompare(b.Description)),
       ISDEFAULT: (array) => array.sort((a, b) => a.isDefault.localeCompare(b.isDefault)),
-      STARTDATE: (array) => array.sort((a, b) => Date(a.StartDate) < Date(b.StartDate)),
-      ENDDATE: (array) => array.sort((a, b) => Date(a.EndDate) < Date(b.EndDate)),
+      STARTDATE: (array) => array.sort((a, b) => new Date(a.StartDate) - new Date(b.StartDate)),
+      ENDDATE: (array) => array.sort((a, b) => new Date(a.EndDate) - new Date(b.EndDate)),
       FINISHED: (array) => array.sort((a, b) => a.Finished.localeCompare(b.Finished)),
     },
   });
@@ -77,7 +113,7 @@ const Projects = () => {
         <span>Total: {data.projects.count}</span>
       </div>
 
-      <Table data={dataTable} theme={theme} sort={sort} pagination={pagination}>
+      <Table data={dataTable} theme={theme} sort={sort} pagination={pagination} layout={{ custom: true }}>
         {(tableList) => (
           <>
             <Header>
@@ -86,10 +122,10 @@ const Projects = () => {
                 <HeaderCellSort sortKey="CLIENT">Client</HeaderCellSort>
                 <HeaderCellSort sortKey="PROJECT">Project</HeaderCellSort>
                 <HeaderCellSort sortKey="DESCRIPTION">Description</HeaderCellSort>
-                <HeaderCellSort sortKey="ISDEFAULT">Default?</HeaderCellSort>
+                <HeaderCellSort sortKey="ISDEFAULT">Def?</HeaderCellSort>
                 <HeaderCellSort sortKey="STARTDATE">Start Date</HeaderCellSort>
                 <HeaderCellSort sortKey="ENDDATE">End Date</HeaderCellSort>
-                <HeaderCellSort sortKey="FINISHED">Finished?</HeaderCellSort>
+                <HeaderCellSort sortKey="FINISHED">Fin?</HeaderCellSort>
               </HeaderRow>
             </Header>
             <Body>
