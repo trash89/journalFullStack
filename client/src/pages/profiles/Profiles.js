@@ -74,7 +74,7 @@ const Profiles = () => {
             <AddIcon />
           </Link>
         </span>
-        <span>Total: {data.profiles.count}</span>
+        <span>Total: {data.profiles.count} rows</span>
       </div>
 
       <Table data={dataTable} theme={theme} sort={sort} pagination={pagination} layout={{ custom: true }}>

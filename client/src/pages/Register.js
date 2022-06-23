@@ -46,27 +46,16 @@ function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [login, { error: loginError }] = useMutation(LOGIN_MUTATION, {
-    onCompleted: ({ login }) => {
-      const localObject = { token: login.token, idProfile: login.profile.idProfile, Username: login.profile.Username };
-      addUserToLocalStorage(localObject);
-      dispatch(loginUser(localObject));
-    },
-  });
-  const [register, { error: registerError }] = useMutation(REGISTER_MUTATION, {
-    onCompleted: ({ register }) => {
-      const localObject = { token: register.token, idProfile: register.profile.idProfile, Username: register.profile.Username };
-      addUserToLocalStorage(localObject);
-      dispatch(registerUser(localObject));
-    },
-  });
+  const [login, { error: loginError }] = useMutation(LOGIN_MUTATION);
+  const [register, { error: registerError }] = useMutation(REGISTER_MUTATION);
+
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
     setValues({ ...values, [name]: value });
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const { Username, Password, isMember } = values;
     if (!Password || (!isMember && !Username)) {
@@ -74,19 +63,37 @@ function Register() {
       return;
     }
     if (isMember) {
-      login({
+      const result = await login({
         variables: {
           Username: values.Username,
           Password: values.Password,
         },
       });
+      if (!result?.errors) {
+        const localObject = {
+          token: result?.data?.login?.token,
+          idProfile: result?.data?.login?.profile?.idProfile,
+          Username: result?.data?.login?.profile?.Username,
+        };
+        addUserToLocalStorage(localObject);
+        dispatch(loginUser(localObject));
+      }
     } else {
-      register({
+      const result = await register({
         variables: {
           Username: values.Username,
           Password: values.Password,
         },
       });
+      if (!result?.errors) {
+        const localObject = {
+          token: result?.data?.register?.token,
+          idProfile: result?.data?.register?.profile?.idProfile,
+          Username: result?.data?.register?.profile?.Username,
+        };
+        addUserToLocalStorage(localObject);
+        dispatch(registerUser(localObject));
+      }
     }
     return;
   };
@@ -95,11 +102,25 @@ function Register() {
     setValues({ ...values, isMember: !values.isMember });
   };
 
+  const loginDemo = async () => {
+    const result = await login({ variables: { Username: "demo", Password: "secret" } });
+    if (!result?.errors) {
+      const localObject = {
+        token: result?.data?.login?.token,
+        idProfile: result?.data?.login?.profile?.idProfile,
+        Username: result?.data?.login?.profile?.Username,
+      };
+      addUserToLocalStorage(localObject);
+      dispatch(loginUser(localObject));
+    }
+  };
+
   useEffect(() => {
     if (user) {
       navigate("/");
     }
   }, [user]);
+
   if (!isMounted) return <></>;
   return (
     <Wrapper className="full-page">
@@ -111,12 +132,7 @@ function Register() {
         <button type="submit" className="btn btn-block" disabled={isLoading}>
           {isLoading ? "loading..." : "submit"}
         </button>
-        <button
-          type="button"
-          className="btn btn-block btn-hipster"
-          disabled={isLoading}
-          onClick={() => login({ variables: { Username: "demo", Password: "secret" } })}
-        >
+        <button type="button" className="btn btn-block btn-hipster" disabled={isLoading} onClick={loginDemo}>
           {isLoading ? "loading..." : "demo app"}
         </button>
         <p>

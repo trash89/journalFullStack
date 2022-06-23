@@ -25,13 +25,6 @@ import {
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const IndexJournals = () => {
-  return (
-    <SharedPagesLayout title="journal">
-      <Journal />
-    </SharedPagesLayout>
-  );
-};
 function App() {
   return (
     <BrowserRouter>
@@ -44,7 +37,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<IndexJournals />} />
+          <Route index element={<Journal />} />
 
           <Route path="journals" element={<SharedPagesLayout title="journal" />}>
             <Route index element={<Journal />} />
