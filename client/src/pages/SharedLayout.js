@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { SmallSidebar, BigSidebar, MenuAppBar } from "../components";
+import { SmallSidebar, BigSidebar, MenuAppBar, Copyright } from "../components";
 import Wrapper from "../assets/wrappers/SharedLayout";
 const SharedLayout = () => {
   return (
@@ -14,6 +14,7 @@ const SharedLayout = () => {
           </div>
         </div>
       </main>
+      <Copyright />
     </Wrapper>
   );
 };
