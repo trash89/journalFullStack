@@ -9,6 +9,7 @@
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.8.4",
     "@reduxjs/toolkit": "^1.8.1",
+    "@table-library/react-table-library": "^3.1.5",
     "axios": "^0.26.1",
     "graphql": "^16.5.0",
     "moment": "^2.29.2",
@@ -20,7 +21,8 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
     "react-toastify": "^8.2.0",
-    "styled-components": "^5.3.5"
+    "styled-components": "^5.3.5",
+    "uuid": "^8.3.2"
   },
   "scripts": {
     "start": "react-scripts start",
