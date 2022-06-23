@@ -19,4 +19,10 @@ const TABLE_THEME = {
   `,
 };
 
-export { USER, dateFormat, TABLE_THEME };
+const PAGINATION_STATE = {
+  state: {
+    page: 0,
+    size: 5,
+  },
+};
+export { USER, dateFormat, TABLE_THEME, PAGINATION_STATE };

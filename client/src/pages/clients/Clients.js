@@ -14,7 +14,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import moment from "moment";
 
 import { useIsMounted } from "../../hooks";
-import { dateFormat, TABLE_THEME } from "../../utils/constants";
+import { dateFormat, TABLE_THEME, PAGINATION_STATE } from "../../utils/constants";
 import { PaginationTable } from "../../components";
 
 const CLIENTS_QUERY = gql`
@@ -55,12 +55,7 @@ const Clients = () => {
       ENDDATE: (array) => array.sort((a, b) => Date(a.EndDate) < Date(b.EndDate)),
     },
   });
-  const pagination = usePagination(dataTable, {
-    state: {
-      page: 0,
-      size: 5,
-    },
-  });
+  const pagination = usePagination(dataTable, PAGINATION_STATE);
 
   if (!isMounted) return <></>;
   if (!user) {
