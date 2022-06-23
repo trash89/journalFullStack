@@ -87,12 +87,12 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <ApolloProvider client={clientApollo}>
-      <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <ApolloProvider client={clientApollo}>
         <Provider store={store}>
           <App />
         </Provider>
-      </ThemeProvider>
-    </ApolloProvider>
+      </ApolloProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );

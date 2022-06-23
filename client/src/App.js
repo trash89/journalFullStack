@@ -7,19 +7,19 @@ import {
   Register,
   ProtectedRoute,
   Journal,
-  SingleJournal,
+  EditJournal,
   NewJournal,
   Projects,
-  SingleProject,
+  EditProject,
   NewProject,
   Subprojects,
-  SingleSubproject,
+  EditSubproject,
   NewSubproject,
   Profiles,
-  SingleProfile,
+  EditProfile,
   NewProfile,
   Clients,
-  SingleClient,
+  EditClient,
   NewClient,
 } from "./pages";
 import { ToastContainer } from "react-toastify";
@@ -48,31 +48,31 @@ function App() {
 
           <Route path="journals" element={<SharedPagesLayout title="journal" />}>
             <Route index element={<Journal />} />
-            <Route path=":idJournal" element={<SingleJournal />} />
+            <Route path=":idJournal" element={<EditJournal />} />
             <Route path="newjournal" element={<NewJournal />} />
           </Route>
 
           <Route path="projects" element={<SharedPagesLayout title="projects" />}>
             <Route index element={<Projects />} />
-            <Route path=":idProject" element={<SingleProject />} />
+            <Route path=":idProject" element={<EditProject />} />
             <Route path="newproject" element={<NewProject />} />
           </Route>
 
           <Route path="subprojects" element={<SharedPagesLayout title="subprojects" />}>
             <Route index element={<Subprojects />} />
-            <Route path=":idSubproject" element={<SingleSubproject />} />
+            <Route path=":idSubproject" element={<EditSubproject />} />
             <Route path="newsubproject" element={<NewSubproject />} />
           </Route>
 
           <Route path="clients" element={<SharedPagesLayout title="clients" />}>
             <Route index element={<Clients />} />
-            <Route path=":idClient" element={<SingleClient />} />
+            <Route path=":idClient" element={<EditClient />} />
             <Route path="newclient" element={<NewClient />} />
           </Route>
 
           <Route path="profiles" element={<SharedPagesLayout title="profiles" />}>
             <Route index element={<Profiles />} />
-            <Route path=":idProfile" element={<SingleProfile />} />
+            <Route path=":idProfile" element={<EditProfile />} />
             <Route path="newprofile" element={<NewProfile />} />
           </Route>
         </Route>

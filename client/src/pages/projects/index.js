@@ -1,4 +1,5 @@
 import Projects from "./Projects";
-import SingleProject from "./SingleProject";
+import EditProject from "./EditProject";
 import NewProject from "./NewProject";
-export { Projects, SingleProject, NewProject };
+
+export { Projects, EditProject, NewProject };

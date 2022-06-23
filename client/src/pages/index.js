@@ -1,11 +1,11 @@
 import ProtectedRoute from "./ProtectedRoute";
 import SharedLayout from "./SharedLayout";
 import SharedPagesLayout from "./SharedPagesLayout";
-import { Journal, SingleJournal, NewJournal } from "./journals/";
-import { Clients, SingleClient, NewClient } from "./clients";
-import { Projects, SingleProject, NewProject } from "./projects";
-import { Subprojects, SingleSubproject, NewSubproject } from "./subprojects";
-import { Profiles, SingleProfile, NewProfile } from "./profiles";
+import { Journal, EditJournal, NewJournal } from "./journals/";
+import { Clients, EditClient, NewClient } from "./clients";
+import { Projects, EditProject, NewProject } from "./projects";
+import { Subprojects, EditSubproject, NewSubproject } from "./subprojects";
+import { Profiles, EditProfile, NewProfile } from "./profiles";
 import Register from "./Register";
 import Error from "./Error";
 
@@ -16,18 +16,18 @@ export {
   SharedLayout,
   SharedPagesLayout,
   Journal,
-  SingleJournal,
+  EditJournal,
   NewJournal,
   Projects,
-  SingleProject,
+  EditProject,
   NewProject,
   Subprojects,
-  SingleSubproject,
+  EditSubproject,
   NewSubproject,
   Profiles,
-  SingleProfile,
+  EditProfile,
   NewProfile,
   Clients,
-  SingleClient,
+  EditClient,
   NewClient,
 };

@@ -1,5 +1,5 @@
 import Profiles from "./Profiles";
-import SingleProfile from "./SingleProfile";
+import EditProfile from "./EditProfile";
 import NewProfile from "./NewProfile";
 
-export { Profiles, SingleProfile, NewProfile };
+export { Profiles, EditProfile, NewProfile };

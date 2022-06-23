@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useDispatch, useSelector } from "react-redux";
 
-import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -52,13 +51,9 @@ const EDIT_PROFILE_QUERY = gql`
     }
   }
 `;
-const verifyProfileInList = (idProfile, list) => {
-  if (list) {
-    return list?.includes(idProfile);
-  }
-  return false;
-};
-const SingleProfile = () => {
+const isIdInList = (id, list) => (list ? list.includes(id) : false);
+
+const EditProfile = () => {
   const isMounted = useIsMounted();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -71,18 +66,14 @@ const SingleProfile = () => {
   const { data: profilesList } = useQuery(PROFILES_QUERY);
   const profilesArray = profilesList?.profiles?.list?.map((profile) => profile?.idProfile);
 
-  const isProfileInList = verifyProfileInList(idProfile, profilesArray);
+  const isProfileInList = isIdInList(idProfile, profilesArray);
 
   const { data: editProfile } = useQuery(EDIT_PROFILE_QUERY, {
     variables: { idProfile: parseInt(idProfile || -1) },
   });
 
-  const [input, setInput] = useState({
-    Password: "",
-  });
-  const [isErrorInput, setIsErrorInput] = useState({
-    Password: false,
-  });
+  const [input, setInput] = useState({ Password: "" });
+  const [isErrorInput, setIsErrorInput] = useState({ Password: false });
 
   const [updateProfile, { error: updateError }] = useMutation(UPDATE_MUTATION);
   const [deleteProfile, { error: deleteError }] = useMutation(DELETE_MUTATION);
@@ -134,7 +125,7 @@ const SingleProfile = () => {
   if (!isMounted) return <></>;
   if (!isProfileInList) return <>You cannot update this profile</>;
   return (
-    <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" padding={1} spacing={1}>
+    <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
       <Typography>Username : {editProfile?.profile?.Username}</Typography>
       <TextField
         autoFocus
@@ -173,4 +164,4 @@ const SingleProfile = () => {
   );
 };
 
-export default SingleProfile;
+export default EditProfile;
