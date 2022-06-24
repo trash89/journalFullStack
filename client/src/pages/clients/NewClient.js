@@ -42,7 +42,7 @@ const NewClient = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const idProfileConnected = parseInt(user.idProfile || -1);
+  const idProfileConnected = parseInt(user.idProfile);
 
   const { input, isErrorInput, isLoading } = useSelector((store) => store.client);
 
@@ -65,7 +65,7 @@ const NewClient = () => {
               EndDate: !input.EndDate || input.EndDate === "" ? null : new Date(input.EndDate).toISOString(),
             },
           });
-          if (!result.errors) {
+          if (!result?.errors) {
             dispatch(clearValues());
             toast.success(`Success creating new client !`);
             navigate("/clients");
@@ -135,7 +135,13 @@ const NewClient = () => {
         variant="outlined"
       />
       <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
-        <IconButton area-label="cancel" onClick={() => navigate("/clients")}>
+        <IconButton
+          area-label="cancel"
+          onClick={() => {
+            dispatch(clearValues());
+            navigate("/clients");
+          }}
+        >
           <CancelIcon />
         </IconButton>
         <IconButton area-label="save" onClick={handleSubmit} disabled={isLoading}>
