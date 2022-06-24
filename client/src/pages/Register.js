@@ -8,6 +8,9 @@ import { useNavigate } from "react-router-dom";
 import { gql, useMutation } from "@apollo/client";
 import { addUserToLocalStorage } from "../utils/localStorage";
 import { useIsMounted } from "../hooks";
+
+import Typography from "@mui/material/Typography";
+
 const REGISTER_MUTATION = gql`
   mutation RegisterMutation($Username: String!, $Password: String!) {
     register(profile: { Username: $Username, Password: $Password }) {
@@ -141,8 +144,8 @@ function Register() {
             {values.isMember ? "Register" : "Login"}
           </button>
         </p>
-        {loginError && <p>{loginError.message}</p>}
-        {registerError && <p>{registerError.message}</p>}
+        {loginError && <Typography color="error.main">{loginError.message}</Typography>}
+        {registerError && <Typography color="error.main">{registerError.message}</Typography>}
       </form>
     </Wrapper>
   );

@@ -51,6 +51,7 @@ const EDIT_PROFILE_QUERY = gql`
     }
   }
 `;
+
 const isIdInList = (id, list) => (list ? list.includes(id) : false);
 
 const EditProfile = () => {
@@ -158,8 +159,8 @@ const EditProfile = () => {
           </Button>
         )}
       </Stack>
-      {updateError && <>{updateError?.message}</>}
-      {deleteError && <>{deleteError?.message}</>}
+      {updateError && <Typography color="error.main">{updateError?.message}</Typography>}
+      {deleteError && <Typography color="error.main">{deleteError?.message}</Typography>}
     </Stack>
   );
 };
