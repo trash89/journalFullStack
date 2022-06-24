@@ -69,11 +69,7 @@ const Profiles = () => {
   return (
     <div style={{ height: "350px" }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span>
-          <Link to="/profiles/newprofile">
-            <AddIcon />
-          </Link>
-        </span>
+        <span></span>
         <span>Total: {data.profiles.count} rows</span>
       </div>
 
