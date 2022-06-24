@@ -42,7 +42,7 @@ const EditClient = () => {
   const dispatch = useDispatch();
 
   const { idClient } = useParams();
-  const idClientInt = idClient ? (parseInt(idClient) === NaN ? -1 : parseInt(idClient)) : -1;
+  const idClientInt = idClient ? (isNaN(parseInt(idClient)) ? -1 : parseInt(idClient)) : -1;
 
   const { user } = useSelector((store) => store.user);
   const idProfileConnected = parseInt(user.idProfile);

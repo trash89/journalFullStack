@@ -67,7 +67,7 @@ const EditProfile = () => {
   const isAdmin = useIsAdmin(idProfileConnected);
 
   const { idProfile } = useParams();
-  const idProfileInt = idProfile ? (parseInt(idProfile) === NaN ? -1 : parseInt(idProfile)) : -1;
+  const idProfileInt = idProfile ? (isNaN(parseInt(idProfile)) ? -1 : parseInt(idProfile)) : -1;
 
   const { data: profilesList } = useQuery(PROFILES_QUERY);
   const profilesArray = profilesList?.profiles?.list?.map((profile) => profile?.idProfile);
@@ -155,7 +155,7 @@ const EditProfile = () => {
 
         {isAdmin === "Y" && parseInt(editProfile?.profile?.idProfile) !== idProfileConnected && (
           <IconButton area-label="delete" onClick={handleDelete} disabled={isLoading}>
-            <SaveIcon />
+            <DeleteIcon />
           </IconButton>
         )}
       </Stack>
