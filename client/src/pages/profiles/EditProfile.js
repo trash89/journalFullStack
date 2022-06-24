@@ -6,8 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+
 import Typography from "@mui/material/Typography";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Cancel";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
 
 import { logoutUser } from "../../features/user/userSlice";
 import { useIsMounted, useIsAdmin } from "../../hooks";
@@ -58,11 +62,12 @@ const EditProfile = () => {
   const isMounted = useIsMounted();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((store) => store.user);
+  const { user, isLoading } = useSelector((store) => store.user);
   const idProfileConnected = parseInt(user.idProfile || -1);
   const isAdmin = useIsAdmin(idProfileConnected);
 
   const { idProfile } = useParams();
+  const idProfileInt = idProfile ? (parseInt(idProfile) === NaN ? -1 : parseInt(idProfile)) : -1;
 
   const { data: profilesList } = useQuery(PROFILES_QUERY);
   const profilesArray = profilesList?.profiles?.list?.map((profile) => profile?.idProfile);
@@ -70,7 +75,7 @@ const EditProfile = () => {
   const isProfileInList = isIdInList(idProfile, profilesArray);
 
   const { data: editProfile } = useQuery(EDIT_PROFILE_QUERY, {
-    variables: { idProfile: parseInt(idProfile || -1) },
+    variables: { idProfile: idProfileInt },
   });
 
   const [input, setInput] = useState({ Password: "" });
@@ -124,7 +129,7 @@ const EditProfile = () => {
   };
 
   if (!isMounted) return <></>;
-  if (!isProfileInList) return <>You cannot update this profile</>;
+  if (!isProfileInList || idProfileInt === -1) return <>You cannot update this profile</>;
   return (
     <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
       <Typography>Username : {editProfile?.profile?.Username}</Typography>
@@ -141,22 +146,17 @@ const EditProfile = () => {
         onChange={handlePassword}
       />
       <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
-        <Button
-          variant="text"
-          size="small"
-          onClick={() => {
-            navigate("/profiles");
-          }}
-        >
-          cancel
-        </Button>
-        <Button variant="text" size="small" onClick={handleSubmit}>
-          save
-        </Button>
+        <IconButton area-label="cancel" onClick={() => navigate("/profiles")}>
+          <CancelIcon />
+        </IconButton>
+        <IconButton area-label="save" onClick={handleSubmit} disabled={isLoading}>
+          <SaveIcon />
+        </IconButton>
+
         {isAdmin === "Y" && parseInt(editProfile?.profile?.idProfile) !== idProfileConnected && (
-          <Button variant="text" size="small" onClick={handleDelete}>
-            delete
-          </Button>
+          <IconButton area-label="delete" onClick={handleDelete} disabled={isLoading}>
+            <SaveIcon />
+          </IconButton>
         )}
       </Stack>
       {updateError && <Typography color="error.main">{updateError?.message}</Typography>}

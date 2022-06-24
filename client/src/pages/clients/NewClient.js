@@ -1,18 +1,18 @@
-import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import MenuItem from "@mui/material/MenuItem";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Cancel";
+import IconButton from "@mui/material/IconButton";
 
-import { logoutUser } from "../../features/user/userSlice";
-import { useIsMounted, useIsAdmin } from "../../hooks";
-import moment from "moment";
+import { useIsMounted } from "../../hooks";
+
+import { handleChange, setErrorInput, clearValues } from "../../features/client/clientSlice";
 
 const CURRENT_PROFILE_QUERY = gql`
   query editProfileQuery($idProfile: ID!) {
@@ -38,45 +38,18 @@ const CREATE_CLIENT_MUTATION = gql`
 
 const NewClient = () => {
   const isMounted = useIsMounted();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const { user } = useSelector((store) => store.user);
   const idProfileConnected = parseInt(user.idProfile || -1);
+
+  const { input, isErrorInput, isLoading } = useSelector((store) => store.client);
 
   const { data: currentProfile } = useQuery(CURRENT_PROFILE_QUERY, {
     variables: { idProfile: idProfileConnected },
   });
   const [createClient, { error: createClientError }] = useMutation(CREATE_CLIENT_MUTATION);
-
-  const [input, setInput] = useState({
-    Name: "",
-    Description: "",
-    StartDate: new moment().format("YYYY-MM-DD"),
-    EndDate: "",
-  });
-  const [isErrorInput, setIsErrorInput] = useState({
-    Name: false,
-    Description: false,
-    StartDate: false,
-    EndDate: false,
-  });
-
-  const handleInputName = (e) => {
-    setInput({ ...input, Name: e.target.value });
-    if (isErrorInput.Name) setIsErrorInput({ ...isErrorInput, Name: false });
-  };
-  const handleInputDescription = (e) => {
-    setInput({ ...input, Description: e.target.value });
-    if (isErrorInput.Description) setIsErrorInput({ ...isErrorInput, Description: false });
-  };
-  const handleInputStartDate = (e) => {
-    setInput({ ...input, StartDate: e.target.value });
-    if (isErrorInput.StartDate) setIsErrorInput({ ...isErrorInput, StartDate: false });
-  };
-  const handleInputEndDate = (e) => {
-    setInput({ ...input, EndDate: e.target.value });
-    if (isErrorInput.EndDate) setIsErrorInput({ ...isErrorInput, EndDate: false });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -93,12 +66,13 @@ const NewClient = () => {
             },
           });
           if (!result.errors) {
-            toast.success(`Success creating new client  !`);
+            dispatch(clearValues());
+            toast.success(`Success creating new client !`);
             navigate("/clients");
           }
-        } else setIsErrorInput({ ...isErrorInput, StartDate: true });
-      } else setIsErrorInput({ ...isErrorInput, Description: true });
-    } else setIsErrorInput({ ...isErrorInput, Name: true });
+        } else dispatch(setErrorInput({ name: "StartDate" }));
+      } else dispatch(setErrorInput({ name: "Description" }));
+    } else dispatch(setErrorInput({ name: "Name" }));
   };
 
   if (!isMounted) return <></>;
@@ -108,7 +82,10 @@ const NewClient = () => {
 
   return (
     <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={1} padding={1}>
-      <Typography>Profile : {currentProfile?.profile?.Username}</Typography>
+      <Typography variant="h6" gutterBottom component="div">
+        New client, on profile {currentProfile?.profile?.Username}
+      </Typography>
+
       <TextField
         error={isErrorInput.Name}
         autoFocus
@@ -118,7 +95,7 @@ const NewClient = () => {
         label="Client Name"
         type="text"
         value={input.Name}
-        onChange={handleInputName}
+        onChange={(e) => dispatch(handleChange({ name: "Name", value: e.target.value }))}
         required
         variant="outlined"
       />
@@ -130,7 +107,7 @@ const NewClient = () => {
         label="Client Description"
         type="text"
         value={input.Description}
-        onChange={handleInputDescription}
+        onChange={(e) => dispatch(handleChange({ name: "Description", value: e.target.value }))}
         required
         variant="outlined"
       />
@@ -143,7 +120,7 @@ const NewClient = () => {
         type="date"
         value={input.StartDate}
         required
-        onChange={handleInputStartDate}
+        onChange={(e) => dispatch(handleChange({ name: "StartDate", value: e.target.value }))}
         variant="outlined"
       />
       <TextField
@@ -154,22 +131,16 @@ const NewClient = () => {
         helperText="End Date"
         type="date"
         value={input.EndDate}
-        onChange={handleInputEndDate}
+        onChange={(e) => dispatch(handleChange({ name: "EndDate", value: e.target.value }))}
         variant="outlined"
       />
       <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={() => {
-            navigate("/clients");
-          }}
-        >
-          cancel
-        </Button>
-        <Button variant="outlined" size="small" onClick={handleSubmit}>
-          save
-        </Button>
+        <IconButton area-label="cancel" onClick={() => navigate("/clients")}>
+          <CancelIcon />
+        </IconButton>
+        <IconButton area-label="save" onClick={handleSubmit} disabled={isLoading}>
+          <SaveIcon />
+        </IconButton>
       </Stack>
       {createClientError && <Typography color="error.main">{createClientError?.message}</Typography>}
     </Stack>

@@ -4,6 +4,7 @@ import MuiLink from "@mui/material/Link";
 export default function Copyright() {
   return (
     <footer>
+      <hr />
       <Typography variant="body2" color="text.secondary" align="center">
         {"Copyright © "}
         <MuiLink color="inherit" href="https://github.com/trash89/">
