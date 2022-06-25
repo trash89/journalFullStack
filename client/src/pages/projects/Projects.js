@@ -1,7 +1,8 @@
+import { useEffect } from "react";
 import { Link, Navigate } from "react-router-dom";
 
 import { gql, useQuery } from "@apollo/client";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { Table, Header, HeaderRow, HeaderCell, Body, Row, Cell } from "@table-library/react-table-library/table";
 import { useTheme } from "@table-library/react-table-library/theme";
@@ -16,6 +17,7 @@ import moment from "moment";
 import { useIsMounted } from "../../hooks";
 import { dateFormat, TABLE_THEME, PAGINATION_STATE } from "../../utils/constants";
 import { PaginationTable } from "../../components";
+import { clearValues } from "../../features/project/projectSlice";
 
 const PROJECTS_QUERY = gql`
   query projectsQuery {
@@ -42,6 +44,7 @@ const PROJECTS_QUERY = gql`
 const Projects = () => {
   const isMounted = useIsMounted();
   const { user } = useSelector((store) => store.user);
+  const dispatch = useDispatch();
 
   const theme = useTheme({
     ...TABLE_THEME,
@@ -96,6 +99,10 @@ const Projects = () => {
     },
   });
   const pagination = usePagination(dataTable, PAGINATION_STATE);
+
+  useEffect(() => {
+    dispatch(clearValues());
+  }, []);
 
   if (!isMounted) return <></>;
   if (!user) {

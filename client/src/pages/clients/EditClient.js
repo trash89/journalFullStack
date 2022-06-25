@@ -105,12 +105,12 @@ const EditClient = () => {
   };
 
   useEffect(() => {
-    if (idProfileEdit !== -1) {
+    if (idClientEdit !== -1) {
       const StartDateFormatted = StartDateEdit ? moment(new Date(StartDateEdit)).format("YYYY-MM-DD") : "";
       const EndDateFormatted = EndDateEdit ? moment(new Date(EndDateEdit)).format("YYYY-MM-DD") : "";
       dispatch(
         setEdit({
-          editIdClient: idClientEdit,
+          editId: idClientEdit,
           input: {
             Name: NameEdit,
             Description: DescriptionEdit,
@@ -120,7 +120,7 @@ const EditClient = () => {
         })
       );
     }
-  }, [idProfileEdit]);
+  }, [idClientEdit]);
 
   if (!isMounted) return <></>;
   if (!user) {

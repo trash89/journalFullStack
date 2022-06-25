@@ -18,7 +18,7 @@ const initialState = {
   },
   status: "pending",
   isEditing: false,
-  editIdClient: "",
+  editId: "",
 };
 
 const clientSlice = createSlice({

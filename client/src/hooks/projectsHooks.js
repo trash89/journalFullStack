@@ -26,9 +26,9 @@ const useGetProject = (id) => {
     Name: data?.project?.Name,
     Description: data?.project?.Description,
     isDefault: data?.project?.isDefault,
-    StartDate: data?.client?.StartDate,
-    EndDate: data?.client?.EndDate,
-    Finished: data?.client?.Finished,
+    StartDate: data?.project?.StartDate,
+    EndDate: data?.project?.EndDate,
+    Finished: data?.project?.Finished,
   };
 };
 
