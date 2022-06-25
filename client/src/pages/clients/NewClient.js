@@ -15,7 +15,7 @@ import { useIsMounted, useGetProfile } from "../../hooks";
 import { handleChange, setErrorInput, clearValues } from "../../features/client/clientSlice";
 
 const CREATE_CLIENT_MUTATION = gql`
-  mutation createClientMutation($Name: String!, $Description: String!, $StartDate: DateTime!, $EndDate: DateTime) {
+  mutation createMutation($Name: String!, $Description: String!, $StartDate: DateTime!, $EndDate: DateTime) {
     createClient(client: { Name: $Name, Description: $Description, StartDate: $StartDate, EndDate: $EndDate }) {
       idProfile
       idClient

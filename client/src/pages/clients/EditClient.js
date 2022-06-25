@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { gql, useMutation } from "@apollo/client";
@@ -13,13 +14,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import { useIsMounted, useGetProfile, useGetClient } from "../../hooks";
 
-import { handleChange, setErrorInput, clearValues, setEditClient } from "../../features/client/clientSlice";
-import { useEffect } from "react";
+import { handleChange, setErrorInput, clearValues, setEdit } from "../../features/client/clientSlice";
 
 import moment from "moment";
 
 const UPDATE_MUTATION = gql`
-  mutation updateClientMutation($idClient: ID!, $Name: String!, $Description: String!, $StartDate: DateTime!, $EndDate: DateTime) {
+  mutation updateMutation($idClient: ID!, $Name: String!, $Description: String!, $StartDate: DateTime!, $EndDate: DateTime) {
     updateClient(idClient: $idClient, client: { Name: $Name, Description: $Description, StartDate: $StartDate, EndDate: $EndDate }) {
       idProfile
       idClient
@@ -45,7 +45,7 @@ const EditClient = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const { idProfile: idProfileConnected, Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
+  const { Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
 
   const { idClient: idClientParam } = useParams();
   const idClientParamInt = idClientParam ? (Number.isNaN(parseInt(idClientParam)) ? -1 : parseInt(idClientParam)) : -1;
@@ -107,7 +107,7 @@ const EditClient = () => {
       const localStartDate = StartDateEdit ? moment(new Date(StartDateEdit)).format("YYYY-MM-DD") : "";
       const localEndDate = EndDateEdit ? moment(new Date(EndDateEdit)).format("YYYY-MM-DD") : "";
       dispatch(
-        setEditClient({
+        setEdit({
           editIdClient: idClientEdit,
           input: {
             Name: NameEdit,

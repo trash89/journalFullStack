@@ -35,12 +35,12 @@ const clientSlice = createSlice({
     clearValues: () => {
       return initialState;
     },
-    setEditClient: (state, { payload }) => {
+    setEdit: (state, { payload }) => {
       return { ...state, isEditing: true, ...payload };
     },
   },
 });
 
-export const { handleChange, setErrorInput, clearValues, setEditClient } = clientSlice.actions;
+export const { handleChange, setErrorInput, clearValues, setEdit } = clientSlice.actions;
 
 export default clientSlice.reducer;

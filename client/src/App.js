@@ -44,6 +44,17 @@ function App() {
             <Route path="newjournal" element={<NewJournal />} />
           </Route>
 
+          <Route path="profiles" element={<SharedPagesLayout title="profiles" />}>
+            <Route index element={<Profiles />} />
+            <Route path=":idProfile" element={<EditProfile />} />
+          </Route>
+
+          <Route path="clients" element={<SharedPagesLayout title="clients" />}>
+            <Route index element={<Clients />} />
+            <Route path=":idClient" element={<EditClient />} />
+            <Route path="newclient" element={<NewClient />} />
+          </Route>
+
           <Route path="projects" element={<SharedPagesLayout title="projects" />}>
             <Route index element={<Projects />} />
             <Route path=":idProject" element={<EditProject />} />
@@ -54,17 +65,6 @@ function App() {
             <Route index element={<Subprojects />} />
             <Route path=":idSubproject" element={<EditSubproject />} />
             <Route path="newsubproject" element={<NewSubproject />} />
-          </Route>
-
-          <Route path="clients" element={<SharedPagesLayout title="clients" />}>
-            <Route index element={<Clients />} />
-            <Route path=":idClient" element={<EditClient />} />
-            <Route path="newclient" element={<NewClient />} />
-          </Route>
-
-          <Route path="profiles" element={<SharedPagesLayout title="profiles" />}>
-            <Route index element={<Profiles />} />
-            <Route path=":idProfile" element={<EditProfile />} />
           </Route>
         </Route>
         <Route path="register" element={<Register />} />
