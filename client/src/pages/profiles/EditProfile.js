@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { useDispatch, useSelector } from "react-redux";
 
 import Stack from "@mui/material/Stack";
@@ -14,7 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 
 import { logoutUser } from "../../features/user/userSlice";
-import { useIsMounted, useIsAdmin } from "../../hooks";
+import { useIsMounted, useGetProfile, useProfilesArray } from "../../hooks";
 
 const UPDATE_MUTATION = gql`
   mutation updateMutation($idProfile: ID!, $Username: String!, $Password: String!) {
@@ -33,29 +33,6 @@ const DELETE_MUTATION = gql`
   }
 `;
 
-const PROFILES_QUERY = gql`
-  query profilesQuery {
-    profiles {
-      count
-      list {
-        idProfile
-        Username
-        Is_Admin
-      }
-    }
-  }
-`;
-
-const EDIT_PROFILE_QUERY = gql`
-  query editProfileQuery($idProfile: ID!) {
-    profile(idProfile: $idProfile) {
-      idProfile
-      Username
-      Is_Admin
-    }
-  }
-`;
-
 const isIdInList = (id, list) => (list ? list.includes(id) : false);
 
 const EditProfile = () => {
@@ -63,20 +40,15 @@ const EditProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, isLoading } = useSelector((store) => store.user);
-  const idProfileConnected = parseInt(user.idProfile || -1);
-  const isAdmin = useIsAdmin(idProfileConnected);
+  const { idProfile: idProfileConnected, Is_Admin: Is_AdminConnected } = useGetProfile(parseInt(user.idProfile));
 
-  const { idProfile } = useParams();
-  const idProfileInt = idProfile ? (isNaN(parseInt(idProfile)) ? -1 : parseInt(idProfile)) : -1;
+  const { idProfile: idProfileParam } = useParams();
+  const idProfileParamInt = idProfileParam ? (Number.isNaN(parseInt(idProfileParam)) ? -1 : parseInt(idProfileParam)) : -1;
+  const { idProfile: idProfileEdit, Username: UsernameEdit } = useGetProfile(idProfileParamInt);
 
-  const { data: profilesList } = useQuery(PROFILES_QUERY);
-  const profilesArray = profilesList?.profiles?.list?.map((profile) => profile?.idProfile);
+  const profilesArray = useProfilesArray();
 
-  const isProfileInList = isIdInList(idProfile, profilesArray);
-
-  const { data: editProfile } = useQuery(EDIT_PROFILE_QUERY, {
-    variables: { idProfile: idProfileInt },
-  });
+  const isProfileInList = isIdInList(idProfileParam, profilesArray);
 
   const [input, setInput] = useState({ Password: "" });
   const [isErrorInput, setIsErrorInput] = useState({ Password: false });
@@ -94,13 +66,13 @@ const EditProfile = () => {
     }
     const result = await updateProfile({
       variables: {
-        idProfile: parseInt(editProfile.profile.idProfile),
-        Username: editProfile?.profile?.Username,
+        idProfile: parseInt(idProfileEdit),
+        Username: UsernameEdit,
         Password: input.Password,
       },
     });
     if (!result.errors) {
-      if (parseInt(editProfile?.profile?.idProfile) === idProfileConnected) {
+      if (idProfileEdit === idProfileConnected) {
         dispatch(logoutUser());
         toast.success(`Success, please reconnect !`);
         navigate("/register");
@@ -114,7 +86,7 @@ const EditProfile = () => {
     e.preventDefault();
     const result = await deleteProfile({
       variables: {
-        idProfile: parseInt(editProfile?.profile?.idProfile),
+        idProfile: parseInt(idProfileEdit),
       },
     });
     if (!result.errors) {
@@ -129,10 +101,10 @@ const EditProfile = () => {
   };
 
   if (!isMounted) return <></>;
-  if (!isProfileInList || idProfileInt === -1) return <>You cannot update this profile</>;
+  if (!isProfileInList || idProfileParamInt === -1) return <>You cannot update this profile</>;
   return (
     <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
-      <Typography>Username : {editProfile?.profile?.Username}</Typography>
+      <Typography>Username : {UsernameEdit}</Typography>
       <TextField
         autoFocus
         error={isErrorInput.Password}
@@ -142,22 +114,21 @@ const EditProfile = () => {
         type="password"
         value={input.Password}
         required
-        variant="standard"
         onChange={handlePassword}
+        variant="standard"
       />
       <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
-        <IconButton area-label="cancel" onClick={() => navigate("/profiles")}>
+        <IconButton area-label="cancel" onClick={() => navigate("/profiles")} size="small">
           <CancelIcon />
         </IconButton>
-        <IconButton area-label="save" onClick={handleSubmit} disabled={isLoading}>
-          <SaveIcon />
-        </IconButton>
-
-        {isAdmin === "Y" && parseInt(editProfile?.profile?.idProfile) !== idProfileConnected && (
-          <IconButton area-label="delete" onClick={handleDelete} disabled={isLoading}>
+        {Is_AdminConnected === "Y" && idProfileEdit !== idProfileConnected && (
+          <IconButton area-label="delete" onClick={handleDelete} disabled={isLoading} size="small">
             <DeleteIcon />
           </IconButton>
         )}
+        <IconButton area-label="save" onClick={handleSubmit} disabled={isLoading} size="small">
+          <SaveIcon />
+        </IconButton>
       </Stack>
       {updateError && <Typography color="error.main">{updateError?.message}</Typography>}
       {deleteError && <Typography color="error.main">{deleteError?.message}</Typography>}

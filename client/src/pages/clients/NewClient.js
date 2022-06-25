@@ -1,6 +1,6 @@
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { useSelector, useDispatch } from "react-redux";
 
 import Stack from "@mui/material/Stack";
@@ -10,19 +10,10 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import IconButton from "@mui/material/IconButton";
 
-import { useIsMounted } from "../../hooks";
+import { useIsMounted, useGetProfile } from "../../hooks";
 
 import { handleChange, setErrorInput, clearValues } from "../../features/client/clientSlice";
 
-const CURRENT_PROFILE_QUERY = gql`
-  query editProfileQuery($idProfile: ID!) {
-    profile(idProfile: $idProfile) {
-      idProfile
-      Username
-      Is_Admin
-    }
-  }
-`;
 const CREATE_CLIENT_MUTATION = gql`
   mutation createClientMutation($Name: String!, $Description: String!, $StartDate: DateTime!, $EndDate: DateTime) {
     createClient(client: { Name: $Name, Description: $Description, StartDate: $StartDate, EndDate: $EndDate }) {
@@ -42,13 +33,10 @@ const NewClient = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const idProfileConnected = parseInt(user.idProfile);
+  const { Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
 
   const { input, isErrorInput, isLoading } = useSelector((store) => store.client);
 
-  const { data: currentProfile } = useQuery(CURRENT_PROFILE_QUERY, {
-    variables: { idProfile: idProfileConnected },
-  });
   const [createClient, { error: createClientError }] = useMutation(CREATE_CLIENT_MUTATION);
 
   const handleSubmit = async (e) => {
@@ -83,7 +71,7 @@ const NewClient = () => {
   return (
     <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={1} padding={1}>
       <Typography variant="h6" gutterBottom component="div">
-        New client, on profile {currentProfile?.profile?.Username}
+        New client, on profile {UsernameConnected}
       </Typography>
 
       <TextField
@@ -97,7 +85,7 @@ const NewClient = () => {
         value={input.Name}
         onChange={(e) => dispatch(handleChange({ name: "Name", value: e.target.value }))}
         required
-        variant="outlined"
+        variant="standard"
       />
       <TextField
         error={isErrorInput.Description}
@@ -109,7 +97,8 @@ const NewClient = () => {
         value={input.Description}
         onChange={(e) => dispatch(handleChange({ name: "Description", value: e.target.value }))}
         required
-        variant="outlined"
+        variant="standard"
+        fullWidth
       />
       <TextField
         error={isErrorInput.StartDate}
@@ -121,7 +110,7 @@ const NewClient = () => {
         value={input.StartDate}
         required
         onChange={(e) => dispatch(handleChange({ name: "StartDate", value: e.target.value }))}
-        variant="outlined"
+        variant="standard"
       />
       <TextField
         error={isErrorInput.EndDate}
@@ -132,7 +121,7 @@ const NewClient = () => {
         type="date"
         value={input.EndDate}
         onChange={(e) => dispatch(handleChange({ name: "EndDate", value: e.target.value }))}
-        variant="outlined"
+        variant="standard"
       />
       <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
         <IconButton
@@ -141,10 +130,11 @@ const NewClient = () => {
             dispatch(clearValues());
             navigate("/clients");
           }}
+          size="small"
         >
           <CancelIcon />
         </IconButton>
-        <IconButton area-label="save" onClick={handleSubmit} disabled={isLoading}>
+        <IconButton area-label="save" onClick={handleSubmit} disabled={isLoading} size="small">
           <SaveIcon />
         </IconButton>
       </Stack>

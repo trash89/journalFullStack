@@ -10,12 +10,12 @@ const PROFILE_QUERY = gql`
   }
 `;
 
-const useIsAdmin = (idProfile) => {
+const useGetProfile = (idProfile) => {
   const { loading, error, data } = useQuery(PROFILE_QUERY, {
     variables: { idProfile: idProfile },
   });
-  if (loading || error) return null;
-  return data?.profile?.Is_Admin || "N";
+  if (loading || error) return { idProfile: -1, Username: "", Is_Admin: "N" };
+  return { idProfile: data?.profile?.idProfile, Username: data?.profile?.Username, Is_Admin: data?.profile?.Is_Admin };
 };
 
-export default useIsAdmin;
+export default useGetProfile;

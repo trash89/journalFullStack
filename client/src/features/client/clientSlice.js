@@ -32,7 +32,6 @@ const clientSlice = createSlice({
     setErrorInput: (state, { payload: { name } }) => {
       state.isErrorInput[name] = true;
     },
-
     clearValues: () => {
       return initialState;
     },

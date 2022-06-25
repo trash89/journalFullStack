@@ -1,4 +1,6 @@
 import useIsMounted from "./useIsMounted";
-import useIsAdmin from "./useIsAdmin";
+import useGetProfile from "./useGetProfile";
+import useGetClient from "./useGetClient";
+import useProfilesArray from "./useProfilesArray";
 
-export { useIsMounted, useIsAdmin };
+export { useIsMounted, useGetProfile, useProfilesArray, useGetClient };

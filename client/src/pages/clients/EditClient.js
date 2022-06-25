@@ -1,6 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { useSelector, useDispatch } from "react-redux";
 
 import Stack from "@mui/material/Stack";
@@ -9,23 +9,18 @@ import Typography from "@mui/material/Typography";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-import { useIsMounted } from "../../hooks";
+import { useIsMounted, useGetProfile, useGetClient } from "../../hooks";
 
-import { handleChange, setErrorInput, clearValues } from "../../features/client/clientSlice";
+import { handleChange, setErrorInput, clearValues, setEditClient } from "../../features/client/clientSlice";
+import { useEffect } from "react";
 
-const CURRENT_PROFILE_QUERY = gql`
-  query editProfileQuery($idProfile: ID!) {
-    profile(idProfile: $idProfile) {
-      idProfile
-      Username
-      Is_Admin
-    }
-  }
-`;
-const CREATE_CLIENT_MUTATION = gql`
-  mutation createClientMutation($Name: String!, $Description: String!, $StartDate: DateTime!, $EndDate: DateTime) {
-    createClient(client: { Name: $Name, Description: $Description, StartDate: $StartDate, EndDate: $EndDate }) {
+import moment from "moment";
+
+const UPDATE_MUTATION = gql`
+  mutation updateClientMutation($idClient: ID!, $Name: String!, $Description: String!, $StartDate: DateTime!, $EndDate: DateTime) {
+    updateClient(idClient: $idClient, client: { Name: $Name, Description: $Description, StartDate: $StartDate, EndDate: $EndDate }) {
       idProfile
       idClient
       Name
@@ -35,24 +30,38 @@ const CREATE_CLIENT_MUTATION = gql`
     }
   }
 `;
+const DELETE_MUTATION = gql`
+  mutation deleteMutation($idClient: ID!) {
+    deleteClient(idClient: $idClient) {
+      idClient
+      Name
+    }
+  }
+`;
 
 const EditClient = () => {
   const isMounted = useIsMounted();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { idClient } = useParams();
-  const idClientInt = idClient ? (isNaN(parseInt(idClient)) ? -1 : parseInt(idClient)) : -1;
-
   const { user } = useSelector((store) => store.user);
-  const idProfileConnected = parseInt(user.idProfile);
+  const { idProfile: idProfileConnected, Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
 
+  const { idClient: idClientParam } = useParams();
+  const idClientParamInt = idClientParam ? (Number.isNaN(parseInt(idClientParam)) ? -1 : parseInt(idClientParam)) : -1;
+
+  const {
+    idProfile: idProfileEdit,
+    idClient: idClientEdit,
+    Name: NameEdit,
+    Description: DescriptionEdit,
+    StartDate: StartDateEdit,
+    EndDate: EndDateEdit,
+  } = useGetClient(idClientParamInt);
   const { input, isErrorInput, isLoading } = useSelector((store) => store.client);
 
-  const { data: currentProfile } = useQuery(CURRENT_PROFILE_QUERY, {
-    variables: { idProfile: idProfileConnected },
-  });
-  const [createClient, { error: createClientError }] = useMutation(CREATE_CLIENT_MUTATION);
+  const [updateClient, { error: updateError }] = useMutation(UPDATE_MUTATION);
+  const [deleteClient, { error: deleteError }] = useMutation(DELETE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,8 +69,9 @@ const EditClient = () => {
     if (input.Name && input.Name !== "") {
       if (input.Description && input.Description !== "") {
         if (input.StartDate && input.StartDate !== "") {
-          const result = await createClient({
+          const result = await updateClient({
             variables: {
+              idClient: idClientParamInt,
               Name: input.Name,
               Description: input.Description,
               StartDate: new Date(input.StartDate).toISOString(),
@@ -70,7 +80,7 @@ const EditClient = () => {
           });
           if (!result?.errors) {
             dispatch(clearValues());
-            toast.success(`Success creating new client !`);
+            toast.success(`Success updating the client !`);
             navigate("/clients");
           }
         } else dispatch(setErrorInput({ name: "StartDate" }));
@@ -78,15 +88,46 @@ const EditClient = () => {
     } else dispatch(setErrorInput({ name: "Name" }));
   };
 
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    const result = await deleteClient({
+      variables: {
+        idClient: idClientParamInt,
+      },
+    });
+    if (!result.errors) {
+      dispatch(clearValues());
+      toast.success("Success !");
+      navigate("/clients");
+    }
+  };
+
+  useEffect(() => {
+    if (idProfileEdit !== -1) {
+      const localStartDate = StartDateEdit ? moment(new Date(StartDateEdit)).format("YYYY-MM-DD") : "";
+      const localEndDate = EndDateEdit ? moment(new Date(EndDateEdit)).format("YYYY-MM-DD") : "";
+      dispatch(
+        setEditClient({
+          editIdClient: idClientEdit,
+          input: {
+            Name: NameEdit,
+            Description: DescriptionEdit,
+            StartDate: localStartDate,
+            EndDate: localEndDate,
+          },
+        })
+      );
+    }
+  }, [idProfileEdit]);
+
   if (!isMounted) return <></>;
   if (!user) {
     return <Navigate to="/register" />;
   }
-
   return (
     <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={1} padding={1}>
       <Typography variant="h6" gutterBottom component="div">
-        Edit client, on profile {currentProfile?.profile?.Username}
+        Edit client, on profile {UsernameConnected}
       </Typography>
 
       <TextField
@@ -100,7 +141,7 @@ const EditClient = () => {
         value={input.Name}
         onChange={(e) => dispatch(handleChange({ name: "Name", value: e.target.value }))}
         required
-        variant="outlined"
+        variant="standard"
       />
       <TextField
         error={isErrorInput.Description}
@@ -112,7 +153,8 @@ const EditClient = () => {
         value={input.Description}
         onChange={(e) => dispatch(handleChange({ name: "Description", value: e.target.value }))}
         required
-        variant="outlined"
+        fullWidth
+        variant="standard"
       />
       <TextField
         error={isErrorInput.StartDate}
@@ -124,7 +166,7 @@ const EditClient = () => {
         value={input.StartDate}
         required
         onChange={(e) => dispatch(handleChange({ name: "StartDate", value: e.target.value }))}
-        variant="outlined"
+        variant="standard"
       />
       <TextField
         error={isErrorInput.EndDate}
@@ -135,7 +177,7 @@ const EditClient = () => {
         type="date"
         value={input.EndDate}
         onChange={(e) => dispatch(handleChange({ name: "EndDate", value: e.target.value }))}
-        variant="outlined"
+        variant="standard"
       />
       <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
         <IconButton
@@ -144,14 +186,19 @@ const EditClient = () => {
             dispatch(clearValues());
             navigate("/clients");
           }}
+          size="small"
         >
           <CancelIcon />
         </IconButton>
-        <IconButton area-label="save" onClick={handleSubmit} disabled={isLoading}>
+        <IconButton area-label="delete" onClick={handleDelete} disabled={isLoading} size="small">
+          <DeleteIcon />
+        </IconButton>
+        <IconButton area-label="save" onClick={handleSubmit} disabled={isLoading} size="small">
           <SaveIcon />
         </IconButton>
       </Stack>
-      {createClientError && <Typography color="error.main">{createClientError?.message}</Typography>}
+      {updateError && <Typography color="error.main">{updateError?.message}</Typography>}
+      {deleteError && <Typography color="error.main">{deleteError?.message}</Typography>}
     </Stack>
   );
 };
