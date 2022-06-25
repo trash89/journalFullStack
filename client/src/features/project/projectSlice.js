@@ -5,24 +5,30 @@ import moment from "moment";
 const initialState = {
   isLoading: false,
   input: {
+    idClient: "",
     Name: "",
     Description: "",
+    isDefault: "N",
     StartDate: new moment().format("YYYY-MM-DD"),
     EndDate: "",
+    Finished: "N",
   },
   isErrorInput: {
+    idClient: false,
     Name: false,
     Description: false,
+    isDefault: false,
     StartDate: false,
     EndDate: false,
+    Finished: false,
   },
   status: "pending",
   isEditing: false,
-  editIdClient: "",
+  editId: "",
 };
 
-const clientSlice = createSlice({
-  name: "client",
+const projectSlice = createSlice({
+  name: "project",
   initialState,
   reducers: {
     setInput: (state, { payload: { name, value } }) => {
@@ -41,6 +47,6 @@ const clientSlice = createSlice({
   },
 });
 
-export const { setInput, setErrorInput, clearValues, setEdit } = clientSlice.actions;
+export const { setInput, setErrorInput, clearValues, setEdit } = projectSlice.actions;
 
-export default clientSlice.reducer;
+export default projectSlice.reducer;

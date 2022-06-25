@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { gql, useMutation } from "@apollo/client";
@@ -12,9 +13,9 @@ import IconButton from "@mui/material/IconButton";
 
 import { useIsMounted, useGetProfile } from "../../hooks";
 
-import { handleChange, setErrorInput, clearValues } from "../../features/client/clientSlice";
+import { setInput, setErrorInput, clearValues } from "../../features/client/clientSlice";
 
-const CREATE_CLIENT_MUTATION = gql`
+const CREATE_MUTATION = gql`
   mutation createMutation($Name: String!, $Description: String!, $StartDate: DateTime!, $EndDate: DateTime) {
     createClient(client: { Name: $Name, Description: $Description, StartDate: $StartDate, EndDate: $EndDate }) {
       idProfile
@@ -37,7 +38,7 @@ const NewClient = () => {
 
   const { input, isErrorInput, isLoading } = useSelector((store) => store.client);
 
-  const [createClient, { error: createClientError }] = useMutation(CREATE_CLIENT_MUTATION);
+  const [createRow, { error: createError }] = useMutation(CREATE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,12 +46,14 @@ const NewClient = () => {
     if (input.Name && input.Name !== "") {
       if (input.Description && input.Description !== "") {
         if (input.StartDate && input.StartDate !== "") {
-          const result = await createClient({
+          const StartDateFormatted = new Date(input.StartDate).toISOString();
+          const EndDateFormatted = !input.EndDate || input.EndDate === "" ? null : new Date(input.EndDate).toISOString();
+          const result = await createRow({
             variables: {
               Name: input.Name,
               Description: input.Description,
-              StartDate: new Date(input.StartDate).toISOString(),
-              EndDate: !input.EndDate || input.EndDate === "" ? null : new Date(input.EndDate).toISOString(),
+              StartDate: StartDateFormatted,
+              EndDate: EndDateFormatted,
             },
           });
           if (!result?.errors) {
@@ -62,6 +65,10 @@ const NewClient = () => {
       } else dispatch(setErrorInput({ name: "Description" }));
     } else dispatch(setErrorInput({ name: "Name" }));
   };
+
+  useEffect(() => {
+    dispatch(clearValues());
+  }, []);
 
   if (!isMounted) return <></>;
   if (!user) {
@@ -83,7 +90,7 @@ const NewClient = () => {
         label="Client Name"
         type="text"
         value={input.Name}
-        onChange={(e) => dispatch(handleChange({ name: "Name", value: e.target.value }))}
+        onChange={(e) => dispatch(setInput({ name: "Name", value: e.target.value }))}
         required
         variant="standard"
       />
@@ -95,7 +102,7 @@ const NewClient = () => {
         label="Client Description"
         type="text"
         value={input.Description}
-        onChange={(e) => dispatch(handleChange({ name: "Description", value: e.target.value }))}
+        onChange={(e) => dispatch(setInput({ name: "Description", value: e.target.value }))}
         required
         variant="standard"
         fullWidth
@@ -109,7 +116,7 @@ const NewClient = () => {
         type="date"
         value={input.StartDate}
         required
-        onChange={(e) => dispatch(handleChange({ name: "StartDate", value: e.target.value }))}
+        onChange={(e) => dispatch(setInput({ name: "StartDate", value: e.target.value }))}
         variant="standard"
       />
       <TextField
@@ -120,7 +127,7 @@ const NewClient = () => {
         helperText="End Date"
         type="date"
         value={input.EndDate}
-        onChange={(e) => dispatch(handleChange({ name: "EndDate", value: e.target.value }))}
+        onChange={(e) => dispatch(setInput({ name: "EndDate", value: e.target.value }))}
         variant="standard"
       />
       <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
@@ -138,7 +145,7 @@ const NewClient = () => {
           <SaveIcon />
         </IconButton>
       </Stack>
-      {createClientError && <Typography color="error.main">{createClientError?.message}</Typography>}
+      {createError && <Typography color="error.main">{createError?.message}</Typography>}
     </Stack>
   );
 };

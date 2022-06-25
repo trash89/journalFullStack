@@ -14,7 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import { useIsMounted, useGetProfile, useGetClient } from "../../hooks";
 
-import { handleChange, setErrorInput, clearValues, setEdit } from "../../features/client/clientSlice";
+import { setInput, setErrorInput, clearValues, setEdit } from "../../features/client/clientSlice";
 
 import moment from "moment";
 
@@ -60,8 +60,8 @@ const EditClient = () => {
   } = useGetClient(idClientParamInt);
   const { input, isErrorInput, isLoading } = useSelector((store) => store.client);
 
-  const [updateClient, { error: updateError }] = useMutation(UPDATE_MUTATION);
-  const [deleteClient, { error: deleteError }] = useMutation(DELETE_MUTATION);
+  const [updateRow, { error: updateError }] = useMutation(UPDATE_MUTATION);
+  const [deleteRow, { error: deleteError }] = useMutation(DELETE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,13 +69,15 @@ const EditClient = () => {
     if (input.Name && input.Name !== "") {
       if (input.Description && input.Description !== "") {
         if (input.StartDate && input.StartDate !== "") {
-          const result = await updateClient({
+          const StartDateFormatted = new Date(input.StartDate).toISOString();
+          const EndDateFormatted = !input.EndDate || input.EndDate === "" ? null : new Date(input.EndDate).toISOString();
+          const result = await updateRow({
             variables: {
               idClient: idClientParamInt,
               Name: input.Name,
               Description: input.Description,
-              StartDate: new Date(input.StartDate).toISOString(),
-              EndDate: !input.EndDate || input.EndDate === "" ? null : new Date(input.EndDate).toISOString(),
+              StartDate: StartDateFormatted,
+              EndDate: EndDateFormatted,
             },
           });
           if (!result?.errors) {
@@ -90,7 +92,7 @@ const EditClient = () => {
 
   const handleDelete = async (e) => {
     e.preventDefault();
-    const result = await deleteClient({
+    const result = await deleteRow({
       variables: {
         idClient: idClientParamInt,
       },
@@ -104,16 +106,16 @@ const EditClient = () => {
 
   useEffect(() => {
     if (idProfileEdit !== -1) {
-      const localStartDate = StartDateEdit ? moment(new Date(StartDateEdit)).format("YYYY-MM-DD") : "";
-      const localEndDate = EndDateEdit ? moment(new Date(EndDateEdit)).format("YYYY-MM-DD") : "";
+      const StartDateFormatted = StartDateEdit ? moment(new Date(StartDateEdit)).format("YYYY-MM-DD") : "";
+      const EndDateFormatted = EndDateEdit ? moment(new Date(EndDateEdit)).format("YYYY-MM-DD") : "";
       dispatch(
         setEdit({
           editIdClient: idClientEdit,
           input: {
             Name: NameEdit,
             Description: DescriptionEdit,
-            StartDate: localStartDate,
-            EndDate: localEndDate,
+            StartDate: StartDateFormatted,
+            EndDate: EndDateFormatted,
           },
         })
       );
@@ -139,7 +141,7 @@ const EditClient = () => {
         label="Client Name"
         type="text"
         value={input.Name}
-        onChange={(e) => dispatch(handleChange({ name: "Name", value: e.target.value }))}
+        onChange={(e) => dispatch(setInput({ name: "Name", value: e.target.value }))}
         required
         variant="standard"
       />
@@ -151,7 +153,7 @@ const EditClient = () => {
         label="Client Description"
         type="text"
         value={input.Description}
-        onChange={(e) => dispatch(handleChange({ name: "Description", value: e.target.value }))}
+        onChange={(e) => dispatch(setInput({ name: "Description", value: e.target.value }))}
         required
         fullWidth
         variant="standard"
@@ -165,7 +167,7 @@ const EditClient = () => {
         type="date"
         value={input.StartDate}
         required
-        onChange={(e) => dispatch(handleChange({ name: "StartDate", value: e.target.value }))}
+        onChange={(e) => dispatch(setInput({ name: "StartDate", value: e.target.value }))}
         variant="standard"
       />
       <TextField
@@ -176,7 +178,7 @@ const EditClient = () => {
         helperText="End Date"
         type="date"
         value={input.EndDate}
-        onChange={(e) => dispatch(handleChange({ name: "EndDate", value: e.target.value }))}
+        onChange={(e) => dispatch(setInput({ name: "EndDate", value: e.target.value }))}
         variant="standard"
       />
       <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
