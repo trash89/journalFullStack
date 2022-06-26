@@ -22,7 +22,7 @@ import { clearValues } from "../../features/client/clientSlice";
 
 const CLIENTS_QUERY = gql`
   query clientsQuery {
-    clients {
+    clients(orderBy: { Name: asc }) {
       count
       list {
         idProfile

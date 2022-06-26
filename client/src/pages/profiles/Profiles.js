@@ -16,7 +16,7 @@ import { PaginationTable } from "../../components";
 
 const PROFILES_QUERY = gql`
   query profilesQuery {
-    profiles {
+    profiles(orderBy: { Username: asc }) {
       count
       list {
         idProfile

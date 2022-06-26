@@ -19,7 +19,7 @@ import { PaginationTable } from "../../components";
 
 const SUBPROJECTS_QUERY = gql`
   query subprojectsQuery {
-    subprojects {
+    subprojects(orderBy: { Name: asc }) {
       count
       list {
         idProject

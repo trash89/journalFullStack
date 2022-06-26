@@ -21,7 +21,7 @@ import { clearValues } from "../../features/project/projectSlice";
 
 const PROJECTS_QUERY = gql`
   query projectsQuery {
-    projects {
+    projects(orderBy: { Name: asc }) {
       count
       list {
         idClient
