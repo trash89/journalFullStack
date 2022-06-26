@@ -99,7 +99,7 @@ const EditClient = () => {
     });
     if (!result.errors) {
       dispatch(clearValues());
-      toast.success("Success !");
+      toast.success("Success delete client !");
       navigate("/clients");
     }
   };

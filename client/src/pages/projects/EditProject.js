@@ -106,7 +106,7 @@ const EditProject = () => {
                 const result = await updateRow({
                   variables: {
                     idProject: idProjectParamInt,
-                    idClient: input.idClient,
+                    idClient: parseInt(input.idClient),
                     Name: input.Name,
                     Description: input.Description,
                     isDefault: input.isDefault,
@@ -137,7 +137,7 @@ const EditProject = () => {
     });
     if (!result.errors) {
       dispatch(clearValues());
-      toast.success("Success !");
+      toast.success("Success delete project !");
       navigate("/projects");
     }
   };
@@ -173,26 +173,28 @@ const EditProject = () => {
         Edit project, on profile {UsernameConnected}
       </Typography>
 
-      <TextField
-        error={isErrorInput.idClient}
-        size="small"
-        margin="dense"
-        id="idClient"
-        helperText="Client?"
-        value={input.idClient}
-        onChange={(e) => dispatch(setInput({ name: "idClient", value: e.target.value }))}
-        required
-        variant="standard"
-        select
-      >
-        {clientsList.map((client) => {
-          return (
-            <MenuItem key={client.idClient} value={client.idClient}>
-              {client.Name}
-            </MenuItem>
-          );
-        })}
-      </TextField>
+      {clientsList.length > 0 && (
+        <TextField
+          error={isErrorInput.idClient}
+          size="small"
+          margin="dense"
+          id="idClient"
+          helperText="Client?"
+          value={input.idClient}
+          onChange={(e) => dispatch(setInput({ name: "idClient", value: e.target.value }))}
+          required
+          variant="standard"
+          select
+        >
+          {clientsList.map((item) => {
+            return (
+              <MenuItem key={item.idClient} value={item.idClient}>
+                {item.Name}
+              </MenuItem>
+            );
+          })}
+        </TextField>
+      )}
       <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
         <TextField
           error={isErrorInput.Name}
@@ -200,7 +202,7 @@ const EditProject = () => {
           size="small"
           margin="dense"
           id="Name"
-          label="Client Name"
+          label="Project Name"
           type="text"
           value={input.Name}
           onChange={(e) => dispatch(setInput({ name: "Name", value: e.target.value }))}

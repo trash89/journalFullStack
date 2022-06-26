@@ -32,4 +32,25 @@ const useGetProject = (id) => {
   };
 };
 
-export { useGetProject };
+const useProjectsList = () => {
+  const QUERY = gql`
+    query entityQuery {
+      projects {
+        count
+        list {
+          idProject
+          Name
+        }
+      }
+    }
+  `;
+
+  const { loading, error, data: List } = useQuery(QUERY);
+  if (loading || error) return [];
+  const entityArray = List?.projects?.list?.map((item) => {
+    return { idProject: item?.idProject, Name: item?.Name };
+  });
+  return entityArray;
+};
+
+export { useGetProject, useProjectsList };

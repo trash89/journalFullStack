@@ -125,10 +125,10 @@ const NewProject = () => {
         required
         variant="standard"
       >
-        {clientsList?.map((client, index) => {
+        {clientsList?.map((item) => {
           return (
-            <MenuItem key={client.idClient} value={client.idClient}>
-              {client.Name}
+            <MenuItem key={item.idClient} value={item.idClient}>
+              {item.Name}
             </MenuItem>
           );
         })}

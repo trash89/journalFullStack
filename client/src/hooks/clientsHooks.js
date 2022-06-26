@@ -30,7 +30,7 @@ const useGetClient = (id) => {
 
 const useClientsList = () => {
   const QUERY = gql`
-    query clientsQuery {
+    query entityQuery {
       clients {
         count
         list {
@@ -41,12 +41,12 @@ const useClientsList = () => {
     }
   `;
 
-  const { loading, error, data: clientsList } = useQuery(QUERY);
+  const { loading, error, data: List } = useQuery(QUERY);
   if (loading || error) return [];
-  const clientsArray = clientsList?.clients?.list?.map((client) => {
-    return { idClient: client?.idClient, Name: client?.Name };
+  const entityArray = List?.clients?.list?.map((item) => {
+    return { idClient: item?.idClient, Name: item?.Name };
   });
-  return clientsArray;
+  return entityArray;
 };
 
 export { useGetClient, useClientsList };
