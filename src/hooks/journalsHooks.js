@@ -21,8 +21,9 @@ const useGetJournal = (id) => {
   const { loading, error, data } = useQuery(QUERY, {
     variables: { idJournal: id },
   });
-  if (loading || error)
+  if (error)
     return {
+      loading: loading,
       idProfile: -1,
       idClient: -1,
       idProject: -1,
@@ -36,6 +37,7 @@ const useGetJournal = (id) => {
     };
 
   return {
+    loading: loading,
     idProfile: data?.journal?.idProfile,
     idClient: data?.journal?.idClient,
     idProject: data?.journal?.idProject,
@@ -63,11 +65,11 @@ const useJournalsList = () => {
   `;
 
   const { loading, error, data: List } = useQuery(QUERY);
-  if (loading || error) return [];
+  if (error) return [];
   const entityArray = List?.journals?.list?.map((item) => {
     return { idJournal: item?.idJournal, EntryDate: item?.EntryDate };
   });
-  return entityArray;
+  return { loading: loading, list: entityArray };
 };
 
 export { useGetJournal, useJournalsList };

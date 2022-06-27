@@ -7,6 +7,7 @@ import { Table, Header, HeaderRow, HeaderCell, Body, Row, Cell } from "@table-li
 import { useTheme } from "@table-library/react-table-library/theme";
 import { useSort, HeaderCellSort } from "@table-library/react-table-library/sort";
 import { usePagination } from "@table-library/react-table-library/pagination";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -90,7 +91,7 @@ const Subprojects = () => {
       `,
   });
 
-  const { data } = useQuery(SUBPROJECTS_QUERY);
+  const { loading, data } = useQuery(SUBPROJECTS_QUERY);
   const dataTable = { nodes: data?.subprojects?.list };
 
   const sort = useSort(dataTable, null, {
@@ -108,6 +109,7 @@ const Subprojects = () => {
   const pagination = usePagination(dataTable, PAGINATION_STATE);
 
   if (!isMounted) return <></>;
+  if (loading) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

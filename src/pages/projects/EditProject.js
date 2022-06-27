@@ -9,6 +9,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -70,12 +71,13 @@ const EditProject = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const { Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
+  const { loading: loadingProfile, Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
 
   const { idProject: idProjectParam } = useParams();
   const idProjectParamInt = idProjectParam ? (Number.isNaN(parseInt(idProjectParam)) ? -1 : parseInt(idProjectParam)) : -1;
 
   const {
+    loading: loadingProject,
     idClient: idClientEdit,
     idProject: idProjectEdit,
     Name: NameEdit,
@@ -88,7 +90,7 @@ const EditProject = () => {
 
   const { input, isErrorInput, isLoading } = useSelector((store) => store.project);
 
-  const clientsList = useClientsList();
+  const { loading: loadingClients, list: clientsList } = useClientsList();
 
   const [updateRow, { error: updateError }] = useMutation(UPDATE_MUTATION);
   const [deleteRow, { error: deleteError }] = useMutation(DELETE_MUTATION);
@@ -166,6 +168,7 @@ const EditProject = () => {
   }, [idProjectEdit]);
 
   if (!isMounted) return <></>;
+  if (isLoading || loadingClients || loadingProfile || loadingProject) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

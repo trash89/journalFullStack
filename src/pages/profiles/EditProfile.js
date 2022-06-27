@@ -12,6 +12,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { logoutUser } from "../../features/user/userSlice";
 import { useIsMounted, useGetProfile, useProfilesArray } from "../../hooks";
@@ -40,13 +41,13 @@ const EditProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, isLoading } = useSelector((store) => store.user);
-  const { idProfile: idProfileConnected, Is_Admin: Is_AdminConnected } = useGetProfile(parseInt(user.idProfile));
+  const { loading: loadingProfileConnected, idProfile: idProfileConnected, Is_Admin: Is_AdminConnected } = useGetProfile(parseInt(user.idProfile));
 
   const { idProfile: idProfileParam } = useParams();
   const idProfileParamInt = idProfileParam ? (Number.isNaN(parseInt(idProfileParam)) ? -1 : parseInt(idProfileParam)) : -1;
-  const { idProfile: idProfileEdit, Username: UsernameEdit } = useGetProfile(idProfileParamInt);
+  const { loading: loadingProfileEdit, idProfile: idProfileEdit, Username: UsernameEdit } = useGetProfile(idProfileParamInt);
 
-  const profilesArray = useProfilesArray();
+  const { loading: loadingProfiles, list: profilesArray } = useProfilesArray();
 
   const isProfileInList = isIdInList(idProfileParam, profilesArray);
 
@@ -101,7 +102,9 @@ const EditProfile = () => {
   };
 
   if (!isMounted) return <></>;
+  if (loadingProfileConnected || loadingProfileEdit || loadingProfiles || isLoading) return <CircularProgress />;
   if (!isProfileInList || idProfileParamInt === -1) return <>You cannot update this profile</>;
+
   return (
     <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
       <Typography>Username : {UsernameEdit}</Typography>

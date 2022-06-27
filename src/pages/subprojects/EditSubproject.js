@@ -9,6 +9,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -73,12 +74,13 @@ const EditSubproject = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const { Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
+  const { loading: loadingProfile, Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
 
   const { idSubproject: idSubprojectParam } = useParams();
   const idSubprojectParamInt = idSubprojectParam ? (Number.isNaN(parseInt(idSubprojectParam)) ? -1 : parseInt(idSubprojectParam)) : -1;
 
   const {
+    loading,
     idClient: idClientEdit,
     idProject: idProjectEdit,
     idSubproject: idSubprojectEdit,
@@ -91,8 +93,8 @@ const EditSubproject = () => {
   } = useGetSubproject(idSubprojectParamInt);
   const { input, isErrorInput, isLoading } = useSelector((store) => store.subproject);
 
-  const clientsList = useClientsList();
-  const projectsList = useProjectsList();
+  const { loading: loadingClients, list: clientsList } = useClientsList();
+  const { loading: loadingProjects, list: projectsList } = useProjectsList();
 
   const [updateRow, { error: updateError }] = useMutation(UPDATE_MUTATION);
   const [deleteRow, { error: deleteError }] = useMutation(DELETE_MUTATION);
@@ -175,6 +177,7 @@ const EditSubproject = () => {
   }, [idSubprojectEdit]);
 
   if (!isMounted) return <></>;
+  if (isLoading || loading || loadingClients || loadingProfile || loadingProjects) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

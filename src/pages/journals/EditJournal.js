@@ -10,6 +10,7 @@ import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -77,12 +78,13 @@ const EditJournal = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const { Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
+  const { loading: loadingProfile, Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
 
   const { idJournal: idJournalParam } = useParams();
   const idJournalParamInt = idJournalParam ? (Number.isNaN(parseInt(idJournalParam)) ? -1 : parseInt(idJournalParam)) : -1;
 
   const {
+    loading,
     idProfile: idProfileEdit,
     idClient: idClientEdit,
     idProject: idProjectEdit,
@@ -96,9 +98,9 @@ const EditJournal = () => {
   } = useGetJournal(idJournalParamInt);
   const { input, isErrorInput, isLoading } = useSelector((store) => store.journal);
 
-  const clientsList = useClientsList();
-  const projectsList = useProjectsList();
-  const subprojectsList = useSubprojectsList();
+  const { loading: loadingClientsList, list: clientsList } = useClientsList();
+  const { loading: loadingProjectsList, list: projectsList } = useProjectsList();
+  const { loading: loadingSubprojectsList, list: subprojectsList } = useSubprojectsList();
 
   const [updateRow, { error: updateError }] = useMutation(UPDATE_MUTATION);
   const [deleteRow, { error: deleteError }] = useMutation(DELETE_MUTATION);
@@ -178,6 +180,7 @@ const EditJournal = () => {
   }, [idJournalEdit]);
 
   if (!isMounted) return <></>;
+  if (isLoading || loading || loadingProfile || loadingClientsList || loadingProjectsList || loadingSubprojectsList) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

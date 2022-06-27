@@ -7,6 +7,7 @@ import { Table, Header, HeaderRow, HeaderCell, Body, Row, Cell } from "@table-li
 import { useTheme } from "@table-library/react-table-library/theme";
 import { useSort, HeaderCellSort } from "@table-library/react-table-library/sort";
 import { usePagination } from "@table-library/react-table-library/pagination";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import EditIcon from "@mui/icons-material/Edit";
 
@@ -49,7 +50,7 @@ const Profiles = () => {
       `,
   });
 
-  const { data } = useQuery(PROFILES_QUERY);
+  const { loading, data } = useQuery(PROFILES_QUERY);
   const dataTable = { nodes: data?.profiles?.list };
 
   const sort = useSort(dataTable, null, {
@@ -61,6 +62,7 @@ const Profiles = () => {
   const pagination = usePagination(dataTable, PAGINATION_STATE);
 
   if (!isMounted) return <></>;
+  if (loading) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

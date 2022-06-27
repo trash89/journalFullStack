@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import InputLabel from "@mui/material/InputLabel";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
@@ -66,11 +67,11 @@ const NewJournal = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const { idProfile: idProfileConnected, Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
+  const { loading: loadingProfile, idProfile: idProfileConnected, Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
 
-  const clientsList = useClientsList();
-  const projectsList = useProjectsList();
-  const subprojectsList = useSubprojectsList();
+  const { loading: loadingClientsList, list: clientsList } = useClientsList();
+  const { loading: loadingProjectsList, list: projectsList } = useProjectsList();
+  const { loading: loadingSubprojectsList, list: subprojectsList } = useSubprojectsList();
 
   const { input, isErrorInput, isLoading } = useSelector((store) => store.journal);
 
@@ -117,6 +118,7 @@ const NewJournal = () => {
   }, []);
 
   if (!isMounted) return <></>;
+  if (isLoading || loadingProfile || loadingClientsList || loadingProjectsList || loadingSubprojectsList) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

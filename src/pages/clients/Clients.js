@@ -11,7 +11,7 @@ import { usePagination } from "@table-library/react-table-library/pagination";
 
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-
+import CircularProgress from "@mui/material/CircularProgress";
 import moment from "moment";
 
 import { useIsMounted } from "../../hooks";
@@ -74,7 +74,7 @@ const Clients = () => {
       `,
   });
 
-  const { data } = useQuery(CLIENTS_QUERY);
+  const { data, loading } = useQuery(CLIENTS_QUERY);
   const dataTable = { nodes: data?.clients?.list };
 
   const sort = useSort(dataTable, null, {
@@ -94,6 +94,7 @@ const Clients = () => {
   }, []);
 
   if (!isMounted) return <></>;
+  if (loading) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

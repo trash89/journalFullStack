@@ -11,6 +11,7 @@ import InputLabel from "@mui/material/InputLabel";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { useIsMounted, useGetProfile } from "../../hooks";
 
@@ -35,7 +36,7 @@ const NewClient = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const { Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
+  const { loading: loadingProfile, Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
 
   const { input, isErrorInput, isLoading } = useSelector((store) => store.client);
 
@@ -73,6 +74,7 @@ const NewClient = () => {
   }, []);
 
   if (!isMounted) return <></>;
+  if (isLoading || loadingProfile) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

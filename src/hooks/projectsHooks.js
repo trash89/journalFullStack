@@ -19,8 +19,9 @@ const useGetProject = (id) => {
   const { loading, error, data } = useQuery(QUERY, {
     variables: { idProject: id },
   });
-  if (loading || error) return { idClient: -1, idProject: -1, Name: "", Description: "", isDefault: "N", StartDate: "", EndDate: "", Finished: "N" };
+  if (error) return { loading: loading, idClient: -1, idProject: -1, Name: "", Description: "", isDefault: "N", StartDate: "", EndDate: "", Finished: "N" };
   return {
+    loading: loading,
     idClient: data?.project?.idClient,
     idProject: data?.project?.idProject,
     Name: data?.project?.Name,
@@ -46,11 +47,11 @@ const useProjectsList = () => {
   `;
 
   const { loading, error, data: List } = useQuery(QUERY);
-  if (loading || error) return [];
+  if (error) return [];
   const entityArray = List?.projects?.list?.map((item) => {
     return { idProject: item?.idProject, Name: item?.Name };
   });
-  return entityArray;
+  return { loading: loading, list: entityArray };
 };
 
 export { useGetProject, useProjectsList };

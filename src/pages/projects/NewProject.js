@@ -9,6 +9,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -57,9 +58,9 @@ const NewProject = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const { Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
+  const { loading: loadingProfile, Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
 
-  const clientsList = useClientsList();
+  const { loading: loadingClients, list: clientsList } = useClientsList();
 
   const { input, isErrorInput, isLoading } = useSelector((store) => store.project);
 
@@ -106,6 +107,7 @@ const NewProject = () => {
   }, []);
 
   if (!isMounted) return <></>;
+  if (isLoading || loadingClients || loadingProfile) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

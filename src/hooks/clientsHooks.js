@@ -17,8 +17,9 @@ const useGetClient = (id) => {
   const { loading, error, data } = useQuery(QUERY, {
     variables: { idClient: id },
   });
-  if (loading || error) return { idProfile: -1, idClient: -1, Name: "", Description: "", StartDate: "", EndDate: "" };
+  if (error) return { loading: loading, idProfile: -1, idClient: -1, Name: "", Description: "", StartDate: "", EndDate: "" };
   return {
+    loading: loading,
     idProfile: data?.client?.idProfile,
     idClient: data?.client?.idClient,
     Name: data?.client?.Name,
@@ -42,11 +43,11 @@ const useClientsList = () => {
   `;
 
   const { loading, error, data: List } = useQuery(QUERY);
-  if (loading || error) return [];
+  if (error) return [];
   const entityArray = List?.clients?.list?.map((item) => {
     return { idClient: item?.idClient, Name: item?.Name };
   });
-  return entityArray;
+  return { loading: loading, list: entityArray };
 };
 
 export { useGetClient, useClientsList };

@@ -8,6 +8,7 @@ import { Table, Header, HeaderRow, HeaderCell, Body, Row, Cell } from "@table-li
 import { useTheme } from "@table-library/react-table-library/theme";
 import { useSort, HeaderCellSort } from "@table-library/react-table-library/sort";
 import { usePagination } from "@table-library/react-table-library/pagination";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -84,7 +85,7 @@ const Projects = () => {
       `,
   });
 
-  const { data } = useQuery(PROJECTS_QUERY);
+  const { loading, data } = useQuery(PROJECTS_QUERY);
   const dataTable = { nodes: data?.projects?.list };
 
   const sort = useSort(dataTable, null, {
@@ -106,6 +107,7 @@ const Projects = () => {
   }, []);
 
   if (!isMounted) return <></>;
+  if (loading) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

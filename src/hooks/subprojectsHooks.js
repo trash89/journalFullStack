@@ -20,10 +20,22 @@ const useGetSubproject = (id) => {
   const { loading, error, data } = useQuery(QUERY, {
     variables: { idSubproject: id },
   });
-  if (loading || error)
-    return { idClient: -1, idProject: -1, idSubproject: -1, Name: "", Description: "", isDefault: "N", StartDate: "", EndDate: "", Finished: "N" };
+  if (error)
+    return {
+      loading: loading,
+      idClient: -1,
+      idProject: -1,
+      idSubproject: -1,
+      Name: "",
+      Description: "",
+      isDefault: "N",
+      StartDate: "",
+      EndDate: "",
+      Finished: "N",
+    };
 
   return {
+    loading: loading,
     idClient: data?.subproject?.idClient,
     idProject: data?.subproject?.idProject,
     idSubproject: data?.subproject?.idSubproject,
@@ -50,11 +62,11 @@ const useSubprojectsList = () => {
   `;
 
   const { loading, error, data: List } = useQuery(QUERY);
-  if (loading || error) return [];
+  if (error) return [];
   const entityArray = List?.subprojects?.list?.map((item) => {
     return { idSubproject: item?.idSubproject, Name: item?.Name };
   });
-  return entityArray;
+  return { loading: loading, list: entityArray };
 };
 
 export { useGetSubproject, useSubprojectsList };

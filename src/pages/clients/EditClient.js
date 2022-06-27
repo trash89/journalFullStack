@@ -12,6 +12,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { useIsMounted, useGetProfile, useGetClient } from "../../hooks";
 
@@ -46,12 +47,13 @@ const EditClient = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const { Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
+  const { loading: loadingProfile, Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
 
   const { idClient: idClientParam } = useParams();
   const idClientParamInt = idClientParam ? (Number.isNaN(parseInt(idClientParam)) ? -1 : parseInt(idClientParam)) : -1;
 
   const {
+    loading,
     idClient: idClientEdit,
     Name: NameEdit,
     Description: DescriptionEdit,
@@ -124,6 +126,7 @@ const EditClient = () => {
   }, [idClientEdit]);
 
   if (!isMounted) return <></>;
+  if (isLoading || loading || loadingProfile) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

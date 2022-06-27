@@ -7,6 +7,7 @@ import { useTheme } from "@table-library/react-table-library/theme";
 import { useSort, HeaderCellSort } from "@table-library/react-table-library/sort";
 import { usePagination } from "@table-library/react-table-library/pagination";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -91,7 +92,7 @@ const Journal = () => {
       `,
   });
 
-  const { data } = useQuery(JOURNALS_QUERY);
+  const { data, loading } = useQuery(JOURNALS_QUERY);
   const dataTable = { nodes: data?.journals?.list };
 
   const sort = useSort(dataTable, null, {
@@ -154,6 +155,7 @@ const Journal = () => {
   };
 
   if (!isMounted) return <></>;
+  if (loading) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

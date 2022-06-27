@@ -12,6 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { useIsMounted, useGetProfile, useClientsList, useProjectsList } from "../../hooks";
 
@@ -61,8 +62,8 @@ const NewSubproject = () => {
   const { user } = useSelector((store) => store.user);
   const { Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
 
-  const clientsList = useClientsList();
-  const projectsList = useProjectsList();
+  const { loading: loadingClients, list: clientsList } = useClientsList();
+  const { loading: loadingProjects, list: projectsList } = useProjectsList();
 
   const { input, isErrorInput, isLoading } = useSelector((store) => store.subproject);
 
@@ -112,6 +113,7 @@ const NewSubproject = () => {
   }, []);
 
   if (!isMounted) return <></>;
+  if (isLoading || loadingClients || loadingProjects) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }
