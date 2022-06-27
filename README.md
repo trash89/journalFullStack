@@ -4,7 +4,7 @@ The Journal Application is allowing to keep an online journal of activity. It al
 
 The application is live on Heroku :
 
-https://journalgraphqlserver.herokuapp.com/
+https://myjournalwebapp.herokuapp.com/
 
 The application is built with three components:
 
