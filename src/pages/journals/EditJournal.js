@@ -174,6 +174,7 @@ const EditJournal = () => {
         })
       );
     }
+    // eslint-disable-next-line
   }, [idJournalEdit]);
 
   if (!isMounted) return <></>;

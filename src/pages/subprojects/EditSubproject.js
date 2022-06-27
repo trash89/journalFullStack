@@ -171,6 +171,7 @@ const EditSubproject = () => {
         })
       );
     }
+    // eslint-disable-next-line
   }, [idSubprojectEdit]);
 
   if (!isMounted) return <></>;

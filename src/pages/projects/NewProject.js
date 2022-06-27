@@ -102,6 +102,7 @@ const NewProject = () => {
 
   useEffect(() => {
     dispatch(clearValues());
+    // eslint-disable-next-line
   }, []);
 
   if (!isMounted) return <></>;

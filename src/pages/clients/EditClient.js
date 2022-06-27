@@ -52,7 +52,6 @@ const EditClient = () => {
   const idClientParamInt = idClientParam ? (Number.isNaN(parseInt(idClientParam)) ? -1 : parseInt(idClientParam)) : -1;
 
   const {
-    idProfile: idProfileEdit,
     idClient: idClientEdit,
     Name: NameEdit,
     Description: DescriptionEdit,
@@ -121,6 +120,7 @@ const EditClient = () => {
         })
       );
     }
+    // eslint-disable-next-line
   }, [idClientEdit]);
 
   if (!isMounted) return <></>;

@@ -108,6 +108,7 @@ const NewSubproject = () => {
 
   useEffect(() => {
     dispatch(clearValues());
+    // eslint-disable-next-line
   }, []);
 
   if (!isMounted) return <></>;

@@ -162,6 +162,7 @@ const EditProject = () => {
         })
       );
     }
+    // eslint-disable-next-line
   }, [idProjectEdit]);
 
   if (!isMounted) return <></>;
