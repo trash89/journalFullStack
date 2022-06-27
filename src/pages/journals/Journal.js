@@ -1,5 +1,5 @@
 import { Link, Navigate } from "react-router-dom";
-
+import { useRef } from "react";
 import { gql, useQuery } from "@apollo/client";
 import { useSelector } from "react-redux";
 
@@ -7,6 +7,7 @@ import { Table, Header, HeaderRow, HeaderCell, Body, Row, Cell } from "@table-li
 import { useTheme } from "@table-library/react-table-library/theme";
 import { useSort, HeaderCellSort } from "@table-library/react-table-library/sort";
 import { usePagination } from "@table-library/react-table-library/pagination";
+import Button from "@mui/material/Button";
 
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -29,6 +30,8 @@ const JOURNALS_QUERY = gql`
         idJournal
         EntryDate
         Description
+        Todos
+        ThingsDone
         profile {
           idProfile
           Username
@@ -104,6 +107,53 @@ const Journal = () => {
   });
   const pagination = usePagination(dataTable, PAGINATION_STATE);
 
+  const escapeCsvCell = (cell) => {
+    if (cell == null) {
+      return "";
+    }
+    const sc = cell.toString().trim();
+    if (sc === "" || sc === '""') {
+      return sc;
+    }
+    if (sc.includes('"') || sc.includes(",") || sc.includes("\n") || sc.includes("\r")) {
+      return '"' + sc.replace(/"/g, '""') + '"';
+    }
+    return sc;
+  };
+
+  const makeCsvData = (columns, data) => {
+    return data.reduce((csvString, rowItem) => {
+      return csvString + columns.map(({ accessor }) => escapeCsvCell(accessor(rowItem))).join(",") + "\r\n";
+    }, columns.map(({ name }) => escapeCsvCell(name)).join(",") + "\r\n");
+  };
+
+  const downloadAsCsv = (columns, data, filename) => {
+    const csvData = makeCsvData(columns, data);
+    const csvFile = new Blob([csvData], { type: "text/csv" });
+    const downloadLink = document.createElement("a");
+
+    downloadLink.display = "none";
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  };
+
+  const handleDownloadCsv = () => {
+    const columns = [
+      { accessor: (item) => item.EntryDate, name: "EntryDate" },
+      { accessor: (item) => item.Description, name: "Description" },
+      { accessor: (item) => item.Todos, name: "Todos" },
+      { accessor: (item) => item.ThingsDone, name: "ThingsDone" },
+      { accessor: (item) => item.client.Name, name: "Client" },
+      { accessor: (item) => item.project.Name, name: "Project" },
+      { accessor: (item) => item.subproject.Name, name: "Subproject" },
+    ];
+
+    downloadAsCsv(columns, dataTable.nodes, "table");
+  };
+
   if (!isMounted) return <></>;
   if (!user) {
     return <Navigate to="/register" />;
@@ -117,9 +167,12 @@ const Journal = () => {
             <AddIcon />
           </Link>
         </span>
+        <Button type="button" onClick={handleDownloadCsv}>
+          Download as CSV
+        </Button>
+
         <span>Total: {data.journals.count} rows</span>
       </div>
-
       <Table data={dataTable} theme={theme} sort={sort} pagination={pagination} layout={{ custom: true }}>
         {(tableList) => (
           <>
