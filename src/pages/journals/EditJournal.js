@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import { gql, useMutation } from "@apollo/client";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -131,7 +130,6 @@ const EditJournal = () => {
               });
               if (!result?.errors) {
                 dispatch(clearValues());
-                toast.success(`Success updating the subproject !`);
                 navigate("/journals");
               }
             } else dispatch(setErrorInput({ name: "Description" }));
@@ -150,7 +148,6 @@ const EditJournal = () => {
     });
     if (!result.errors) {
       dispatch(clearValues());
-      toast.success("Success delete journal entry !");
       navigate("/journals");
     }
   };

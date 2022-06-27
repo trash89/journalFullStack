@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import { gql, useMutation } from "@apollo/client";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -84,7 +83,6 @@ const EditClient = () => {
           });
           if (!result?.errors) {
             dispatch(clearValues());
-            toast.success(`Success updating the client !`);
             navigate("/clients");
           }
         } else dispatch(setErrorInput({ name: "StartDate" }));
@@ -101,7 +99,6 @@ const EditClient = () => {
     });
     if (!result.errors) {
       dispatch(clearValues());
-      toast.success("Success delete client !");
       navigate("/clients");
     }
   };

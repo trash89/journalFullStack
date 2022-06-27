@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { gql, useMutation } from "@apollo/client";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -90,7 +89,6 @@ const NewProject = () => {
                 });
                 if (!result?.errors) {
                   dispatch(clearValues());
-                  toast.success(`Success creating new project !`);
                   navigate("/projects");
                 }
               } else dispatch(setErrorInput({ name: "Finished" }));

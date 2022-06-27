@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import { gql, useMutation } from "@apollo/client";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -126,7 +125,6 @@ const EditSubproject = () => {
                   });
                   if (!result?.errors) {
                     dispatch(clearValues());
-                    toast.success(`Success updating the subproject !`);
                     navigate("/subprojects");
                   }
                 } else dispatch(setErrorInput({ name: "Finished" }));
@@ -147,7 +145,6 @@ const EditSubproject = () => {
     });
     if (!result.errors) {
       dispatch(clearValues());
-      toast.success("Success delete subproject !");
       navigate("/subprojects");
     }
   };

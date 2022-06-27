@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import { gql, useMutation } from "@apollo/client";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -62,7 +61,6 @@ const EditProfile = () => {
     const { Password } = input;
     if (!Password) {
       setIsErrorInput({ ...isErrorInput, Password: true });
-      toast.error("please fill out all fields");
       return;
     }
     const result = await updateProfile({
@@ -75,10 +73,8 @@ const EditProfile = () => {
     if (!result.errors) {
       if (idProfileEdit === idProfileConnected) {
         dispatch(logoutUser());
-        toast.success(`Success, please reconnect !`);
         navigate("/register");
       } else {
-        toast.success(`Success saving profile !`);
         navigate("/profiles");
       }
     }
@@ -91,7 +87,6 @@ const EditProfile = () => {
       },
     });
     if (!result.errors) {
-      toast.success("Success !");
       navigate("/profiles");
     }
   };

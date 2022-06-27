@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Logo, FormRow } from "../components";
 import Wrapper from "../assets/wrappers/RegisterPage";
-import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, registerUser } from "../features/user/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -62,7 +61,6 @@ function Register() {
     e.preventDefault();
     const { Username, Password, isMember } = values;
     if (!Password || (!isMember && !Username)) {
-      toast.error("Please fill out all fields");
       return;
     }
     if (isMember) {

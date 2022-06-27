@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
 import { getUserFromLocalStorage, removeUserFromLocalStorage } from "../../utils/localStorage";
 
 const initialState = {
@@ -19,17 +18,11 @@ const userSlice = createSlice({
       state.user = payload;
       state.isSidebarOpen = false;
       state.isLoading = false;
-      if (payload) {
-        toast.success(`Hello Again, ${state.user.Username} !`);
-      }
     },
     registerUser: (state, { payload }) => {
       state.user = payload;
       state.isSidebarOpen = false;
       state.isLoading = false;
-      if (payload) {
-        toast.success(`Hello, ${state.user.Username} !`);
-      }
     },
     logoutUser: (state) => {
       state.user = null;

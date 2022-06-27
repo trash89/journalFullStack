@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import { gql, useMutation } from "@apollo/client";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -120,7 +119,6 @@ const EditProject = () => {
                 });
                 if (!result?.errors) {
                   dispatch(clearValues());
-                  toast.success(`Success updating the project !`);
                   navigate("/projects");
                 }
               } else dispatch(setErrorInput({ name: "Finished" }));
@@ -140,7 +138,6 @@ const EditProject = () => {
     });
     if (!result.errors) {
       dispatch(clearValues());
-      toast.success("Success delete project !");
       navigate("/projects");
     }
   };

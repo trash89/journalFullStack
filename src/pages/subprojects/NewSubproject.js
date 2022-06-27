@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { gql, useMutation } from "@apollo/client";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -95,7 +94,6 @@ const NewSubproject = () => {
                   });
                   if (!result?.errors) {
                     dispatch(clearValues());
-                    toast.success(`Success creating new subproject !`);
                     navigate("/subprojects");
                   }
                 } else dispatch(setErrorInput({ name: "Finished" }));
