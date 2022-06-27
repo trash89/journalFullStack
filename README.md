@@ -2,9 +2,9 @@
 
 The Journal Application is allowing to keep an online journal of activity. It allows to enter a description of daily activities, things already done and things to do.
 
-The application is live on Heroku :
+The application is live on Netlify :
 
-https://myjournalwebapp.herokuapp.com/
+https://myjournalwebapp.netlify.app/
 
 The application is built with three components:
 
