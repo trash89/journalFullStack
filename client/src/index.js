@@ -14,7 +14,7 @@ import { getUserFromLocalStorage } from "./utils/localStorage";
 
 const theme = createTheme(themeOptions);
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000/",
+  uri: "https://journalgraphqlserver.herokuapp.com/",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -60,7 +60,6 @@ const clientApollo = new ApolloClient({
         case "AuthPayload":
           return `AuthPayload:${responseObject.token}`;
         default: {
-          console.log("Typename=", responseObject.__typename, "ID=", defaultDataIdFromObject(responseObject));
           return defaultDataIdFromObject(responseObject);
         }
       }

@@ -139,11 +139,11 @@ const Journal = () => {
                 const localItem = {
                   id: parseInt(item.idJournal),
                   entryDate: new moment(item.EntryDate).format(dateFormat),
-                  description: item.Description,
-                  profile: item.profile.Username,
-                  client: item.client.Name,
-                  project: item.project.Name,
-                  subproject: item.subproject.Name,
+                  description: item.Description.substring(0, 50),
+                  profile: item.profile.Username.substring(0, 10),
+                  client: item.client.Name.substring(0, 15),
+                  project: item.project.Name.substring(0, 15),
+                  subproject: item.subproject.Name.substring(0, 15),
                 };
                 return (
                   <Row key={localItem.id} item={localItem}>

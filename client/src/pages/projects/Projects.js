@@ -139,9 +139,9 @@ const Projects = () => {
               {tableList.map((item) => {
                 const localItem = {
                   id: parseInt(item.idProject),
-                  client: item.client.Name,
-                  project: item.Name,
-                  description: item.Description,
+                  client: item.client.Name.substring(0, 15),
+                  project: item.Name.substring(0, 15),
+                  description: item.Description.substring(0, 50),
                   isDefault: item.isDefault === "Y" ? "Yes" : "No",
                   StartDate: new moment(item.StartDate).format(dateFormat),
                   EndDate: item.EndDate === null ? "" : new moment(item.EndDate).format(dateFormat),

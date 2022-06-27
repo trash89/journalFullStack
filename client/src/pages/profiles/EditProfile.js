@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-
+import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -105,18 +105,21 @@ const EditProfile = () => {
   return (
     <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
       <Typography>Username : {UsernameEdit}</Typography>
-      <TextField
-        autoFocus
-        error={isErrorInput.Password}
-        margin="dense"
-        id="Password"
-        label="New Password?"
-        type="password"
-        value={input.Password}
-        required
-        onChange={handlePassword}
-        variant="standard"
-      />
+      <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+        <InputLabel error={isErrorInput.Password}>New Password?</InputLabel>
+        <TextField
+          autoFocus
+          error={isErrorInput.Password}
+          margin="dense"
+          size="small"
+          id="Password"
+          type="password"
+          value={input.Password}
+          required
+          onChange={handlePassword}
+          variant="outlined"
+        />
+      </Stack>
       <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
         <IconButton area-label="cancel" onClick={() => navigate("/profiles")} size="small">
           <CancelIcon />

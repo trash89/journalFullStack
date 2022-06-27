@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import InputLabel from "@mui/material/InputLabel";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import IconButton from "@mui/material/IconButton";
@@ -105,7 +106,7 @@ const EditClient = () => {
   };
 
   useEffect(() => {
-    if (idClientEdit !== -1) {
+    if (parseInt(idClientEdit) !== -1) {
       const StartDateFormatted = StartDateEdit ? moment(new Date(StartDateEdit)).format("YYYY-MM-DD") : "";
       const EndDateFormatted = EndDateEdit ? moment(new Date(EndDateEdit)).format("YYYY-MM-DD") : "";
       dispatch(
@@ -143,7 +144,7 @@ const EditClient = () => {
         value={input.Name}
         onChange={(e) => dispatch(setInput({ name: "Name", value: e.target.value }))}
         required
-        variant="standard"
+        variant="outlined"
       />
       <TextField
         error={isErrorInput.Description}
@@ -156,31 +157,35 @@ const EditClient = () => {
         onChange={(e) => dispatch(setInput({ name: "Description", value: e.target.value }))}
         required
         fullWidth
-        variant="standard"
+        variant="outlined"
       />
-      <TextField
-        error={isErrorInput.StartDate}
-        size="small"
-        margin="dense"
-        id="StartDate"
-        helperText="Start Date"
-        type="date"
-        value={input.StartDate}
-        required
-        onChange={(e) => dispatch(setInput({ name: "StartDate", value: e.target.value }))}
-        variant="standard"
-      />
-      <TextField
-        error={isErrorInput.EndDate}
-        size="small"
-        margin="dense"
-        id="EndDate"
-        helperText="End Date"
-        type="date"
-        value={input.EndDate}
-        onChange={(e) => dispatch(setInput({ name: "EndDate", value: e.target.value }))}
-        variant="standard"
-      />
+      <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+        <InputLabel error={isErrorInput.StartDate}>Start Date</InputLabel>
+        <TextField
+          error={isErrorInput.StartDate}
+          size="small"
+          margin="dense"
+          id="StartDate"
+          type="date"
+          value={input.StartDate}
+          required
+          onChange={(e) => dispatch(setInput({ name: "StartDate", value: e.target.value }))}
+          variant="outlined"
+        />
+      </Stack>
+      <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+        <InputLabel error={isErrorInput.EndDate}>End Date</InputLabel>
+        <TextField
+          error={isErrorInput.EndDate}
+          size="small"
+          margin="dense"
+          id="EndDate"
+          type="date"
+          value={input.EndDate}
+          onChange={(e) => dispatch(setInput({ name: "EndDate", value: e.target.value }))}
+          variant="outlined"
+        />
+      </Stack>
       <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
         <IconButton
           area-label="cancel"

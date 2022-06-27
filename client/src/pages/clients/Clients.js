@@ -124,9 +124,9 @@ const Clients = () => {
               {tableList.map((item) => {
                 const localItem = {
                   id: parseInt(item.idClient),
-                  profile: item.profile.Username,
-                  client: item.Name,
-                  description: item.Description,
+                  profile: item.profile.Username.substring(0, 10),
+                  client: item.Name.substring(0, 15),
+                  description: item.Description.substring(0, 50),
                   StartDate: new moment(item.StartDate).format(dateFormat),
                   EndDate: item.EndDate === null ? "" : new moment(item.EndDate).format(dateFormat),
                 };
