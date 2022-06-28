@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Logo, FormRow } from "../components";
+import { Logo } from "../components";
 import Wrapper from "../assets/wrappers/RegisterPage";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, registerUser } from "../features/user/userSlice";
