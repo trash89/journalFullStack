@@ -101,8 +101,8 @@ const EditJournal = () => {
   const { loading: loadingProjectsList, list: projectsList } = useProjectsList();
   const { loading: loadingSubprojectsList, list: subprojectsList } = useSubprojectsList();
 
-  const [updateRow, { error: updateError }] = useMutation(UPDATE_MUTATION);
-  const [deleteRow, { error: deleteError }] = useMutation(DELETE_MUTATION);
+  const [updateRow, { loading: loadingUpdate, error: updateError }] = useMutation(UPDATE_MUTATION);
+  const [deleteRow, { loading: loadingDelete, error: deleteError }] = useMutation(DELETE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -177,7 +177,8 @@ const EditJournal = () => {
   }, [idJournalEdit]);
 
   if (!isMounted) return <></>;
-  if (isLoading || loading || loadingProfile || loadingClientsList || loadingProjectsList || loadingSubprojectsList) return <CircularProgress />;
+  if (isLoading || loading || loadingProfile || loadingClientsList || loadingProjectsList || loadingSubprojectsList || loadingUpdate || loadingDelete)
+    return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

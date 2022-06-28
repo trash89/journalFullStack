@@ -61,8 +61,8 @@ const EditClient = () => {
   } = useGetClient(idClientParamInt);
   const { input, isErrorInput, isLoading } = useSelector((store) => store.client);
 
-  const [updateRow, { error: updateError }] = useMutation(UPDATE_MUTATION);
-  const [deleteRow, { error: deleteError }] = useMutation(DELETE_MUTATION);
+  const [updateRow, { loading: loadingUpdate, error: updateError }] = useMutation(UPDATE_MUTATION);
+  const [deleteRow, { loading: loadingDelete, error: deleteError }] = useMutation(DELETE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -123,7 +123,7 @@ const EditClient = () => {
   }, [idClientEdit]);
 
   if (!isMounted) return <></>;
-  if (isLoading || loading || loadingProfile) return <CircularProgress />;
+  if (isLoading || loading || loadingProfile || loadingUpdate || loadingDelete) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

@@ -74,7 +74,7 @@ const NewJournal = () => {
 
   const { input, isErrorInput, isLoading } = useSelector((store) => store.journal);
 
-  const [createRow, { error: createError }] = useMutation(CREATE_MUTATION);
+  const [createRow, { loading: loadingCreate, error: createError }] = useMutation(CREATE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -116,7 +116,7 @@ const NewJournal = () => {
   }, []);
 
   if (!isMounted) return <></>;
-  if (isLoading || loadingProfile || loadingClientsList || loadingProjectsList || loadingSubprojectsList) return <CircularProgress />;
+  if (isLoading || loadingProfile || loadingClientsList || loadingProjectsList || loadingSubprojectsList || loadingCreate) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

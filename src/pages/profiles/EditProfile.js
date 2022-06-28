@@ -53,8 +53,8 @@ const EditProfile = () => {
   const [input, setInput] = useState({ Password: "" });
   const [isErrorInput, setIsErrorInput] = useState({ Password: false });
 
-  const [updateProfile, { error: updateError }] = useMutation(UPDATE_MUTATION);
-  const [deleteProfile, { error: deleteError }] = useMutation(DELETE_MUTATION);
+  const [updateProfile, { loading: loadingUpdate, error: updateError }] = useMutation(UPDATE_MUTATION);
+  const [deleteProfile, { loading: loadingDelete, error: deleteError }] = useMutation(DELETE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,7 +97,7 @@ const EditProfile = () => {
   };
 
   if (!isMounted) return <></>;
-  if (loadingProfileConnected || loadingProfileEdit || loadingProfiles || isLoading) return <CircularProgress />;
+  if (loadingProfileConnected || loadingProfileEdit || loadingProfiles || isLoading || loadingUpdate || loadingDelete) return <CircularProgress />;
   if (!isProfileInList || idProfileParamInt === -1) return <>You cannot update this profile</>;
 
   return (

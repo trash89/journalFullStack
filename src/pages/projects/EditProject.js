@@ -91,8 +91,8 @@ const EditProject = () => {
 
   const { loading: loadingClients, list: clientsList } = useClientsList();
 
-  const [updateRow, { error: updateError }] = useMutation(UPDATE_MUTATION);
-  const [deleteRow, { error: deleteError }] = useMutation(DELETE_MUTATION);
+  const [updateRow, { loading: loadingUpdate, error: updateError }] = useMutation(UPDATE_MUTATION);
+  const [deleteRow, { loading: loadingDelete, error: deleteError }] = useMutation(DELETE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -165,7 +165,7 @@ const EditProject = () => {
   }, [idProjectEdit]);
 
   if (!isMounted) return <></>;
-  if (isLoading || loadingClients || loadingProfile || loadingProject) return <CircularProgress />;
+  if (isLoading || loadingClients || loadingProfile || loadingProject || loadingUpdate || loadingDelete) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

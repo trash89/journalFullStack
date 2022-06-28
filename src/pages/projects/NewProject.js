@@ -63,7 +63,7 @@ const NewProject = () => {
 
   const { input, isErrorInput, isLoading } = useSelector((store) => store.project);
 
-  const [createRow, { error: createError }] = useMutation(CREATE_MUTATION);
+  const [createRow, { loading: loadingCreate, error: createError }] = useMutation(CREATE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -105,7 +105,7 @@ const NewProject = () => {
   }, []);
 
   if (!isMounted) return <></>;
-  if (isLoading || loadingClients || loadingProfile) return <CircularProgress />;
+  if (isLoading || loadingClients || loadingProfile || loadingCreate) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }

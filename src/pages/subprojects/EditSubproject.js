@@ -95,8 +95,8 @@ const EditSubproject = () => {
   const { loading: loadingClients, list: clientsList } = useClientsList();
   const { loading: loadingProjects, list: projectsList } = useProjectsList();
 
-  const [updateRow, { error: updateError }] = useMutation(UPDATE_MUTATION);
-  const [deleteRow, { error: deleteError }] = useMutation(DELETE_MUTATION);
+  const [updateRow, { loading: loadingUpdate, error: updateError }] = useMutation(UPDATE_MUTATION);
+  const [deleteRow, { loading: loadingDelete, error: deleteError }] = useMutation(DELETE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -174,7 +174,7 @@ const EditSubproject = () => {
   }, [idSubprojectEdit]);
 
   if (!isMounted) return <></>;
-  if (isLoading || loading || loadingClients || loadingProfile || loadingProjects) return <CircularProgress />;
+  if (isLoading || loading || loadingClients || loadingProfile || loadingProjects || loadingUpdate || loadingDelete) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }
