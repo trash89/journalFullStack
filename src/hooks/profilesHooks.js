@@ -7,6 +7,7 @@ const useGetProfile = (id) => {
         idProfile
         Username
         Is_Admin
+        Keep
       }
     }
   `;
@@ -27,6 +28,7 @@ const useProfilesArray = () => {
           idProfile
           Username
           Is_Admin
+          Keep
         }
       }
     }

@@ -14,7 +14,6 @@ const initialState = {
     Description: "",
     Todos: "",
     ThingsDone: "",
-    DocUploaded: "",
   },
   isErrorInput: {
     idProfile: false,
@@ -26,7 +25,6 @@ const initialState = {
     Description: false,
     Todos: false,
     ThingsDone: false,
-    DocUploaded: false,
   },
   status: "pending",
   isEditing: false,

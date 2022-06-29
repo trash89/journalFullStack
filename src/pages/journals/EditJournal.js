@@ -33,7 +33,6 @@ const UPDATE_MUTATION = gql`
     $Description: String!
     $Todos: String!
     $ThingsDone: String
-    $DocUploaded: ByteArray
   ) {
     updateJournal(
       idJournal: $idJournal
@@ -46,7 +45,6 @@ const UPDATE_MUTATION = gql`
         Description: $Description
         Todos: $Todos
         ThingsDone: $ThingsDone
-        DocUploaded: $DocUploaded
       }
     ) {
       idProfile
@@ -58,7 +56,6 @@ const UPDATE_MUTATION = gql`
       Description
       Todos
       ThingsDone
-      DocUploaded
     }
   }
 `;
@@ -67,6 +64,9 @@ const DELETE_MUTATION = gql`
     deleteJournal(idJournal: $idJournal) {
       idJournal
       EntryDate
+      Description
+      Todos
+      ThingsDone
     }
   }
 `;
@@ -93,7 +93,6 @@ const EditJournal = () => {
     Description: DescriptionEdit,
     Todos: TodosEdit,
     ThingsDone: ThingsDoneEdit,
-    DocUploaded: DocUploadedEdit,
   } = useGetJournal(idJournalParamInt);
   const { input, isErrorInput, isLoading } = useSelector((store) => store.journal);
 
@@ -124,8 +123,6 @@ const EditJournal = () => {
                   Description: input.Description,
                   Todos: input.Todos,
                   ThingsDone: input.ThingsDone,
-                  //DocUploaded: input.DocUploaded,
-                  DocUploaded: null,
                 },
               });
               if (!result?.errors) {
@@ -168,7 +165,6 @@ const EditJournal = () => {
             Description: DescriptionEdit,
             Todos: TodosEdit,
             ThingsDone: ThingsDoneEdit,
-            DocUploaded: DocUploadedEdit,
           },
         })
       );
@@ -301,18 +297,6 @@ const EditJournal = () => {
         onChange={(e) => dispatch(setInput({ name: "ThingsDone", value: e.target.value }))}
         minRows={5}
         style={{ width: 600 }}
-        variant="outlined"
-      />
-      <InputLabel error={isErrorInput.DocUploaded}>Uploading Document</InputLabel>
-      <TextField
-        error={isErrorInput.DocUploaded}
-        size="small"
-        margin="dense"
-        id="DocUploaded"
-        label="Uploading Document"
-        type="text"
-        value={input.DocUploaded}
-        onChange={(e) => dispatch(setInput({ name: "DocUploaded", value: e.target.value }))}
         variant="outlined"
       />
 

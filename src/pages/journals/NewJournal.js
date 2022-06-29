@@ -29,7 +29,6 @@ const CREATE_MUTATION = gql`
     $Description: String!
     $Todos: String!
     $ThingsDone: String!
-    $DocUploaded: ByteArray
   ) {
     createJournal(
       journal: {
@@ -41,7 +40,6 @@ const CREATE_MUTATION = gql`
         Description: $Description
         Todos: $Todos
         ThingsDone: $ThingsDone
-        DocUploaded: $DocUploaded
       }
     ) {
       idProfile
@@ -55,7 +53,6 @@ const CREATE_MUTATION = gql`
       Description
       Todos
       ThingsDone
-      DocUploaded
     }
   }
 `;
@@ -95,8 +92,6 @@ const NewJournal = () => {
                   Description: input.Description,
                   Todos: input.Todos,
                   ThingsDone: input.ThingsDone,
-                  //DocUploaded: input.DocUploaded,
-                  DocUploaded: null,
                 },
               });
               if (!result?.errors) {
@@ -243,17 +238,6 @@ const NewJournal = () => {
         variant="outlined"
         minRows={5}
         style={{ width: 600 }}
-      />
-      <InputLabel error={isErrorInput.DocUploaded}>Uploading Document</InputLabel>
-      <TextField
-        error={isErrorInput.DocUploaded}
-        size="small"
-        margin="dense"
-        id="DocUploaded"
-        type="text"
-        value={input.DocUploaded}
-        onChange={(e) => dispatch(setInput({ name: "DocUploaded", value: e.target.value }))}
-        variant="outlined"
       />
 
       <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>

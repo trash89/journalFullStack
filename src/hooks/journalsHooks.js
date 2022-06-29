@@ -13,7 +13,6 @@ const useGetJournal = (id) => {
         Description
         Todos
         ThingsDone
-        DocUploaded
       }
     }
   `;
@@ -31,9 +30,8 @@ const useGetJournal = (id) => {
       idJournal: -1,
       EntryDate: "",
       Description: "",
-      Todos: "N",
+      Todos: "",
       ThingsDone: "",
-      DocUploaded: "",
     };
 
   return {
@@ -47,7 +45,6 @@ const useGetJournal = (id) => {
     Description: data?.journal?.Description,
     Todos: data?.journal?.Todos,
     ThingsDone: data?.journal?.ThingsDone,
-    DocUploaded: data?.journal?.DocUploaded,
   };
 };
 

@@ -23,6 +23,7 @@ const PROFILES_QUERY = gql`
         idProfile
         Username
         Is_Admin
+        Keep
       }
     }
   }
@@ -40,13 +41,18 @@ const Profiles = () => {
           width: 5%;
         }
         &:nth-of-type(2) {
-          min-width: 80%;
+          min-width: 65%;
           width: 80%;
         }
         &:nth-of-type(3) {
           min-width: 15%;
           width: 15%;
         }
+        &:nth-of-type(4) {
+          min-width: 15%;
+          width: 15%;
+        }
+
       `,
   });
 
@@ -57,6 +63,7 @@ const Profiles = () => {
     sortFns: {
       USERNAME: (array) => array.sort((a, b) => a.Username.localeCompare(b.Username)),
       IS_ADMIN: (array) => array.sort((a, b) => a.Is_Admin.localeCompare(b.Is_Admin)),
+      KEEP: (array) => array.sort((a, b) => a.Keep.localeCompare(b.Keep)),
     },
   });
   const pagination = usePagination(dataTable, PAGINATION_STATE);
@@ -82,6 +89,7 @@ const Profiles = () => {
                 <HeaderCell>Actions</HeaderCell>
                 <HeaderCellSort sortKey="USERNAME">Username</HeaderCellSort>
                 <HeaderCellSort sortKey="IS_ADMIN">Admin?</HeaderCellSort>
+                <HeaderCellSort sortKey="KEEP">Keep?</HeaderCellSort>
               </HeaderRow>
             </Header>
             <Body>
@@ -90,6 +98,7 @@ const Profiles = () => {
                   id: parseInt(item.idProfile),
                   Username: item.Username,
                   Is_Admin: item.Is_Admin,
+                  Keep: item.Keep,
                 };
                 return (
                   <Row key={localItem.id} item={localItem}>
@@ -100,6 +109,7 @@ const Profiles = () => {
                     </Cell>
                     <Cell>{localItem.Username}</Cell>
                     <Cell>{localItem.Is_Admin}</Cell>
+                    <Cell>{localItem.Keep}</Cell>
                   </Row>
                 );
               })}

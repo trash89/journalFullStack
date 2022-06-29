@@ -7,6 +7,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import Typography from "@mui/material/Typography";
+import MenuItem from "@mui/material/MenuItem";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -17,10 +18,11 @@ import { logoutUser } from "../../features/user/userSlice";
 import { useIsMounted, useGetProfile, useProfilesArray } from "../../hooks";
 
 const UPDATE_MUTATION = gql`
-  mutation updateMutation($idProfile: ID!, $Username: String!, $Password: String!) {
-    updateProfile(idProfile: $idProfile, profile: { Username: $Username, Password: $Password }) {
+  mutation updateMutation($idProfile: ID!, $Username: String!, $Password: String!, $Keep: String!) {
+    updateProfile(idProfile: $idProfile, profile: { Username: $Username, Password: $Password, Keep: $Keep }) {
       idProfile
       Username
+      Keep
     }
   }
 `;
@@ -29,6 +31,7 @@ const DELETE_MUTATION = gql`
     deleteProfile(idProfile: $idProfile) {
       idProfile
       Username
+      Keep
     }
   }
 `;
@@ -50,8 +53,8 @@ const EditProfile = () => {
 
   const isProfileInList = isIdInList(idProfileParam, profilesArray);
 
-  const [input, setInput] = useState({ Password: "" });
-  const [isErrorInput, setIsErrorInput] = useState({ Password: false });
+  const [input, setInput] = useState({ Password: "", Keep: "N" });
+  const [isErrorInput, setIsErrorInput] = useState({ Password: false, Keep: false });
 
   const [updateProfile, { loading: loadingUpdate, error: updateError }] = useMutation(UPDATE_MUTATION);
   const [deleteProfile, { loading: loadingDelete, error: deleteError }] = useMutation(DELETE_MUTATION);
@@ -68,6 +71,7 @@ const EditProfile = () => {
         idProfile: parseInt(idProfileEdit),
         Username: UsernameEdit,
         Password: input.Password,
+        Keep: input.Keep,
       },
     });
     if (!result.errors) {
@@ -95,6 +99,10 @@ const EditProfile = () => {
     setInput({ ...input, Password: e.target.value });
     if (isErrorInput.Password) setIsErrorInput({ ...isErrorInput, Password: false });
   };
+  const handleKeep = (e) => {
+    setInput({ ...input, Keep: e.target.value });
+    if (isErrorInput.Keep) setIsErrorInput({ ...isErrorInput, Keep: false });
+  };
 
   if (!isMounted) return <></>;
   if (loadingProfileConnected || loadingProfileEdit || loadingProfiles || isLoading || loadingUpdate || loadingDelete) return <CircularProgress />;
@@ -117,6 +125,25 @@ const EditProfile = () => {
           onChange={handlePassword}
           variant="outlined"
         />
+        <InputLabel error={isErrorInput.Keep}>Keep?</InputLabel>
+        <TextField
+          error={isErrorInput.Keep}
+          size="small"
+          margin="dense"
+          id="isDefault"
+          select
+          value={input.Keep}
+          onChange={handleKeep}
+          required
+          variant="outlined"
+        >
+          <MenuItem key="N" value="N">
+            No
+          </MenuItem>
+          <MenuItem key="Y" value="Y">
+            Yes
+          </MenuItem>
+        </TextField>
       </Stack>
       <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
         <IconButton area-label="cancel" onClick={() => navigate("/profiles")} size="small">

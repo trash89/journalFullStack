@@ -178,7 +178,7 @@ function Register() {
         />
 
         <Button type="submit" className="btn btn-block" disabled={isLoading} variant="contained" size="small">
-          {isLoading ? "loading..." : "submit"}
+          {isLoading ? "loading..." : "connect"}
         </Button>
         <Button type="button" className="btn btn-block btn-hipster" disabled={isLoading} onClick={loginDemo} variant="contained" size="small">
           {isLoading ? "loading..." : "demo app"}
