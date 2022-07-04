@@ -174,7 +174,7 @@ const Journal = () => {
 
         <span>Total: {data.journals.count} rows</span>
       </div>
-      <Table data={dataTable} theme={theme} sort={sort} pagination={pagination} layout={{ custom: true }}>
+      <Table data={dataTable} sort={sort} pagination={pagination}>
         {(tableList) => (
           <>
             <Header>
