@@ -1,3 +1,4 @@
+import React from "react";
 import { BsPersonLinesFill, BsJournals } from "react-icons/bs";
 import { FaWpforms, FaProjectDiagram } from "react-icons/fa";
 import { ImProfile } from "react-icons/im";

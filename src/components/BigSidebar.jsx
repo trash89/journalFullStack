@@ -1,3 +1,4 @@
+import React from "react";
 import NavLinks from "./NavLinks";
 import Logo from "./Logo";
 import Wrapper from "../assets/wrappers/BigSidebar";

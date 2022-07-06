@@ -1,3 +1,4 @@
+import React from "react";
 import { useIsMounted } from "../hooks";
 
 const PaginationTable = ({ pagination, data }) => {
