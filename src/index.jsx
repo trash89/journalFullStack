@@ -8,7 +8,13 @@ import "./index.css";
 
 import { themeOptions } from "./MUITheme";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache, defaultDataIdFromObject } from "@apollo/client";
+import {
+  ApolloProvider,
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+  defaultDataIdFromObject,
+} from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { getUserFromLocalStorage } from "./utils/localStorage";
 

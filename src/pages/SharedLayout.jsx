@@ -12,10 +12,10 @@ const SharedLayout = () => {
           <MenuAppBar />
           <div className="principal-page">
             <Outlet />
+            <Copyright />
           </div>
         </div>
       </main>
-      <Copyright />
     </Wrapper>
   );
 };

@@ -9,9 +9,9 @@ const TABLE_THEME = {
     background-color: #eaf5fd;
   `,
   Row: `
-    font-size: 14px;
+    font-size: 1rem;
     &:nth-of-type(odd) {
-      background-color: #d2e9fb;
+      background-color: #84beeb;
     }
 
     &:nth-of-type(even) {
@@ -21,9 +21,8 @@ const TABLE_THEME = {
   HeaderCell: `
         & > div {
           width: 100%;
-
           display: flex;
-          justify-content: space-between;
+          justify-content: left;
           align-items: center;
         }
       `,
@@ -32,7 +31,7 @@ const TABLE_THEME = {
 const PAGINATION_STATE = {
   state: {
     page: 0,
-    size: 10,
+    size: 8,
   },
 };
 export { USER, dateFormat, TABLE_THEME, PAGINATION_STATE };

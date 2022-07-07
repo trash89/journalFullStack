@@ -3,9 +3,20 @@ import { Link, Navigate } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import { useSelector } from "react-redux";
 
-import { Table, Header, HeaderRow, HeaderCell, Body, Row, Cell } from "@table-library/react-table-library/table";
+import {
+  Table,
+  Header,
+  HeaderRow,
+  HeaderCell,
+  Body,
+  Row,
+  Cell,
+} from "@table-library/react-table-library/table";
 import { useTheme } from "@table-library/react-table-library/theme";
-import { useSort, HeaderCellSort } from "@table-library/react-table-library/sort";
+import {
+  useSort,
+  HeaderCellSort,
+} from "@table-library/react-table-library/sort";
 import { usePagination } from "@table-library/react-table-library/pagination";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -16,7 +27,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import moment from "moment";
 
 import { useIsMounted } from "../../hooks";
-import { dateFormat, TABLE_THEME, PAGINATION_STATE } from "../../utils/constants";
+import {
+  dateFormat,
+  TABLE_THEME,
+  PAGINATION_STATE,
+} from "../../utils/constants";
 import { PaginationTable } from "../../components";
 
 const JOURNALS_QUERY = gql`
@@ -58,52 +73,29 @@ const Journal = () => {
   const isMounted = useIsMounted();
   const { user } = useSelector((store) => store.user);
 
-  const theme = useTheme({
-    ...TABLE_THEME,
-    BaseCell: `
-        &:nth-of-type(1) {
-          min-width: 5%;
-          width: 5%;
-        }
-        &:nth-of-type(2) {
-          min-width: 10%;
-          width: 10%;
-        }
-        &:nth-of-type(3) {
-          min-width: 35%;
-          width: 35%;
-        }
-        &:nth-of-type(4) {
-          min-width: 10%;
-          width: 10%;
-        }
-        &:nth-of-type(5) {
-          min-width: 10%;
-          width: 10%;
-        }
-        &:nth-of-type(6) {
-          min-width: 15%;
-          width: 15%;
-        }
-        &:nth-of-type(7) {
-          min-width: 15%;
-          width: 15%;
-        }
-
-      `,
-  });
+  const theme = useTheme(TABLE_THEME);
 
   const { data, loading } = useQuery(JOURNALS_QUERY);
   const dataTable = { nodes: data?.journals?.list };
 
   const sort = useSort(dataTable, null, {
     sortFns: {
-      ENTRYDATE: (array) => array.sort((a, b) => new Date(a.EntryDate) - new Date(b.EntryDate)),
-      DESCRIPTION: (array) => array.sort((a, b) => a.Description.localeCompare(b.Description)),
-      PROFILE: (array) => array.sort((a, b) => a.profile.Username.localeCompare(b.profile.Username)),
-      CLIENT: (array) => array.sort((a, b) => a.client.Name.localeCompare(b.profile.Name)),
-      PROJECT: (array) => array.sort((a, b) => a.project.Name.localeCompare(b.project.Name)),
-      SUBPROJECT: (array) => array.sort((a, b) => a.subproject.Name.localeCompare(b.subproject.Name)),
+      ENTRYDATE: (array) =>
+        array.sort((a, b) => new Date(a.EntryDate) - new Date(b.EntryDate)),
+      DESCRIPTION: (array) =>
+        array.sort((a, b) => a.Description.localeCompare(b.Description)),
+      PROFILE: (array) =>
+        array.sort((a, b) =>
+          a.profile.Username.localeCompare(b.profile.Username)
+        ),
+      CLIENT: (array) =>
+        array.sort((a, b) => a.client.Name.localeCompare(b.profile.Name)),
+      PROJECT: (array) =>
+        array.sort((a, b) => a.project.Name.localeCompare(b.project.Name)),
+      SUBPROJECT: (array) =>
+        array.sort((a, b) =>
+          a.subproject.Name.localeCompare(b.subproject.Name)
+        ),
     },
   });
   const pagination = usePagination(dataTable, PAGINATION_STATE);
@@ -116,7 +108,12 @@ const Journal = () => {
     if (sc === "" || sc === '""') {
       return sc;
     }
-    if (sc.includes('"') || sc.includes(",") || sc.includes("\n") || sc.includes("\r")) {
+    if (
+      sc.includes('"') ||
+      sc.includes(",") ||
+      sc.includes("\n") ||
+      sc.includes("\r")
+    ) {
       return '"' + sc.replace(/"/g, '""') + '"';
     }
     return sc;
@@ -124,7 +121,13 @@ const Journal = () => {
 
   const makeCsvData = (columns, data) => {
     return data.reduce((csvString, rowItem) => {
-      return csvString + columns.map(({ accessor }) => escapeCsvCell(accessor(rowItem))).join(",") + "\r\n";
+      return (
+        csvString +
+        columns
+          .map(({ accessor }) => escapeCsvCell(accessor(rowItem)))
+          .join(",") +
+        "\r\n"
+      );
     }, columns.map(({ name }) => escapeCsvCell(name)).join(",") + "\r\n");
   };
 
@@ -162,7 +165,7 @@ const Journal = () => {
   }
   if (!dataTable.nodes || dataTable.nodes === undefined) return <></>;
   return (
-    <div style={{ height: "350px" }}>
+    <div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <span>
           <Link to="/journals/newjournal">
@@ -175,14 +178,16 @@ const Journal = () => {
 
         <span>Total: {data.journals.count} rows</span>
       </div>
-      <Table data={dataTable} sort={sort} pagination={pagination}>
+      <Table data={dataTable} sort={sort} pagination={pagination} theme={theme}>
         {(tableList) => (
           <>
             <Header>
               <HeaderRow>
                 <HeaderCell>Actions</HeaderCell>
                 <HeaderCellSort sortKey="ENTRYDATE">Entry Date</HeaderCellSort>
-                <HeaderCellSort sortKey="DESCRIPTION">Description</HeaderCellSort>
+                <HeaderCellSort sortKey="DESCRIPTION">
+                  Description
+                </HeaderCellSort>
                 <HeaderCellSort sortKey="PROFILE">Profile</HeaderCellSort>
                 <HeaderCellSort sortKey="CLIENT">Client</HeaderCellSort>
                 <HeaderCellSort sortKey="PROJECT">Project</HeaderCellSort>

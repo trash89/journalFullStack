@@ -16,9 +16,19 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import IconButton from "@mui/material/IconButton";
 
-import { useIsMounted, useGetProfile, useClientsList, useProjectsList, useSubprojectsList } from "../../hooks";
+import {
+  useIsMounted,
+  useGetProfile,
+  useClientsList,
+  useProjectsList,
+  useSubprojectsList,
+} from "../../hooks";
 
-import { setInput, setErrorInput, clearValues } from "../../features/journal/journalSlice";
+import {
+  setInput,
+  setErrorInput,
+  clearValues,
+} from "../../features/journal/journalSlice";
 
 const CREATE_MUTATION = gql`
   mutation createMutation(
@@ -64,15 +74,24 @@ const NewJournal = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const { loading: loadingProfile, idProfile: idProfileConnected, Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
+  const {
+    loading: loadingProfile,
+    idProfile: idProfileConnected,
+    Username: UsernameConnected,
+  } = useGetProfile(parseInt(user.idProfile));
 
   const { loading: loadingClientsList, list: clientsList } = useClientsList();
-  const { loading: loadingProjectsList, list: projectsList } = useProjectsList();
-  const { loading: loadingSubprojectsList, list: subprojectsList } = useSubprojectsList();
+  const { loading: loadingProjectsList, list: projectsList } =
+    useProjectsList();
+  const { loading: loadingSubprojectsList, list: subprojectsList } =
+    useSubprojectsList();
 
-  const { input, isErrorInput, isLoading } = useSelector((store) => store.journal);
+  const { input, isErrorInput, isLoading } = useSelector(
+    (store) => store.journal
+  );
 
-  const [createRow, { loading: loadingCreate, error: createError }] = useMutation(CREATE_MUTATION);
+  const [createRow, { loading: loadingCreate, error: createError }] =
+    useMutation(CREATE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -82,7 +101,9 @@ const NewJournal = () => {
         if (input.idSubproject && input.idSubproject !== "") {
           if (input.EntryDate && input.EntryDate !== "") {
             if (input.Description && input.Description !== "") {
-              const EntryDateFormatted = new Date(input.EntryDate).toISOString();
+              const EntryDateFormatted = new Date(
+                input.EntryDate
+              ).toISOString();
               const result = await createRow({
                 variables: {
                   idProfile: parseInt(idProfileConnected),
@@ -112,16 +133,36 @@ const NewJournal = () => {
   }, []);
 
   if (!isMounted) return <></>;
-  if (isLoading || loadingProfile || loadingClientsList || loadingProjectsList || loadingSubprojectsList || loadingCreate) return <CircularProgress />;
+  if (
+    isLoading ||
+    loadingProfile ||
+    loadingClientsList ||
+    loadingProjectsList ||
+    loadingSubprojectsList ||
+    loadingCreate
+  )
+    return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }
   return (
-    <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={1} padding={1}>
+    <Stack
+      direction="column"
+      justifyContent="flex-start"
+      alignItems="flex-start"
+      spacing={1}
+      padding={1}
+    >
       <Typography variant="h6" gutterBottom component="div">
-        New journal entry, on profile {UsernameConnected}
+        New journal entry
       </Typography>
-      <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+      <Stack
+        direction="column"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        spacing={0}
+        padding={0}
+      >
         <InputLabel error={isErrorInput.EntryDate}>Entry Date</InputLabel>
         <TextField
           autoFocus
@@ -131,13 +172,27 @@ const NewJournal = () => {
           id="EntryDate"
           type="date"
           value={input.EntryDate}
-          onChange={(e) => dispatch(setInput({ name: "EntryDate", value: e.target.value }))}
+          onChange={(e) =>
+            dispatch(setInput({ name: "EntryDate", value: e.target.value }))
+          }
           variant="outlined"
           required
         />
       </Stack>
-      <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={1} spacing={1}>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+      <Stack
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        padding={1}
+        spacing={1}
+      >
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.idClient}>Client</InputLabel>
           <TextField
             error={isErrorInput.idClient}
@@ -146,7 +201,9 @@ const NewJournal = () => {
             id="idClient"
             select
             value={input.idClient}
-            onChange={(e) => dispatch(setInput({ name: "idClient", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "idClient", value: e.target.value }))
+            }
             required
             variant="outlined"
           >
@@ -159,7 +216,13 @@ const NewJournal = () => {
             })}
           </TextField>
         </Stack>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.idProject}>Project</InputLabel>
           <TextField
             error={isErrorInput.idProject}
@@ -168,7 +231,9 @@ const NewJournal = () => {
             id="idProject"
             select
             value={input.idProject}
-            onChange={(e) => dispatch(setInput({ name: "idProject", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "idProject", value: e.target.value }))
+            }
             required
             variant="outlined"
           >
@@ -181,7 +246,13 @@ const NewJournal = () => {
             })}
           </TextField>
         </Stack>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.idSubproject}>Subproject</InputLabel>
           <TextField
             error={isErrorInput.idSubproject}
@@ -190,7 +261,11 @@ const NewJournal = () => {
             id="idSubproject"
             select
             value={input.idSubproject}
-            onChange={(e) => dispatch(setInput({ name: "idSubproject", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(
+                setInput({ name: "idSubproject", value: e.target.value })
+              )
+            }
             required
             variant="outlined"
           >
@@ -211,11 +286,13 @@ const NewJournal = () => {
         id="Description"
         type="text"
         value={input.Description}
-        onChange={(e) => dispatch(setInput({ name: "Description", value: e.target.value }))}
+        onChange={(e) =>
+          dispatch(setInput({ name: "Description", value: e.target.value }))
+        }
         required
         variant="outlined"
         minRows={5}
-        style={{ width: 600 }}
+        style={{ width: 300 }}
       />
       <InputLabel error={isErrorInput.Todos}>To Do</InputLabel>
       <TextareaAutosize
@@ -224,10 +301,12 @@ const NewJournal = () => {
         id="Todos"
         type="text"
         value={input.Todos}
-        onChange={(e) => dispatch(setInput({ name: "Todos", value: e.target.value }))}
+        onChange={(e) =>
+          dispatch(setInput({ name: "Todos", value: e.target.value }))
+        }
         variant="outlined"
         minRows={5}
-        style={{ width: 600 }}
+        style={{ width: 300 }}
       />
       <InputLabel error={isErrorInput.ThingsDone}>Already Done</InputLabel>
       <TextareaAutosize
@@ -235,13 +314,21 @@ const NewJournal = () => {
         margin="dense"
         id="ThingsDone"
         value={input.ThingsDone}
-        onChange={(e) => dispatch(setInput({ name: "ThingsDone", value: e.target.value }))}
+        onChange={(e) =>
+          dispatch(setInput({ name: "ThingsDone", value: e.target.value }))
+        }
         variant="outlined"
         minRows={5}
-        style={{ width: 600 }}
+        style={{ width: 300 }}
       />
 
-      <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
+      <Stack
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        padding={0}
+        spacing={1}
+      >
         <IconButton
           area-label="cancel"
           onClick={() => {
@@ -252,11 +339,18 @@ const NewJournal = () => {
         >
           <CancelIcon />
         </IconButton>
-        <IconButton area-label="save" onClick={handleSubmit} disabled={isLoading} size="small">
+        <IconButton
+          area-label="save"
+          onClick={handleSubmit}
+          disabled={isLoading}
+          size="small"
+        >
           <SaveIcon />
         </IconButton>
       </Stack>
-      {createError && <Typography color="error.main">{createError?.message}</Typography>}
+      {createError && (
+        <Typography color="error.main">{createError?.message}</Typography>
+      )}
     </Stack>
   );
 };

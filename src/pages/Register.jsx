@@ -16,6 +16,8 @@ import Button from "@mui/material/Button";
 
 import Typography from "@mui/material/Typography";
 
+import { Copyright } from "../components";
+
 const REGISTER_MUTATION = gql`
   mutation RegisterMutation($Username: String!, $Password: String!) {
     register(profile: { Username: $Username, Password: $Password }) {
@@ -58,8 +60,10 @@ function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [login, { loading: loadingLogin, error: loginError }] = useMutation(LOGIN_MUTATION);
-  const [register, { loading: loadingRegister, error: registerError }] = useMutation(REGISTER_MUTATION);
+  const [login, { loading: loadingLogin, error: loginError }] =
+    useMutation(LOGIN_MUTATION);
+  const [register, { loading: loadingRegister, error: registerError }] =
+    useMutation(REGISTER_MUTATION);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -116,15 +120,19 @@ function Register() {
   };
   const handleUsername = async (e) => {
     setInput({ ...input, Username: e.target.value });
-    if (isErrorInput.Username) setIsErrorInput({ ...isErrorInput, Username: false });
+    if (isErrorInput.Username)
+      setIsErrorInput({ ...isErrorInput, Username: false });
   };
   const handlePassword = async (e) => {
     setInput({ ...input, Password: e.target.value });
-    if (isErrorInput.Password) setIsErrorInput({ ...isErrorInput, Password: false });
+    if (isErrorInput.Password)
+      setIsErrorInput({ ...isErrorInput, Password: false });
   };
 
   const loginDemo = async () => {
-    const result = await login({ variables: { Username: "demo", Password: "secret" } });
+    const result = await login({
+      variables: { Username: "demo", Password: "secret" },
+    });
     if (!result?.errors) {
       const localObject = {
         token: result?.data?.login?.token,
@@ -178,21 +186,45 @@ function Register() {
           fullWidth
         />
 
-        <Button type="submit" className="btn btn-block" disabled={isLoading} variant="contained" size="small">
+        <Button
+          type="submit"
+          className="btn btn-block"
+          disabled={isLoading}
+          variant="contained"
+          size="small"
+        >
           {isLoading ? "loading..." : "connect"}
         </Button>
-        <Button type="button" className="btn btn-block btn-hipster" disabled={isLoading} onClick={loginDemo} variant="contained" size="small">
+        <Button
+          type="button"
+          className="btn btn-block btn-hipster"
+          disabled={isLoading}
+          onClick={loginDemo}
+          variant="contained"
+          size="small"
+        >
           {isLoading ? "loading..." : "demo app"}
         </Button>
         <p>
           {input.isMember ? "Not a member yet?" : "Already a member?"}
-          <Button type="button" onClick={toggleMember} className="member-btn" variant="text" size="small">
+          <Button
+            type="button"
+            onClick={toggleMember}
+            className="member-btn"
+            variant="text"
+            size="small"
+          >
             {input.isMember ? "Register" : "Login"}
           </Button>
         </p>
-        {loginError && <Typography color="error.main">{loginError.message}</Typography>}
-        {registerError && <Typography color="error.main">{registerError.message}</Typography>}
+        {loginError && (
+          <Typography color="error.main">{loginError.message}</Typography>
+        )}
+        {registerError && (
+          <Typography color="error.main">{registerError.message}</Typography>
+        )}
       </form>
+      <Copyright />
     </Wrapper>
   );
 }

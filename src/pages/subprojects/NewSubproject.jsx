@@ -14,9 +14,18 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import { useIsMounted, useGetProfile, useClientsList, useProjectsList } from "../../hooks";
+import {
+  useIsMounted,
+  useGetProfile,
+  useClientsList,
+  useProjectsList,
+} from "../../hooks";
 
-import { setInput, setErrorInput, clearValues } from "../../features/subproject/subprojectSlice";
+import {
+  setInput,
+  setErrorInput,
+  clearValues,
+} from "../../features/subproject/subprojectSlice";
 
 const CREATE_MUTATION = gql`
   mutation createMutation(
@@ -60,14 +69,19 @@ const NewSubproject = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const { Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
+  const { Username: UsernameConnected } = useGetProfile(
+    parseInt(user.idProfile)
+  );
 
   const { loading: loadingClients, list: clientsList } = useClientsList();
   const { loading: loadingProjects, list: projectsList } = useProjectsList();
 
-  const { input, isErrorInput, isLoading } = useSelector((store) => store.subproject);
+  const { input, isErrorInput, isLoading } = useSelector(
+    (store) => store.subproject
+  );
 
-  const [createRow, { loading: loadingCreate, error: createError }] = useMutation(CREATE_MUTATION);
+  const [createRow, { loading: loadingCreate, error: createError }] =
+    useMutation(CREATE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,8 +93,13 @@ const NewSubproject = () => {
             if (input.isDefault && input.isDefault !== "") {
               if (input.StartDate && input.StartDate !== "") {
                 if (input.Finished && input.Finished !== "") {
-                  const StartDateFormatted = new Date(input.StartDate).toISOString();
-                  const EndDateFormatted = !input.EndDate || input.EndDate === "" ? null : new Date(input.EndDate).toISOString();
+                  const StartDateFormatted = new Date(
+                    input.StartDate
+                  ).toISOString();
+                  const EndDateFormatted =
+                    !input.EndDate || input.EndDate === ""
+                      ? null
+                      : new Date(input.EndDate).toISOString();
                   const result = await createRow({
                     variables: {
                       idProject: input.idProject,
@@ -112,18 +131,37 @@ const NewSubproject = () => {
   }, []);
 
   if (!isMounted) return <></>;
-  if (isLoading || loadingClients || loadingProjects || loadingCreate) return <CircularProgress />;
+  if (isLoading || loadingClients || loadingProjects || loadingCreate)
+    return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }
 
   return (
-    <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={1} padding={1}>
+    <Stack
+      direction="column"
+      justifyContent="flex-start"
+      alignItems="flex-start"
+      spacing={1}
+      padding={1}
+    >
       <Typography variant="h6" gutterBottom component="div">
-        New subproject, on profile {UsernameConnected}
+        New subproject
       </Typography>
-      <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1} padding={0}>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+      <Stack
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        spacing={1}
+        padding={0}
+      >
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.idClient}>Client</InputLabel>
           <TextField
             error={isErrorInput.idClient}
@@ -132,7 +170,9 @@ const NewSubproject = () => {
             id="idClient"
             select
             value={input.idClient}
-            onChange={(e) => dispatch(setInput({ name: "idClient", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "idClient", value: e.target.value }))
+            }
             required
             variant="outlined"
           >
@@ -145,7 +185,13 @@ const NewSubproject = () => {
             })}
           </TextField>
         </Stack>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.idProject}>Project</InputLabel>
           <TextField
             error={isErrorInput.idProject}
@@ -154,7 +200,9 @@ const NewSubproject = () => {
             id="idProject"
             select
             value={input.idProject}
-            onChange={(e) => dispatch(setInput({ name: "idProject", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "idProject", value: e.target.value }))
+            }
             required
             variant="outlined"
           >
@@ -168,8 +216,20 @@ const NewSubproject = () => {
           </TextField>
         </Stack>
       </Stack>
-      <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+      <Stack
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        padding={0}
+        spacing={1}
+      >
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.Name}>Subproject Name</InputLabel>
           <TextField
             error={isErrorInput.Name}
@@ -179,12 +239,20 @@ const NewSubproject = () => {
             id="Name"
             type="text"
             value={input.Name}
-            onChange={(e) => dispatch(setInput({ name: "Name", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "Name", value: e.target.value }))
+            }
             required
             variant="outlined"
           />
         </Stack>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.isDefault}>Default?</InputLabel>
           <TextField
             error={isErrorInput.isDefault}
@@ -193,7 +261,9 @@ const NewSubproject = () => {
             id="isDefault"
             select
             value={input.isDefault}
-            onChange={(e) => dispatch(setInput({ name: "isDefault", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "isDefault", value: e.target.value }))
+            }
             required
             variant="outlined"
           >
@@ -205,7 +275,13 @@ const NewSubproject = () => {
             </MenuItem>
           </TextField>
         </Stack>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.Finished}>Finished?</InputLabel>
           <TextField
             error={isErrorInput.Finished}
@@ -214,7 +290,9 @@ const NewSubproject = () => {
             id="Finished"
             select
             value={input.Finished}
-            onChange={(e) => dispatch(setInput({ name: "Finished", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "Finished", value: e.target.value }))
+            }
             variant="outlined"
             required
           >
@@ -235,13 +313,27 @@ const NewSubproject = () => {
         id="Description"
         type="text"
         value={input.Description}
-        onChange={(e) => dispatch(setInput({ name: "Description", value: e.target.value }))}
+        onChange={(e) =>
+          dispatch(setInput({ name: "Description", value: e.target.value }))
+        }
         required
         variant="outlined"
         fullWidth
       />
-      <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1} padding={0}>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+      <Stack
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        spacing={1}
+        padding={0}
+      >
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.StartDate}>Start Date</InputLabel>
           <TextField
             error={isErrorInput.StartDate}
@@ -250,12 +342,20 @@ const NewSubproject = () => {
             id="StartDate"
             type="date"
             value={input.StartDate}
-            onChange={(e) => dispatch(setInput({ name: "StartDate", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "StartDate", value: e.target.value }))
+            }
             variant="outlined"
             required
           />
         </Stack>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.EndDate}>End Date</InputLabel>
           <TextField
             error={isErrorInput.EndDate}
@@ -264,12 +364,20 @@ const NewSubproject = () => {
             id="EndDate"
             type="date"
             value={input.EndDate}
-            onChange={(e) => dispatch(setInput({ name: "EndDate", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "EndDate", value: e.target.value }))
+            }
             variant="outlined"
           />
         </Stack>
       </Stack>
-      <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
+      <Stack
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        padding={0}
+        spacing={1}
+      >
         <IconButton
           area-label="cancel"
           onClick={() => {
@@ -280,11 +388,18 @@ const NewSubproject = () => {
         >
           <CancelIcon />
         </IconButton>
-        <IconButton area-label="save" onClick={handleSubmit} disabled={isLoading} size="small">
+        <IconButton
+          area-label="save"
+          onClick={handleSubmit}
+          disabled={isLoading}
+          size="small"
+        >
           <SaveIcon />
         </IconButton>
       </Stack>
-      {createError && <Typography color="error.main">{createError?.message}</Typography>}
+      {createError && (
+        <Typography color="error.main">{createError?.message}</Typography>
+      )}
     </Stack>
   );
 };

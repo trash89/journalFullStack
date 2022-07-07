@@ -4,9 +4,20 @@ import { Link, Navigate } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import { useSelector } from "react-redux";
 
-import { Table, Header, HeaderRow, HeaderCell, Body, Row, Cell } from "@table-library/react-table-library/table";
+import {
+  Table,
+  Header,
+  HeaderRow,
+  HeaderCell,
+  Body,
+  Row,
+  Cell,
+} from "@table-library/react-table-library/table";
 import { useTheme } from "@table-library/react-table-library/theme";
-import { useSort, HeaderCellSort } from "@table-library/react-table-library/sort";
+import {
+  useSort,
+  HeaderCellSort,
+} from "@table-library/react-table-library/sort";
 import { usePagination } from "@table-library/react-table-library/pagination";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -34,36 +45,17 @@ const Profiles = () => {
   const isMounted = useIsMounted();
   const { user } = useSelector((store) => store.user);
 
-  const theme = useTheme({
-    ...TABLE_THEME,
-    BaseCell: `
-        &:nth-of-type(1) {
-          min-width: 5%;
-          width: 5%;
-        }
-        &:nth-of-type(2) {
-          min-width: 65%;
-          width: 80%;
-        }
-        &:nth-of-type(3) {
-          min-width: 15%;
-          width: 15%;
-        }
-        &:nth-of-type(4) {
-          min-width: 15%;
-          width: 15%;
-        }
-
-      `,
-  });
+  const theme = useTheme(TABLE_THEME);
 
   const { loading, data } = useQuery(PROFILES_QUERY);
   const dataTable = { nodes: data?.profiles?.list };
 
   const sort = useSort(dataTable, null, {
     sortFns: {
-      USERNAME: (array) => array.sort((a, b) => a.Username.localeCompare(b.Username)),
-      IS_ADMIN: (array) => array.sort((a, b) => a.Is_Admin.localeCompare(b.Is_Admin)),
+      USERNAME: (array) =>
+        array.sort((a, b) => a.Username.localeCompare(b.Username)),
+      IS_ADMIN: (array) =>
+        array.sort((a, b) => a.Is_Admin.localeCompare(b.Is_Admin)),
       KEEP: (array) => array.sort((a, b) => a.Keep.localeCompare(b.Keep)),
     },
   });
@@ -76,13 +68,13 @@ const Profiles = () => {
   }
   if (!dataTable.nodes || dataTable.nodes === undefined) return <></>;
   return (
-    <div style={{ height: "350px" }}>
+    <div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <span></span>
         <span>Total: {data.profiles.count} rows</span>
       </div>
 
-      <Table data={dataTable} sort={sort} pagination={pagination}>
+      <Table data={dataTable} sort={sort} pagination={pagination} theme={theme}>
         {(tableList) => (
           <>
             <Header>

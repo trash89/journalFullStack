@@ -16,9 +16,19 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { useIsMounted, useGetProfile, useGetProject, useClientsList } from "../../hooks";
+import {
+  useIsMounted,
+  useGetProfile,
+  useGetProject,
+  useClientsList,
+} from "../../hooks";
 
-import { setInput, setErrorInput, clearValues, setEdit } from "../../features/project/projectSlice";
+import {
+  setInput,
+  setErrorInput,
+  clearValues,
+  setEdit,
+} from "../../features/project/projectSlice";
 
 import moment from "moment";
 
@@ -71,10 +81,15 @@ const EditProject = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const { loading: loadingProfile, Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
+  const { loading: loadingProfile, Username: UsernameConnected } =
+    useGetProfile(parseInt(user.idProfile));
 
   const { idProject: idProjectParam } = useParams();
-  const idProjectParamInt = idProjectParam ? (Number.isNaN(parseInt(idProjectParam)) ? -1 : parseInt(idProjectParam)) : -1;
+  const idProjectParamInt = idProjectParam
+    ? Number.isNaN(parseInt(idProjectParam))
+      ? -1
+      : parseInt(idProjectParam)
+    : -1;
 
   const {
     loading: loadingProject,
@@ -88,12 +103,16 @@ const EditProject = () => {
     Finished: FinishedEdit,
   } = useGetProject(idProjectParamInt);
 
-  const { input, isErrorInput, isLoading } = useSelector((store) => store.project);
+  const { input, isErrorInput, isLoading } = useSelector(
+    (store) => store.project
+  );
 
   const { loading: loadingClients, list: clientsList } = useClientsList();
 
-  const [updateRow, { loading: loadingUpdate, error: updateError }] = useMutation(UPDATE_MUTATION);
-  const [deleteRow, { loading: loadingDelete, error: deleteError }] = useMutation(DELETE_MUTATION);
+  const [updateRow, { loading: loadingUpdate, error: updateError }] =
+    useMutation(UPDATE_MUTATION);
+  const [deleteRow, { loading: loadingDelete, error: deleteError }] =
+    useMutation(DELETE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -104,8 +123,13 @@ const EditProject = () => {
           if (input.isDefault && input.isDefault !== "") {
             if (input.StartDate && input.StartDate !== "") {
               if (input.Finished && input.Finished !== "") {
-                const StartDateFormatted = new Date(input.StartDate).toISOString();
-                const EndDateFormatted = !input.EndDate || input.EndDate === "" ? null : new Date(input.EndDate).toISOString();
+                const StartDateFormatted = new Date(
+                  input.StartDate
+                ).toISOString();
+                const EndDateFormatted =
+                  !input.EndDate || input.EndDate === ""
+                    ? null
+                    : new Date(input.EndDate).toISOString();
                 const result = await updateRow({
                   variables: {
                     idProject: idProjectParamInt,
@@ -145,8 +169,12 @@ const EditProject = () => {
 
   useEffect(() => {
     if (parseInt(idProjectEdit) !== -1) {
-      const StartDateFormatted = StartDateEdit ? moment(new Date(StartDateEdit)).format("YYYY-MM-DD") : "";
-      const EndDateFormatted = EndDateEdit ? moment(new Date(EndDateEdit)).format("YYYY-MM-DD") : "";
+      const StartDateFormatted = StartDateEdit
+        ? moment(new Date(StartDateEdit)).format("YYYY-MM-DD")
+        : "";
+      const EndDateFormatted = EndDateEdit
+        ? moment(new Date(EndDateEdit)).format("YYYY-MM-DD")
+        : "";
       dispatch(
         setEdit({
           editId: idProjectEdit,
@@ -166,18 +194,38 @@ const EditProject = () => {
   }, [idProjectEdit]);
 
   if (!isMounted) return <></>;
-  if (isLoading || loadingClients || loadingProfile || loadingProject || loadingUpdate || loadingDelete) return <CircularProgress />;
+  if (
+    isLoading ||
+    loadingClients ||
+    loadingProfile ||
+    loadingProject ||
+    loadingUpdate ||
+    loadingDelete
+  )
+    return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }
   return (
-    <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={1} padding={1}>
+    <Stack
+      direction="column"
+      justifyContent="flex-start"
+      alignItems="flex-start"
+      spacing={1}
+      padding={1}
+    >
       <Typography variant="h6" gutterBottom component="div">
-        Edit project, on profile {UsernameConnected}
+        Edit project
       </Typography>
 
       {clientsList.length > 0 && (
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.idClient}>Client</InputLabel>
           <TextField
             error={isErrorInput.idClient}
@@ -185,7 +233,9 @@ const EditProject = () => {
             margin="dense"
             id="idClient"
             value={input.idClient}
-            onChange={(e) => dispatch(setInput({ name: "idClient", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "idClient", value: e.target.value }))
+            }
             required
             variant="outlined"
             select
@@ -200,8 +250,20 @@ const EditProject = () => {
           </TextField>
         </Stack>
       )}
-      <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+      <Stack
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        padding={0}
+        spacing={1}
+      >
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.Name}>Project Name</InputLabel>
           <TextField
             error={isErrorInput.Name}
@@ -211,12 +273,20 @@ const EditProject = () => {
             id="Name"
             type="text"
             value={input.Name}
-            onChange={(e) => dispatch(setInput({ name: "Name", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "Name", value: e.target.value }))
+            }
             required
             variant="outlined"
           />
         </Stack>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.isDefault}>Default?</InputLabel>
           <TextField
             error={isErrorInput.isDefault}
@@ -225,7 +295,9 @@ const EditProject = () => {
             id="isDefault"
             select
             value={input.isDefault}
-            onChange={(e) => dispatch(setInput({ name: "isDefault", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "isDefault", value: e.target.value }))
+            }
             required
             variant="outlined"
           >
@@ -237,7 +309,13 @@ const EditProject = () => {
             </MenuItem>
           </TextField>
         </Stack>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.Finished}>Finished?</InputLabel>
           <TextField
             error={isErrorInput.Finished}
@@ -246,7 +324,9 @@ const EditProject = () => {
             id="Finished"
             select
             value={input.Finished}
-            onChange={(e) => dispatch(setInput({ name: "Finished", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "Finished", value: e.target.value }))
+            }
             variant="outlined"
             required
           >
@@ -267,13 +347,27 @@ const EditProject = () => {
         id="Description"
         type="text"
         value={input.Description}
-        onChange={(e) => dispatch(setInput({ name: "Description", value: e.target.value }))}
+        onChange={(e) =>
+          dispatch(setInput({ name: "Description", value: e.target.value }))
+        }
         required
         fullWidth
         variant="outlined"
       />
-      <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1} padding={0}>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+      <Stack
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        spacing={1}
+        padding={0}
+      >
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.StartDate}>Start Date</InputLabel>
           <TextField
             error={isErrorInput.StartDate}
@@ -283,11 +377,19 @@ const EditProject = () => {
             type="date"
             value={input.StartDate}
             required
-            onChange={(e) => dispatch(setInput({ name: "StartDate", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "StartDate", value: e.target.value }))
+            }
             variant="outlined"
           />
         </Stack>
-        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
           <InputLabel error={isErrorInput.EndDate}>End Date</InputLabel>
           <TextField
             error={isErrorInput.EndDate}
@@ -296,12 +398,20 @@ const EditProject = () => {
             id="EndDate"
             type="date"
             value={input.EndDate}
-            onChange={(e) => dispatch(setInput({ name: "EndDate", value: e.target.value }))}
+            onChange={(e) =>
+              dispatch(setInput({ name: "EndDate", value: e.target.value }))
+            }
             variant="outlined"
           />
         </Stack>
       </Stack>
-      <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
+      <Stack
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        padding={0}
+        spacing={1}
+      >
         <IconButton
           area-label="cancel"
           onClick={() => {
@@ -312,15 +422,29 @@ const EditProject = () => {
         >
           <CancelIcon />
         </IconButton>
-        <IconButton area-label="delete" onClick={handleDelete} disabled={isLoading} size="small">
+        <IconButton
+          area-label="delete"
+          onClick={handleDelete}
+          disabled={isLoading}
+          size="small"
+        >
           <DeleteIcon />
         </IconButton>
-        <IconButton area-label="save" onClick={handleSubmit} disabled={isLoading} size="small">
+        <IconButton
+          area-label="save"
+          onClick={handleSubmit}
+          disabled={isLoading}
+          size="small"
+        >
           <SaveIcon />
         </IconButton>
       </Stack>
-      {updateError && <Typography color="error.main">{updateError?.message}</Typography>}
-      {deleteError && <Typography color="error.main">{deleteError?.message}</Typography>}
+      {updateError && (
+        <Typography color="error.main">{updateError?.message}</Typography>
+      )}
+      {deleteError && (
+        <Typography color="error.main">{deleteError?.message}</Typography>
+      )}
     </Stack>
   );
 };
