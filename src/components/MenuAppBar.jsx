@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
@@ -17,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../features/user/userSlice";
 import { links, userLinks } from "../utils/links";
+import { fontSize } from "@mui/system";
 
 const MenuAppBar = () => {
   const { user } = useSelector((store) => store.user);
@@ -76,7 +78,7 @@ const MenuAppBar = () => {
               display: { xs: "none", md: "flex" },
               fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: ".3rem",
+              letterSpacing: "0.1rem",
               color: "inherit",
               textDecoration: "none",
             }}
@@ -114,13 +116,17 @@ const MenuAppBar = () => {
               }}
             >
               {links.map((page) => (
-                <MenuItem key={page.id} onClick={handleCloseNavMenu} value={page.id}>
+                <MenuItem
+                  key={page.id}
+                  onClick={handleCloseNavMenu}
+                  value={page.id}
+                >
                   <Typography textAlign="center">{page.text}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <NotesIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <NotesIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -131,8 +137,8 @@ const MenuAppBar = () => {
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
               fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
+              fontWeight: 400,
+              letterSpacing: ".1rem",
               color: "inherit",
               textDecoration: "none",
             }}
@@ -141,7 +147,12 @@ const MenuAppBar = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {links.map((page) => (
-              <Button key={page.id} onClick={handleCloseNavMenu} sx={{ my: 2, color: "white", display: "block" }} value={page.id}>
+              <Button
+                key={page.id}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: "white", display: "block" }}
+                value={page.id}
+              >
                 {page.text}
               </Button>
             ))}
@@ -150,6 +161,7 @@ const MenuAppBar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="User">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <AccountCircle />
                 {user && <>{user.Username}</>}
               </IconButton>
             </Tooltip>
@@ -171,7 +183,11 @@ const MenuAppBar = () => {
             >
               {userLinks.map((link) => {
                 return (
-                  <MenuItem key={link.id} onClick={handleCloseUserMenu} value={link.id}>
+                  <MenuItem
+                    key={link.id}
+                    onClick={handleCloseUserMenu}
+                    value={link.id}
+                  >
                     <Typography textAlign="center">{link.text}</Typography>
                   </MenuItem>
                 );

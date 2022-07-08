@@ -18,11 +18,12 @@ import {
   HeaderCellSort,
 } from "@table-library/react-table-library/sort";
 import { usePagination } from "@table-library/react-table-library/pagination";
-import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+import DownloadIcon from "@mui/icons-material/Download";
 
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
+import IconButton from "@mui/material/IconButton";
 
 import moment from "moment";
 
@@ -172,10 +173,13 @@ const Journal = () => {
             <AddIcon />
           </Link>
         </span>
-        <Button type="button" onClick={handleDownloadCsv}>
-          Download as CSV
-        </Button>
-
+        <IconButton
+          area-label="CSV download"
+          onClick={handleDownloadCsv}
+          size="small"
+        >
+          <DownloadIcon />
+        </IconButton>
         <span>Total: {data.journals.count} rows</span>
       </div>
       <Table data={dataTable} sort={sort} pagination={pagination} theme={theme}>

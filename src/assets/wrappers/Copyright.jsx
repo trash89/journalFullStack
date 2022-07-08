@@ -6,10 +6,16 @@ const Wrapper = styled.div`
     bottom: 0;
     right: 0;
     width: 100%;
-  }
-  p {
+    height: 1.3rem;
+    background: #3f51b5;
+    color: white;
     text-align: center;
-    max-width: 100%;
+    font-size: 0.75rem;
+    margin: auto;
+  }
+  .footer a {
+    text-decoration: none;
+    color: cyan;
   }
 `;
 export default Wrapper;
