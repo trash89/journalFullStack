@@ -49,6 +49,7 @@ const subprojectSlice = createSlice({
   },
 });
 
-export const { setInput, setErrorInput, clearValues, setEdit } = subprojectSlice.actions;
+export const { setInput, setErrorInput, clearValues, setEdit } =
+  subprojectSlice.actions;
 
 export default subprojectSlice.reducer;

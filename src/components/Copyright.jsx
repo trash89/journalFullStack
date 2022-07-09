@@ -1,4 +1,3 @@
-import React from "react";
 import Wrapper from "../assets/wrappers/Copyright";
 
 export default function Copyright() {
@@ -14,5 +13,3 @@ export default function Copyright() {
     </Wrapper>
   );
 }
-
-//© 2022 John Smilga. All rights reserved. Built withGatsby

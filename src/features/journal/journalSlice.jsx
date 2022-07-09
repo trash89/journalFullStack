@@ -51,6 +51,7 @@ const journalSlice = createSlice({
   },
 });
 
-export const { setInput, setErrorInput, clearValues, setEdit } = journalSlice.actions;
+export const { setInput, setErrorInput, clearValues, setEdit } =
+  journalSlice.actions;
 
 export default journalSlice.reducer;

@@ -17,7 +17,16 @@ const useGetClient = (id) => {
   const { loading, error, data } = useQuery(QUERY, {
     variables: { idClient: id },
   });
-  if (error) return { loading: loading, idProfile: -1, idClient: -1, Name: "", Description: "", StartDate: "", EndDate: "" };
+  if (error)
+    return {
+      loading: loading,
+      idProfile: -1,
+      idClient: -1,
+      Name: "",
+      Description: "",
+      StartDate: "",
+      EndDate: "",
+    };
   return {
     loading: loading,
     idProfile: data?.client?.idProfile,

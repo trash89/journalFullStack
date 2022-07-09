@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from "react";
 
 import AppBar from "@mui/material/AppBar";
@@ -18,7 +17,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../features/user/userSlice";
 import { links, userLinks } from "../utils/links";
-import { fontSize } from "@mui/system";
 
 const MenuAppBar = () => {
   const { user } = useSelector((store) => store.user);

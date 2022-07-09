@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import {
@@ -37,13 +36,19 @@ function App() {
         >
           <Route index element={<Journal />} />
 
-          <Route path="journals" element={<SharedPagesLayout title="journal" />}>
+          <Route
+            path="journals"
+            element={<SharedPagesLayout title="journal" />}
+          >
             <Route index element={<Journal />} />
             <Route path=":idJournal" element={<EditJournal />} />
             <Route path="newjournal" element={<NewJournal />} />
           </Route>
 
-          <Route path="profiles" element={<SharedPagesLayout title="profiles" />}>
+          <Route
+            path="profiles"
+            element={<SharedPagesLayout title="profiles" />}
+          >
             <Route index element={<Profiles />} />
             <Route path=":idProfile" element={<EditProfile />} />
           </Route>
@@ -54,13 +59,19 @@ function App() {
             <Route path="newclient" element={<NewClient />} />
           </Route>
 
-          <Route path="projects" element={<SharedPagesLayout title="projects" />}>
+          <Route
+            path="projects"
+            element={<SharedPagesLayout title="projects" />}
+          >
             <Route index element={<Projects />} />
             <Route path=":idProject" element={<EditProject />} />
             <Route path="newproject" element={<NewProject />} />
           </Route>
 
-          <Route path="subprojects" element={<SharedPagesLayout title="subprojects" />}>
+          <Route
+            path="subprojects"
+            element={<SharedPagesLayout title="subprojects" />}
+          >
             <Route index element={<Subprojects />} />
             <Route path=":idSubproject" element={<EditSubproject />} />
             <Route path="newsubproject" element={<NewSubproject />} />

@@ -1,6 +1,4 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
-import { Copyright } from "../components";
 
 const SharedPagesLayout = ({ title = "" }) => {
   return (

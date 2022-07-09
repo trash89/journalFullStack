@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { gql, useMutation } from "@apollo/client";
@@ -19,8 +18,16 @@ import { logoutUser } from "../../features/user/userSlice";
 import { useIsMounted, useGetProfile, useProfilesArray } from "../../hooks";
 
 const UPDATE_MUTATION = gql`
-  mutation updateMutation($idProfile: ID!, $Username: String!, $Password: String!, $Keep: String!) {
-    updateProfile(idProfile: $idProfile, profile: { Username: $Username, Password: $Password, Keep: $Keep }) {
+  mutation updateMutation(
+    $idProfile: ID!
+    $Username: String!
+    $Password: String!
+    $Keep: String!
+  ) {
+    updateProfile(
+      idProfile: $idProfile
+      profile: { Username: $Username, Password: $Password, Keep: $Keep }
+    ) {
       idProfile
       Username
       Keep
@@ -44,21 +51,38 @@ const EditProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, isLoading } = useSelector((store) => store.user);
-  const { loading: loadingProfileConnected, idProfile: idProfileConnected, Is_Admin: Is_AdminConnected } = useGetProfile(parseInt(user.idProfile));
+  const {
+    loading: loadingProfileConnected,
+    idProfile: idProfileConnected,
+    Is_Admin: Is_AdminConnected,
+  } = useGetProfile(parseInt(user.idProfile));
 
   const { idProfile: idProfileParam } = useParams();
-  const idProfileParamInt = idProfileParam ? (Number.isNaN(parseInt(idProfileParam)) ? -1 : parseInt(idProfileParam)) : -1;
-  const { loading: loadingProfileEdit, idProfile: idProfileEdit, Username: UsernameEdit } = useGetProfile(idProfileParamInt);
+  const idProfileParamInt = idProfileParam
+    ? Number.isNaN(parseInt(idProfileParam))
+      ? -1
+      : parseInt(idProfileParam)
+    : -1;
+  const {
+    loading: loadingProfileEdit,
+    idProfile: idProfileEdit,
+    Username: UsernameEdit,
+  } = useGetProfile(idProfileParamInt);
 
   const { loading: loadingProfiles, list: profilesArray } = useProfilesArray();
 
   const isProfileInList = isIdInList(idProfileParam, profilesArray);
 
   const [input, setInput] = useState({ Password: "", Keep: "N" });
-  const [isErrorInput, setIsErrorInput] = useState({ Password: false, Keep: false });
+  const [isErrorInput, setIsErrorInput] = useState({
+    Password: false,
+    Keep: false,
+  });
 
-  const [updateProfile, { loading: loadingUpdate, error: updateError }] = useMutation(UPDATE_MUTATION);
-  const [deleteProfile, { loading: loadingDelete, error: deleteError }] = useMutation(DELETE_MUTATION);
+  const [updateProfile, { loading: loadingUpdate, error: updateError }] =
+    useMutation(UPDATE_MUTATION);
+  const [deleteProfile, { loading: loadingDelete, error: deleteError }] =
+    useMutation(DELETE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,7 +122,8 @@ const EditProfile = () => {
 
   const handlePassword = (e) => {
     setInput({ ...input, Password: e.target.value });
-    if (isErrorInput.Password) setIsErrorInput({ ...isErrorInput, Password: false });
+    if (isErrorInput.Password)
+      setIsErrorInput({ ...isErrorInput, Password: false });
   };
   const handleKeep = (e) => {
     setInput({ ...input, Keep: e.target.value });
@@ -106,13 +131,34 @@ const EditProfile = () => {
   };
 
   if (!isMounted) return <></>;
-  if (loadingProfileConnected || loadingProfileEdit || loadingProfiles || isLoading || loadingUpdate || loadingDelete) return <CircularProgress />;
-  if (!isProfileInList || idProfileParamInt === -1) return <>You cannot update this profile</>;
+  if (
+    loadingProfileConnected ||
+    loadingProfileEdit ||
+    loadingProfiles ||
+    isLoading ||
+    loadingUpdate ||
+    loadingDelete
+  )
+    return <CircularProgress />;
+  if (!isProfileInList || idProfileParamInt === -1)
+    return <>You cannot update this profile</>;
 
   return (
-    <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
+    <Stack
+      direction="column"
+      justifyContent="flex-start"
+      alignItems="flex-start"
+      padding={0}
+      spacing={1}
+    >
       <Typography>Username : {UsernameEdit}</Typography>
-      <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
+      <Stack
+        direction="column"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        spacing={0}
+        padding={0}
+      >
         <InputLabel error={isErrorInput.Password}>New Password?</InputLabel>
         <TextField
           autoFocus
@@ -146,21 +192,45 @@ const EditProfile = () => {
           </MenuItem>
         </TextField>
       </Stack>
-      <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
-        <IconButton area-label="cancel" onClick={() => navigate("/profiles")} size="small">
+      <Stack
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        padding={0}
+        spacing={1}
+      >
+        <IconButton
+          area-label="cancel"
+          onClick={() => navigate("/profiles")}
+          size="small"
+        >
           <CancelIcon />
         </IconButton>
         {Is_AdminConnected === "Y" && idProfileEdit !== idProfileConnected && (
-          <IconButton area-label="delete" onClick={handleDelete} disabled={isLoading} size="small">
+          <IconButton
+            area-label="delete"
+            onClick={handleDelete}
+            disabled={isLoading}
+            size="small"
+          >
             <DeleteIcon />
           </IconButton>
         )}
-        <IconButton area-label="save" onClick={handleSubmit} disabled={isLoading} size="small">
+        <IconButton
+          area-label="save"
+          onClick={handleSubmit}
+          disabled={isLoading}
+          size="small"
+        >
           <SaveIcon />
         </IconButton>
       </Stack>
-      {updateError && <Typography color="error.main">{updateError?.message}</Typography>}
-      {deleteError && <Typography color="error.main">{deleteError?.message}</Typography>}
+      {updateError && (
+        <Typography color="error.main">{updateError?.message}</Typography>
+      )}
+      {deleteError && (
+        <Typography color="error.main">{deleteError?.message}</Typography>
+      )}
     </Stack>
   );
 };

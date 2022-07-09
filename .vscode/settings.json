@@ -1,6 +1,0 @@
-{
-  "javascript.format.semicolons": "insert",
-  "js/ts.implicitProjectConfig.checkJs": true,
-  "js/ts.implicitProjectConfig.target": "ESNext",
-  "typescript.enablePromptUseWorkspaceTsdk": true
-}

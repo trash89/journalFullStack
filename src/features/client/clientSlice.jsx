@@ -41,6 +41,7 @@ const clientSlice = createSlice({
   },
 });
 
-export const { setInput, setErrorInput, clearValues, setEdit } = clientSlice.actions;
+export const { setInput, setErrorInput, clearValues, setEdit } =
+  clientSlice.actions;
 
 export default clientSlice.reducer;

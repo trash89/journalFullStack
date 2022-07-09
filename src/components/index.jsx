@@ -6,4 +6,12 @@ import Logo from "./Logo";
 import MenuAppBar from "./MenuAppBar";
 import PaginationTable from "./PaginationTable";
 
-export { Copyright, SmallSidebar, BigSidebar, NavLinks, Logo, MenuAppBar, PaginationTable };
+export {
+  Copyright,
+  SmallSidebar,
+  BigSidebar,
+  NavLinks,
+  Logo,
+  MenuAppBar,
+  PaginationTable,
+};

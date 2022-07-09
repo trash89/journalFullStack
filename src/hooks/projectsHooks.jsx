@@ -19,7 +19,18 @@ const useGetProject = (id) => {
   const { loading, error, data } = useQuery(QUERY, {
     variables: { idProject: id },
   });
-  if (error) return { loading: loading, idClient: -1, idProject: -1, Name: "", Description: "", isDefault: "N", StartDate: "", EndDate: "", Finished: "N" };
+  if (error)
+    return {
+      loading: loading,
+      idClient: -1,
+      idProject: -1,
+      Name: "",
+      Description: "",
+      isDefault: "N",
+      StartDate: "",
+      EndDate: "",
+      Finished: "N",
+    };
   return {
     loading: loading,
     idClient: data?.project?.idClient,

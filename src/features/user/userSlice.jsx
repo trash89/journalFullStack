@@ -1,5 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getUserFromLocalStorage, removeUserFromLocalStorage } from "../../utils/localStorage";
+import {
+  getUserFromLocalStorage,
+  removeUserFromLocalStorage,
+} from "../../utils/localStorage";
 
 const initialState = {
   isLoading: false,
@@ -33,5 +36,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { toggleSidebar, loginUser, logoutUser, registerUser } = userSlice.actions;
+export const { toggleSidebar, loginUser, logoutUser, registerUser } =
+  userSlice.actions;
 export default userSlice.reducer;
