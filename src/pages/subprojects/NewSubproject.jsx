@@ -12,6 +12,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
+import Paper from "@mui/material/Paper";
 
 import {
   useIsMounted,
@@ -68,9 +69,6 @@ const NewSubproject = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const { Username: UsernameConnected } = useGetProfile(
-    parseInt(user.idProfile)
-  );
 
   const { loading: loadingClients, list: clientsList } = useClientsList();
   const { loading: loadingProjects, list: projectsList } = useProjectsList();
@@ -137,269 +135,240 @@ const NewSubproject = () => {
   }
 
   return (
-    <Stack
-      direction="column"
-      justifyContent="flex-start"
-      alignItems="flex-start"
-      spacing={1}
-      padding={1}
-    >
-      <Typography variant="h6" gutterBottom component="div">
-        New subproject
-      </Typography>
+    <Paper elevation={2}>
       <Stack
-        direction="row"
+        direction="column"
         justifyContent="flex-start"
         alignItems="flex-start"
         spacing={1}
-        padding={0}
+        padding={1}
       >
+        <Typography variant="h6" gutterBottom component="div">
+          New subproject
+        </Typography>
         <Stack
-          direction="column"
+          direction="row"
           justifyContent="flex-start"
           alignItems="flex-start"
-          spacing={0}
+          spacing={1}
           padding={0}
         >
-          <InputLabel error={isErrorInput.idClient}>Client</InputLabel>
-          <TextField
-            error={isErrorInput.idClient}
-            size="small"
-            margin="dense"
-            id="idClient"
-            select
-            value={input.idClient}
-            onChange={(e) =>
-              dispatch(setInput({ name: "idClient", value: e.target.value }))
-            }
-            required
-            variant="outlined"
+          <Stack
+            direction="column"
+            justifyContent="flex-start"
+            alignItems="flex-start"
+            spacing={0}
+            padding={0}
           >
-            {clientsList?.map((item) => {
-              return (
-                <MenuItem key={item.idClient} value={item.idClient}>
-                  {item.Name}
-                </MenuItem>
-              );
-            })}
-          </TextField>
-        </Stack>
-        <Stack
-          direction="column"
-          justifyContent="flex-start"
-          alignItems="flex-start"
-          spacing={0}
-          padding={0}
-        >
-          <InputLabel error={isErrorInput.idProject}>Project</InputLabel>
-          <TextField
-            error={isErrorInput.idProject}
-            size="small"
-            margin="dense"
-            id="idProject"
-            select
-            value={input.idProject}
-            onChange={(e) =>
-              dispatch(setInput({ name: "idProject", value: e.target.value }))
-            }
-            required
-            variant="outlined"
+            <InputLabel error={isErrorInput.idClient}>Client</InputLabel>
+            <TextField
+              error={isErrorInput.idClient}
+              size="small"
+              margin="dense"
+              id="idClient"
+              select
+              value={input.idClient}
+              onChange={(e) =>
+                dispatch(setInput({ name: "idClient", value: e.target.value }))
+              }
+              required
+              variant="outlined"
+            >
+              {clientsList?.map((item) => {
+                return (
+                  <MenuItem key={item.idClient} value={item.idClient}>
+                    {item.Name}
+                  </MenuItem>
+                );
+              })}
+            </TextField>
+          </Stack>
+          <Stack
+            direction="column"
+            justifyContent="flex-start"
+            alignItems="flex-start"
+            spacing={0}
+            padding={0}
           >
-            {projectsList?.map((item) => {
-              return (
-                <MenuItem key={item.idProject} value={item.idProject}>
-                  {item.Name}
-                </MenuItem>
-              );
-            })}
-          </TextField>
+            <InputLabel error={isErrorInput.idProject}>Project</InputLabel>
+            <TextField
+              error={isErrorInput.idProject}
+              size="small"
+              margin="dense"
+              id="idProject"
+              select
+              value={input.idProject}
+              onChange={(e) =>
+                dispatch(setInput({ name: "idProject", value: e.target.value }))
+              }
+              required
+              variant="outlined"
+            >
+              {projectsList?.map((item) => {
+                return (
+                  <MenuItem key={item.idProject} value={item.idProject}>
+                    {item.Name}
+                  </MenuItem>
+                );
+              })}
+            </TextField>
+          </Stack>
         </Stack>
-      </Stack>
-      <Stack
-        direction="row"
-        justifyContent="flex-start"
-        alignItems="flex-start"
-        padding={0}
-        spacing={1}
-      >
-        <Stack
-          direction="column"
-          justifyContent="flex-start"
-          alignItems="flex-start"
-          spacing={0}
-          padding={0}
-        >
-          <InputLabel error={isErrorInput.Name}>Subproject Name</InputLabel>
-          <TextField
-            error={isErrorInput.Name}
-            autoFocus
-            size="small"
-            margin="dense"
-            id="Name"
-            type="text"
-            value={input.Name}
-            onChange={(e) =>
-              dispatch(setInput({ name: "Name", value: e.target.value }))
-            }
-            required
-            variant="outlined"
-          />
-        </Stack>
-        <Stack
-          direction="column"
-          justifyContent="flex-start"
-          alignItems="flex-start"
-          spacing={0}
-          padding={0}
-        >
-          <InputLabel error={isErrorInput.isDefault}>Default?</InputLabel>
-          <TextField
-            error={isErrorInput.isDefault}
-            size="small"
-            margin="dense"
-            id="isDefault"
-            select
-            value={input.isDefault}
-            onChange={(e) =>
-              dispatch(setInput({ name: "isDefault", value: e.target.value }))
-            }
-            required
-            variant="outlined"
-          >
-            <MenuItem key="N" value="N">
-              No
-            </MenuItem>
-            <MenuItem key="Y" value="Y">
-              Yes
-            </MenuItem>
-          </TextField>
-        </Stack>
-        <Stack
-          direction="column"
-          justifyContent="flex-start"
-          alignItems="flex-start"
-          spacing={0}
-          padding={0}
-        >
-          <InputLabel error={isErrorInput.Finished}>Finished?</InputLabel>
-          <TextField
-            error={isErrorInput.Finished}
-            size="small"
-            margin="dense"
-            id="Finished"
-            select
-            value={input.Finished}
-            onChange={(e) =>
-              dispatch(setInput({ name: "Finished", value: e.target.value }))
-            }
-            variant="outlined"
-            required
-          >
-            <MenuItem key="N" value="N">
-              No
-            </MenuItem>
-            <MenuItem key="Y" value="Y">
-              Yes
-            </MenuItem>
-          </TextField>
-        </Stack>
-      </Stack>
-      <InputLabel error={isErrorInput.Description}>Description</InputLabel>
-      <TextField
-        error={isErrorInput.Description}
-        size="small"
-        margin="dense"
-        id="Description"
-        type="text"
-        value={input.Description}
-        onChange={(e) =>
-          dispatch(setInput({ name: "Description", value: e.target.value }))
-        }
-        required
-        variant="outlined"
-        fullWidth
-      />
-      <Stack
-        direction="row"
-        justifyContent="flex-start"
-        alignItems="flex-start"
-        spacing={1}
-        padding={0}
-      >
-        <Stack
-          direction="column"
-          justifyContent="flex-start"
-          alignItems="flex-start"
-          spacing={0}
-          padding={0}
-        >
-          <InputLabel error={isErrorInput.StartDate}>Start Date</InputLabel>
-          <TextField
-            error={isErrorInput.StartDate}
-            size="small"
-            margin="dense"
-            id="StartDate"
-            type="date"
-            value={input.StartDate}
-            onChange={(e) =>
-              dispatch(setInput({ name: "StartDate", value: e.target.value }))
-            }
-            variant="outlined"
-            required
-          />
-        </Stack>
-        <Stack
-          direction="column"
-          justifyContent="flex-start"
-          alignItems="flex-start"
-          spacing={0}
-          padding={0}
-        >
-          <InputLabel error={isErrorInput.EndDate}>End Date</InputLabel>
-          <TextField
-            error={isErrorInput.EndDate}
-            size="small"
-            margin="dense"
-            id="EndDate"
-            type="date"
-            value={input.EndDate}
-            onChange={(e) =>
-              dispatch(setInput({ name: "EndDate", value: e.target.value }))
-            }
-            variant="outlined"
-          />
-        </Stack>
-      </Stack>
-      <Stack
-        direction="row"
-        justifyContent="flex-start"
-        alignItems="flex-start"
-        padding={0}
-        spacing={1}
-      >
-        <IconButton
-          area-label="cancel"
-          onClick={() => {
-            dispatch(clearValues());
-            navigate("/subprojects");
-          }}
+        <InputLabel error={isErrorInput.Name}>Subproject Name</InputLabel>
+        <TextField
+          error={isErrorInput.Name}
+          autoFocus
           size="small"
+          margin="dense"
+          id="Name"
+          type="text"
+          value={input.Name}
+          onChange={(e) =>
+            dispatch(setInput({ name: "Name", value: e.target.value }))
+          }
+          required
+          variant="outlined"
+        />
+
+        <Stack
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          padding={0}
+          spacing={1}
         >
-          <CancelIcon />
-        </IconButton>
-        <IconButton
-          area-label="save"
-          onClick={handleSubmit}
-          disabled={isLoading}
+          <Stack
+            direction="column"
+            justifyContent="flex-start"
+            alignItems="flex-start"
+            spacing={0}
+            padding={0}
+          >
+            <InputLabel error={isErrorInput.isDefault}>Default?</InputLabel>
+            <TextField
+              error={isErrorInput.isDefault}
+              size="small"
+              margin="dense"
+              id="isDefault"
+              select
+              value={input.isDefault}
+              onChange={(e) =>
+                dispatch(setInput({ name: "isDefault", value: e.target.value }))
+              }
+              required
+              variant="outlined"
+            >
+              <MenuItem key="N" value="N">
+                No
+              </MenuItem>
+              <MenuItem key="Y" value="Y">
+                Yes
+              </MenuItem>
+            </TextField>
+          </Stack>
+          <Stack
+            direction="column"
+            justifyContent="flex-start"
+            alignItems="flex-start"
+            spacing={0}
+            padding={0}
+          >
+            <InputLabel error={isErrorInput.Finished}>Finished?</InputLabel>
+            <TextField
+              error={isErrorInput.Finished}
+              size="small"
+              margin="dense"
+              id="Finished"
+              select
+              value={input.Finished}
+              onChange={(e) =>
+                dispatch(setInput({ name: "Finished", value: e.target.value }))
+              }
+              variant="outlined"
+              required
+            >
+              <MenuItem key="N" value="N">
+                No
+              </MenuItem>
+              <MenuItem key="Y" value="Y">
+                Yes
+              </MenuItem>
+            </TextField>
+          </Stack>
+        </Stack>
+        <InputLabel error={isErrorInput.Description}>Description</InputLabel>
+        <TextField
+          error={isErrorInput.Description}
           size="small"
+          margin="dense"
+          id="Description"
+          type="text"
+          value={input.Description}
+          onChange={(e) =>
+            dispatch(setInput({ name: "Description", value: e.target.value }))
+          }
+          required
+          variant="outlined"
+          fullWidth
+        />
+        <InputLabel error={isErrorInput.StartDate}>Start Date</InputLabel>
+        <TextField
+          error={isErrorInput.StartDate}
+          size="small"
+          margin="dense"
+          id="StartDate"
+          type="date"
+          value={input.StartDate}
+          onChange={(e) =>
+            dispatch(setInput({ name: "StartDate", value: e.target.value }))
+          }
+          variant="outlined"
+          required
+        />
+        <InputLabel error={isErrorInput.EndDate}>End Date</InputLabel>
+        <TextField
+          error={isErrorInput.EndDate}
+          size="small"
+          margin="dense"
+          id="EndDate"
+          type="date"
+          value={input.EndDate}
+          onChange={(e) =>
+            dispatch(setInput({ name: "EndDate", value: e.target.value }))
+          }
+          variant="outlined"
+        />
+        <Stack
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          padding={0}
+          spacing={1}
         >
-          <SaveIcon />
-        </IconButton>
+          <IconButton
+            area-label="cancel"
+            onClick={() => {
+              dispatch(clearValues());
+              navigate("/subprojects");
+            }}
+            size="small"
+          >
+            <CancelIcon />
+          </IconButton>
+          <IconButton
+            area-label="save"
+            onClick={handleSubmit}
+            disabled={isLoading}
+            size="small"
+          >
+            <SaveIcon />
+          </IconButton>
+        </Stack>
+        {createError && (
+          <Typography color="error.main">{createError?.message}</Typography>
+        )}
       </Stack>
-      {createError && (
-        <Typography color="error.main">{createError?.message}</Typography>
-      )}
-    </Stack>
+    </Paper>
   );
 };
 

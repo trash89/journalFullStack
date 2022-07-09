@@ -2,37 +2,22 @@ import { Link, Navigate } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import { useSelector } from "react-redux";
 
-import {
-  Table,
-  Header,
-  HeaderRow,
-  HeaderCell,
-  Body,
-  Row,
-  Cell,
-} from "@table-library/react-table-library/table";
-import { useTheme } from "@table-library/react-table-library/theme";
-import {
-  useSort,
-  HeaderCellSort,
-} from "@table-library/react-table-library/sort";
-import { usePagination } from "@table-library/react-table-library/pagination";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress";
-import DownloadIcon from "@mui/icons-material/Download";
 
-import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import IconButton from "@mui/material/IconButton";
 
 import moment from "moment";
 
 import { useIsMounted } from "../../hooks";
-import {
-  dateFormat,
-  TABLE_THEME,
-  PAGINATION_STATE,
-} from "../../utils/constants";
-import { PaginationTable } from "../../components";
+import { dateFormat } from "../../utils/constants";
+import { TotalRows } from "../../components";
 
 const JOURNALS_QUERY = gql`
   query journalsQuery {
@@ -73,32 +58,7 @@ const Journal = () => {
   const isMounted = useIsMounted();
   const { user } = useSelector((store) => store.user);
 
-  const theme = useTheme(TABLE_THEME);
-
   const { data, loading } = useQuery(JOURNALS_QUERY);
-  const dataTable = { nodes: data?.journals?.list };
-
-  const sort = useSort(dataTable, null, {
-    sortFns: {
-      ENTRYDATE: (array) =>
-        array.sort((a, b) => new Date(a.EntryDate) - new Date(b.EntryDate)),
-      DESCRIPTION: (array) =>
-        array.sort((a, b) => a.Description.localeCompare(b.Description)),
-      PROFILE: (array) =>
-        array.sort((a, b) =>
-          a.profile.Username.localeCompare(b.profile.Username)
-        ),
-      CLIENT: (array) =>
-        array.sort((a, b) => a.client.Name.localeCompare(b.profile.Name)),
-      PROJECT: (array) =>
-        array.sort((a, b) => a.project.Name.localeCompare(b.project.Name)),
-      SUBPROJECT: (array) =>
-        array.sort((a, b) =>
-          a.subproject.Name.localeCompare(b.subproject.Name)
-        ),
-    },
-  });
-  const pagination = usePagination(dataTable, PAGINATION_STATE);
 
   const escapeCsvCell = (cell) => {
     if (cell == null) {
@@ -155,7 +115,7 @@ const Journal = () => {
       { accessor: (item) => item.subproject.Name, name: "Subproject" },
     ];
 
-    downloadAsCsv(columns, dataTable.nodes, "table");
+    downloadAsCsv(columns, data.journals.list, "Journal");
   };
 
   if (!isMounted) return <></>;
@@ -163,72 +123,71 @@ const Journal = () => {
   if (!user) {
     return <Navigate to="/register" />;
   }
-  if (!dataTable.nodes || dataTable.nodes === undefined) return <></>;
+  if (!data || data === undefined) return <></>;
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span>
-          <Link to="/journals/newjournal">
-            <AddIcon />
-          </Link>
-        </span>
-        <IconButton
-          area-label="CSV download"
-          onClick={handleDownloadCsv}
-          size="small"
-        >
-          <DownloadIcon />
-        </IconButton>
-        <span>Total: {data.journals.count} rows</span>
-      </div>
-      <Table data={dataTable} sort={sort} pagination={pagination} theme={theme}>
-        {(tableList) => (
-          <>
-            <Header>
-              <HeaderRow>
-                <HeaderCell>Actions</HeaderCell>
-                <HeaderCellSort sortKey="ENTRYDATE">Entry Date</HeaderCellSort>
-                <HeaderCellSort sortKey="DESCRIPTION">
-                  Description
-                </HeaderCellSort>
-                <HeaderCellSort sortKey="PROFILE">Profile</HeaderCellSort>
-                <HeaderCellSort sortKey="CLIENT">Client</HeaderCellSort>
-                <HeaderCellSort sortKey="PROJECT">Project</HeaderCellSort>
-                <HeaderCellSort sortKey="SUBPROJECT">Subproject</HeaderCellSort>
-              </HeaderRow>
-            </Header>
-            <Body>
-              {tableList.map((item) => {
-                const localItem = {
-                  id: parseInt(item.idJournal),
-                  entryDate: new moment(item.EntryDate).format(dateFormat),
-                  description: item.Description.substring(0, 50),
-                  profile: item.profile.Username.substring(0, 10),
-                  client: item.client.Name.substring(0, 15),
-                  project: item.project.Name.substring(0, 15),
-                  subproject: item.subproject.Name.substring(0, 15),
-                };
-                return (
-                  <Row key={localItem.id} item={localItem}>
-                    <Cell>
-                      <Link to={`/journals/${localItem.id}`}>
-                        <EditIcon />
-                      </Link>
-                    </Cell>
-                    <Cell>{localItem.entryDate}</Cell>
-                    <Cell>{localItem.description}</Cell>
-                    <Cell>{localItem.profile}</Cell>
-                    <Cell>{localItem.client}</Cell>
-                    <Cell>{localItem.project}</Cell>
-                    <Cell>{localItem.subproject}</Cell>
-                  </Row>
-                );
-              })}
-            </Body>
-          </>
-        )}
-      </Table>
-      <PaginationTable pagination={pagination} data={dataTable} />
+      <TotalRows
+        link="/journals/newjournal"
+        count={data.journals.count}
+        download={handleDownloadCsv}
+      />
+      <TableContainer component={Paper}>
+        <Table aria-label="projects" size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Actions
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Entry Date
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Description
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Profile
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Client
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Project
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Subproject
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data?.journals?.list?.map((item) => {
+              const localItem = {
+                id: parseInt(item.idJournal),
+                EntryDate: new moment(item.EntryDate).format(dateFormat),
+                description: item.Description.substring(0, 50),
+                profile: item.profile.Username.substring(0, 10),
+                client: item.client.Name.substring(0, 15),
+                project: item.project.Name.substring(0, 15),
+                subproject: item.subproject.Name.substring(0, 15),
+              };
+              return (
+                <TableRow key={localItem.id}>
+                  <TableCell>
+                    <Link to={`/journals/${localItem.id}`}>
+                      <EditIcon />
+                    </Link>
+                  </TableCell>
+                  <TableCell>{localItem.EntryDate}</TableCell>
+                  <TableCell>{localItem.description}</TableCell>
+                  <TableCell>{localItem.profile}</TableCell>
+                  <TableCell>{localItem.client}</TableCell>
+                  <TableCell>{localItem.project}</TableCell>
+                  <TableCell>{localItem.subproject}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

@@ -1,4 +1,5 @@
+import img from "../assets/images/logo.png";
 const Logo = () => {
-  return <h4>Journal</h4>;
+  return <img src={img} alt="journal" height={50} width={50} />;
 };
 export default Logo;

@@ -3,35 +3,22 @@ import { Link, Navigate } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import { useSelector } from "react-redux";
 
-import {
-  Table,
-  Header,
-  HeaderRow,
-  HeaderCell,
-  Body,
-  Row,
-  Cell,
-} from "@table-library/react-table-library/table";
-import { useTheme } from "@table-library/react-table-library/theme";
-import {
-  useSort,
-  HeaderCellSort,
-} from "@table-library/react-table-library/sort";
-import { usePagination } from "@table-library/react-table-library/pagination";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 
 import moment from "moment";
 
 import { useIsMounted } from "../../hooks";
-import {
-  dateFormat,
-  TABLE_THEME,
-  PAGINATION_STATE,
-} from "../../utils/constants";
-import { PaginationTable } from "../../components";
+import { dateFormat } from "../../utils/constants";
+import { TotalRows } from "../../components";
 
 const SUBPROJECTS_QUERY = gql`
   query subprojectsQuery {
@@ -64,105 +51,90 @@ const Subprojects = () => {
   const isMounted = useIsMounted();
   const { user } = useSelector((store) => store.user);
 
-  const theme = useTheme(TABLE_THEME);
   const { loading, data } = useQuery(SUBPROJECTS_QUERY);
-  const dataTable = { nodes: data?.subprojects?.list };
-
-  const sort = useSort(dataTable, null, {
-    sortFns: {
-      CLIENT: (array) =>
-        array.sort((a, b) => a.client.Name.localeCompare(b.client.Name)),
-      PROJECT: (array) =>
-        array.sort((a, b) => a.project.Name.localeCompare(b.project.Name)),
-      SUBPROJECT: (array) => array.sort((a, b) => a.Name.localeCompare(b.Name)),
-      DESCRIPTION: (array) =>
-        array.sort((a, b) => a.Description.localeCompare(b.Description)),
-      ISDEFAULT: (array) =>
-        array.sort((a, b) => a.isDefault.localeCompare(b.isDefault)),
-      STARTDATE: (array) =>
-        array.sort((a, b) => new Date(a.StartDate) - new Date(b.StartDate)),
-      ENDDATE: (array) =>
-        array.sort((a, b) => new Date(a.EndDate) - new Date(b.EndDate)),
-      FINISHED: (array) =>
-        array.sort((a, b) => a.Finished.localeCompare(b.Finished)),
-    },
-  });
-  const pagination = usePagination(dataTable, PAGINATION_STATE);
 
   if (!isMounted) return <></>;
   if (loading) return <CircularProgress />;
   if (!user) {
     return <Navigate to="/register" />;
   }
-  if (!dataTable.nodes || dataTable.nodes === undefined) return <></>;
+  if (!data || data === undefined) return <></>;
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span>
-          <Link to="/subprojects/newsubproject">
-            <AddIcon />
-          </Link>
-        </span>
-        <span>Total: {data.subprojects.count} rows</span>
-      </div>
-
-      <Table data={dataTable} sort={sort} pagination={pagination} theme={theme}>
-        {(tableList) => (
-          <>
-            <Header>
-              <HeaderRow>
-                <HeaderCell>Actions</HeaderCell>
-                <HeaderCellSort sortKey="CLIENT">Client</HeaderCellSort>
-                <HeaderCellSort sortKey="PROJECT">Project</HeaderCellSort>
-                <HeaderCellSort sortKey="SUBPROJECT">Subproject</HeaderCellSort>
-                <HeaderCellSort sortKey="DESCRIPTION">
-                  Description
-                </HeaderCellSort>
-                <HeaderCellSort sortKey="ISDEFAULT">Def?</HeaderCellSort>
-                <HeaderCellSort sortKey="STARTDATE">Start Date</HeaderCellSort>
-                <HeaderCellSort sortKey="ENDDATE">End Date</HeaderCellSort>
-                <HeaderCellSort sortKey="FINISHED">Fin?</HeaderCellSort>
-              </HeaderRow>
-            </Header>
-            <Body>
-              {tableList.map((item) => {
-                const localItem = {
-                  id: parseInt(item.idSubproject),
-                  client: item.client.Name.substring(0, 15),
-                  project: item.project.Name.substring(0, 15),
-                  subproject: item.Name.substring(0, 15),
-                  description: item.Description.substring(0, 50),
-                  isDefault: item.isDefault === "Y" ? "Yes" : "No",
-                  startDate: new moment(item.StartDate).format(dateFormat),
-                  endDate:
-                    item.EndDate === null
-                      ? ""
-                      : new moment(item.EndDate).format(dateFormat),
-                  finished: item.Finished === "Y" ? "Yes" : "No",
-                };
-                return (
-                  <Row key={localItem.id} item={localItem}>
-                    <Cell>
-                      <Link to={`/subprojects/${localItem.id}`}>
-                        <EditIcon />
-                      </Link>
-                    </Cell>
-                    <Cell>{localItem.client}</Cell>
-                    <Cell>{localItem.project}</Cell>
-                    <Cell>{localItem.subproject}</Cell>
-                    <Cell>{localItem.description}</Cell>
-                    <Cell>{localItem.isDefault}</Cell>
-                    <Cell>{localItem.startDate}</Cell>
-                    <Cell>{localItem.endDate}</Cell>
-                    <Cell>{localItem.finished}</Cell>
-                  </Row>
-                );
-              })}
-            </Body>
-          </>
-        )}
-      </Table>
-      <PaginationTable pagination={pagination} data={dataTable} />
+      <TotalRows
+        link="/subprojects/newsubproject"
+        count={data.subprojects.count}
+      />
+      <TableContainer component={Paper}>
+        <Table aria-label="projects" size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Actions
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Client
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Project
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Subproject
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Description
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Def?
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Start Date
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                End Date
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Fin?
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data?.subprojects?.list?.map((item) => {
+              const localItem = {
+                id: parseInt(item.idSubproject),
+                client: item.client.Name.substring(0, 15),
+                project: item.project.Name.substring(0, 15),
+                subproject: item.Name.substring(0, 15),
+                description: item.Description.substring(0, 50),
+                isDefault: item.isDefault === "Y" ? "Yes" : "No",
+                StartDate: new moment(item.StartDate).format(dateFormat),
+                EndDate:
+                  item.EndDate === null
+                    ? ""
+                    : new moment(item.EndDate).format(dateFormat),
+                Finished: item.Finished === "Y" ? "Yes" : "No",
+              };
+              return (
+                <TableRow key={localItem.id}>
+                  <TableCell>
+                    <Link to={`/subprojects/${localItem.id}`}>
+                      <EditIcon />
+                    </Link>
+                  </TableCell>
+                  <TableCell>{localItem.client}</TableCell>
+                  <TableCell>{localItem.project}</TableCell>
+                  <TableCell>{localItem.subproject}</TableCell>
+                  <TableCell>{localItem.description}</TableCell>
+                  <TableCell>{localItem.isDefault}</TableCell>
+                  <TableCell>{localItem.StartDate}</TableCell>
+                  <TableCell>{localItem.EndDate}</TableCell>
+                  <TableCell>{localItem.Finished}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

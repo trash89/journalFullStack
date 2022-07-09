@@ -16,6 +16,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import EditIcon from "@mui/icons-material/Edit";
 
 import { useIsMounted } from "../../hooks";
+import { TotalRows } from "../../components";
 
 const PROFILES_QUERY = gql`
   query profilesQuery {
@@ -44,10 +45,7 @@ const Profiles = () => {
   if (!data?.profiles || data?.profiles === undefined) return <></>;
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span></span>
-        <span>Total: {data?.profiles?.count} rows</span>
-      </div>
+      <TotalRows link="" count={data?.profiles?.count} />
 
       <TableContainer component={Paper}>
         <Table aria-label="profiles" size="small">

@@ -1,37 +1,24 @@
 import { useEffect } from "react";
 import { Link, Navigate } from "react-router-dom";
 
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+
 import { gql, useQuery } from "@apollo/client";
 import { useSelector, useDispatch } from "react-redux";
 
-import {
-  Table,
-  Header,
-  HeaderRow,
-  HeaderCell,
-  Body,
-  Row,
-  Cell,
-} from "@table-library/react-table-library/table";
-import { useTheme } from "@table-library/react-table-library/theme";
-import {
-  useSort,
-  HeaderCellSort,
-} from "@table-library/react-table-library/sort";
-import { usePagination } from "@table-library/react-table-library/pagination";
-
-import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import CircularProgress from "@mui/material/CircularProgress";
 import moment from "moment";
 
 import { useIsMounted } from "../../hooks";
-import {
-  dateFormat,
-  TABLE_THEME,
-  PAGINATION_STATE,
-} from "../../utils/constants";
-import { PaginationTable } from "../../components";
+import { dateFormat } from "../../utils/constants";
+import { TotalRows } from "../../components";
 
 import { clearValues } from "../../features/client/clientSlice";
 
@@ -59,24 +46,8 @@ const Clients = () => {
   const isMounted = useIsMounted();
   const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
-  const theme = useTheme(TABLE_THEME);
 
   const { data, loading } = useQuery(CLIENTS_QUERY);
-  const dataTable = { nodes: data?.clients?.list };
-
-  const sort = useSort(dataTable, null, {
-    sortFns: {
-      IDPROFILE: (array) => array.sort((a, b) => a.idProfile < b.idProfile),
-      CLIENT: (array) => array.sort((a, b) => a.Name.localeCompare(b.Name)),
-      DESCRIPTION: (array) =>
-        array.sort((a, b) => a.Description.localeCompare(b.Description)),
-      STARTDATE: (array) =>
-        array.sort((a, b) => new Date(a.StartDate) - new Date(b.StartDate)),
-      ENDDATE: (array) =>
-        array.sort((a, b) => new Date(a.EndDate) - new Date(b.EndDate)),
-    },
-  });
-  const pagination = usePagination(dataTable, PAGINATION_STATE);
 
   useEffect(() => {
     dispatch(clearValues());
@@ -88,65 +59,65 @@ const Clients = () => {
   if (!user) {
     return <Navigate to="/register" />;
   }
-  if (!dataTable.nodes || dataTable.nodes === undefined) return <></>;
+  if (!data || data === undefined) return <></>;
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span>
-          <Link to="/clients/newclient">
-            <AddIcon />
-          </Link>
-        </span>
-        <span>Total: {data.clients.count} rows</span>
-      </div>
-      <Table data={dataTable} sort={sort} pagination={pagination} theme={theme}>
-        {(tableList) => (
-          <>
-            <Header>
-              <HeaderRow>
-                <HeaderCell>Actions</HeaderCell>
-                <HeaderCellSort sortKey="IDPROFILE">Profile</HeaderCellSort>
-                <HeaderCellSort sortKey="CLIENT">Client</HeaderCellSort>
-                <HeaderCellSort sortKey="DESCRIPTION">
-                  Description
-                </HeaderCellSort>
-                <HeaderCellSort sortKey="STARTDATE">Start Date</HeaderCellSort>
-                <HeaderCellSort sortKey="ENDDATE">End Date</HeaderCellSort>
-              </HeaderRow>
-            </Header>
-            <Body>
-              {tableList.map((item) => {
-                const localItem = {
-                  id: parseInt(item.idClient),
-                  profile: item.profile.Username.substring(0, 10),
-                  client: item.Name.substring(0, 15),
-                  description: item.Description.substring(0, 50),
-                  StartDate: new moment(item.StartDate).format(dateFormat),
-                  EndDate:
-                    item.EndDate === null
-                      ? ""
-                      : new moment(item.EndDate).format(dateFormat),
-                };
-                return (
-                  <Row key={localItem.id} item={localItem}>
-                    <Cell>
-                      <Link to={`/clients/${localItem.id}`}>
-                        <EditIcon />
-                      </Link>
-                    </Cell>
-                    <Cell>{localItem.profile}</Cell>
-                    <Cell>{localItem.client}</Cell>
-                    <Cell>{localItem.description}</Cell>
-                    <Cell>{localItem.StartDate}</Cell>
-                    <Cell>{localItem.EndDate}</Cell>
-                  </Row>
-                );
-              })}
-            </Body>
-          </>
-        )}
-      </Table>
-      <PaginationTable pagination={pagination} data={dataTable} />
+      <TotalRows link="/clients/newclient" count={data.clients.count} />
+      <TableContainer component={Paper}>
+        <Table aria-label="clients" size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Actions
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Profile
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Client
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Description
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                Start Date
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
+                End Date
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data?.clients?.list?.map((item) => {
+              const localItem = {
+                id: parseInt(item.idClient),
+                profile: item.profile.Username.substring(0, 10),
+                client: item.Name.substring(0, 15),
+                description: item.Description.substring(0, 50),
+                StartDate: new moment(item.StartDate).format(dateFormat),
+                EndDate:
+                  item.EndDate === null
+                    ? ""
+                    : new moment(item.EndDate).format(dateFormat),
+              };
+              return (
+                <TableRow key={localItem.id}>
+                  <TableCell>
+                    <Link to={`/clients/${localItem.id}`}>
+                      <EditIcon />
+                    </Link>
+                  </TableCell>
+                  <TableCell>{localItem.profile}</TableCell>
+                  <TableCell>{localItem.client}</TableCell>
+                  <TableCell>{localItem.description}</TableCell>
+                  <TableCell>{localItem.StartDate}</TableCell>
+                  <TableCell>{localItem.EndDate}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

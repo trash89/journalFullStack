@@ -4,7 +4,7 @@ import BigSidebar from "./BigSidebar";
 import NavLinks from "./NavLinks";
 import Logo from "./Logo";
 import MenuAppBar from "./MenuAppBar";
-import PaginationTable from "./PaginationTable";
+import TotalRows from "./TotalRows";
 
 export {
   Copyright,
@@ -13,5 +13,5 @@ export {
   NavLinks,
   Logo,
   MenuAppBar,
-  PaginationTable,
+  TotalRows,
 };

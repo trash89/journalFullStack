@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../features/user/userSlice";
 import { links, userLinks } from "../utils/links";
+import Logo from "./Logo";
 
 const MenuAppBar = () => {
   const { user } = useSelector((store) => store.user);
@@ -65,7 +66,6 @@ const MenuAppBar = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* <NotesIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} /> */}
           <Typography
             variant="h6"
             noWrap
@@ -79,8 +79,10 @@ const MenuAppBar = () => {
               letterSpacing: "0.3rem",
               color: "inherit",
               textDecoration: "none",
+              alignItems: "center",
             }}
           >
+            <Logo />
             JOURNAL
           </Typography>
 
@@ -124,7 +126,6 @@ const MenuAppBar = () => {
               ))}
             </Menu>
           </Box>
-          {/* <NotesIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} /> */}
           <Typography
             variant="h5"
             noWrap

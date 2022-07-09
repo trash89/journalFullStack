@@ -11,6 +11,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
+import Paper from "@mui/material/Paper";
 
 import { useIsMounted, useGetProfile } from "../../hooks";
 
@@ -101,120 +102,122 @@ const NewClient = () => {
   }
 
   return (
-    <Stack
-      direction="column"
-      justifyContent="flex-start"
-      alignItems="flex-start"
-      spacing={1}
-      padding={1}
-    >
-      <Typography variant="h6" gutterBottom component="div">
-        New client
-      </Typography>
-
-      <TextField
-        error={isErrorInput.Name}
-        autoFocus
-        size="small"
-        margin="dense"
-        id="Name"
-        label="Client Name"
-        type="text"
-        value={input.Name}
-        onChange={(e) =>
-          dispatch(setInput({ name: "Name", value: e.target.value }))
-        }
-        required
-        variant="outlined"
-      />
-      <TextField
-        error={isErrorInput.Description}
-        size="small"
-        margin="dense"
-        id="Description"
-        label="Client Description"
-        type="text"
-        value={input.Description}
-        onChange={(e) =>
-          dispatch(setInput({ name: "Description", value: e.target.value }))
-        }
-        required
-        variant="outlined"
-        fullWidth
-      />
+    <Paper elevation={2}>
       <Stack
         direction="column"
         justifyContent="flex-start"
         alignItems="flex-start"
-        spacing={0}
-        padding={0}
-      >
-        <InputLabel error={isErrorInput.StartDate}>Start Date</InputLabel>
-        <TextField
-          error={isErrorInput.StartDate}
-          size="small"
-          margin="dense"
-          id="StartDate"
-          type="date"
-          value={input.StartDate}
-          required
-          onChange={(e) =>
-            dispatch(setInput({ name: "StartDate", value: e.target.value }))
-          }
-          variant="outlined"
-        />
-      </Stack>
-      <Stack
-        direction="column"
-        justifyContent="flex-start"
-        alignItems="flex-start"
-        spacing={0}
-        padding={0}
-      >
-        <InputLabel error={isErrorInput.EndDate}>End Date</InputLabel>
-        <TextField
-          error={isErrorInput.EndDate}
-          size="small"
-          margin="dense"
-          id="EndDate"
-          type="date"
-          value={input.EndDate}
-          onChange={(e) =>
-            dispatch(setInput({ name: "EndDate", value: e.target.value }))
-          }
-          variant="outlined"
-        />
-      </Stack>
-      <Stack
-        direction="row"
-        justifyContent="flex-start"
-        alignItems="flex-start"
-        padding={0}
         spacing={1}
+        padding={1}
       >
-        <IconButton
-          area-label="cancel"
-          onClick={() => {
-            dispatch(clearValues());
-            navigate("/clients");
-          }}
+        <Typography variant="h6" gutterBottom component="div">
+          New client
+        </Typography>
+
+        <TextField
+          error={isErrorInput.Name}
+          autoFocus
           size="small"
-        >
-          <CancelIcon />
-        </IconButton>
-        <IconButton
-          area-label="save"
-          onClick={handleSubmit}
-          disabled={isLoading}
+          margin="dense"
+          id="Name"
+          label="Client Name"
+          type="text"
+          value={input.Name}
+          onChange={(e) =>
+            dispatch(setInput({ name: "Name", value: e.target.value }))
+          }
+          required
+          variant="outlined"
+        />
+        <TextField
+          error={isErrorInput.Description}
           size="small"
+          margin="dense"
+          id="Description"
+          label="Client Description"
+          type="text"
+          value={input.Description}
+          onChange={(e) =>
+            dispatch(setInput({ name: "Description", value: e.target.value }))
+          }
+          required
+          variant="outlined"
+          fullWidth
+        />
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
         >
-          <SaveIcon />
-        </IconButton>
+          <InputLabel error={isErrorInput.StartDate}>Start Date</InputLabel>
+          <TextField
+            error={isErrorInput.StartDate}
+            size="small"
+            margin="dense"
+            id="StartDate"
+            type="date"
+            value={input.StartDate}
+            required
+            onChange={(e) =>
+              dispatch(setInput({ name: "StartDate", value: e.target.value }))
+            }
+            variant="outlined"
+          />
+        </Stack>
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
+        >
+          <InputLabel error={isErrorInput.EndDate}>End Date</InputLabel>
+          <TextField
+            error={isErrorInput.EndDate}
+            size="small"
+            margin="dense"
+            id="EndDate"
+            type="date"
+            value={input.EndDate}
+            onChange={(e) =>
+              dispatch(setInput({ name: "EndDate", value: e.target.value }))
+            }
+            variant="outlined"
+          />
+        </Stack>
+        <Stack
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          padding={0}
+          spacing={1}
+        >
+          <IconButton
+            area-label="cancel"
+            onClick={() => {
+              dispatch(clearValues());
+              navigate("/clients");
+            }}
+            size="small"
+          >
+            <CancelIcon />
+          </IconButton>
+          <IconButton
+            area-label="save"
+            onClick={handleSubmit}
+            disabled={isLoading}
+            size="small"
+          >
+            <SaveIcon />
+          </IconButton>
+        </Stack>
+        {createError && (
+          <Typography color="error.main">{createError?.message}</Typography>
+        )}
       </Stack>
-      {createError && (
-        <Typography color="error.main">{createError?.message}</Typography>
-      )}
-    </Stack>
+    </Paper>
   );
 };
 
