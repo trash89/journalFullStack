@@ -13,6 +13,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
+import Paper from "@mui/material/Paper";
 
 import { logoutUser } from "../../features/user/userSlice";
 import { useIsMounted, useGetProfile, useProfilesArray } from "../../hooks";
@@ -144,94 +145,96 @@ const EditProfile = () => {
     return <>You cannot update this profile</>;
 
   return (
-    <Stack
-      direction="column"
-      justifyContent="flex-start"
-      alignItems="flex-start"
-      padding={0}
-      spacing={1}
-    >
-      <Typography>Username : {UsernameEdit}</Typography>
+    <Paper elevation={2}>
       <Stack
         direction="column"
         justifyContent="flex-start"
         alignItems="flex-start"
-        spacing={0}
-        padding={0}
-      >
-        <InputLabel error={isErrorInput.Password}>New Password?</InputLabel>
-        <TextField
-          autoFocus
-          error={isErrorInput.Password}
-          margin="dense"
-          size="small"
-          id="Password"
-          type="password"
-          value={input.Password}
-          required
-          onChange={handlePassword}
-          variant="outlined"
-        />
-        <InputLabel error={isErrorInput.Keep}>Keep?</InputLabel>
-        <TextField
-          error={isErrorInput.Keep}
-          size="small"
-          margin="dense"
-          id="isDefault"
-          select
-          value={input.Keep}
-          onChange={handleKeep}
-          required
-          variant="outlined"
-        >
-          <MenuItem key="N" value="N">
-            No
-          </MenuItem>
-          <MenuItem key="Y" value="Y">
-            Yes
-          </MenuItem>
-        </TextField>
-      </Stack>
-      <Stack
-        direction="row"
-        justifyContent="flex-start"
-        alignItems="flex-start"
-        padding={0}
+        padding={1}
         spacing={1}
       >
-        <IconButton
-          area-label="cancel"
-          onClick={() => navigate("/profiles")}
-          size="small"
+        <Typography>Username : {UsernameEdit}</Typography>
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={0}
+          padding={0}
         >
-          <CancelIcon />
-        </IconButton>
-        {Is_AdminConnected === "Y" && idProfileEdit !== idProfileConnected && (
+          <InputLabel error={isErrorInput.Password}>New Password?</InputLabel>
+          <TextField
+            autoFocus
+            error={isErrorInput.Password}
+            margin="dense"
+            size="small"
+            id="Password"
+            type="password"
+            value={input.Password}
+            required
+            onChange={handlePassword}
+            variant="outlined"
+          />
+          <InputLabel error={isErrorInput.Keep}>Keep?</InputLabel>
+          <TextField
+            error={isErrorInput.Keep}
+            size="small"
+            margin="dense"
+            id="isDefault"
+            select
+            value={input.Keep}
+            onChange={handleKeep}
+            required
+            variant="outlined"
+          >
+            <MenuItem key="N" value="N">
+              No
+            </MenuItem>
+            <MenuItem key="Y" value="Y">
+              Yes
+            </MenuItem>
+          </TextField>
+        </Stack>
+        <Stack
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          padding={0}
+          spacing={1}
+        >
           <IconButton
-            area-label="delete"
-            onClick={handleDelete}
+            area-label="cancel"
+            onClick={() => navigate("/profiles")}
+            size="small"
+          >
+            <CancelIcon />
+          </IconButton>
+          {Is_AdminConnected === "Y" && idProfileEdit !== idProfileConnected && (
+            <IconButton
+              area-label="delete"
+              onClick={handleDelete}
+              disabled={isLoading}
+              size="small"
+            >
+              <DeleteIcon />
+            </IconButton>
+          )}
+          <IconButton
+            area-label="save"
+            onClick={handleSubmit}
             disabled={isLoading}
             size="small"
           >
-            <DeleteIcon />
+            <SaveIcon />
           </IconButton>
+        </Stack>
+        {updateError && (
+          <Typography color="error.main">{updateError?.message}</Typography>
         )}
-        <IconButton
-          area-label="save"
-          onClick={handleSubmit}
-          disabled={isLoading}
-          size="small"
-        >
-          <SaveIcon />
-        </IconButton>
+        {deleteError && (
+          <Typography color="error.main">{deleteError?.message}</Typography>
+        )}
       </Stack>
-      {updateError && (
-        <Typography color="error.main">{updateError?.message}</Typography>
-      )}
-      {deleteError && (
-        <Typography color="error.main">{deleteError?.message}</Typography>
-      )}
-    </Stack>
+    </Paper>
   );
 };
 

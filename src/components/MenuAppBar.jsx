@@ -65,7 +65,7 @@ const MenuAppBar = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <NotesIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          {/* <NotesIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} /> */}
           <Typography
             variant="h6"
             noWrap
@@ -76,7 +76,7 @@ const MenuAppBar = () => {
               display: { xs: "none", md: "flex" },
               fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: "0.1rem",
+              letterSpacing: "0.3rem",
               color: "inherit",
               textDecoration: "none",
             }}
@@ -124,7 +124,7 @@ const MenuAppBar = () => {
               ))}
             </Menu>
           </Box>
-          <NotesIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          {/* <NotesIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} /> */}
           <Typography
             variant="h5"
             noWrap
@@ -135,8 +135,8 @@ const MenuAppBar = () => {
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
               fontFamily: "monospace",
-              fontWeight: 400,
-              letterSpacing: ".1rem",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
             }}

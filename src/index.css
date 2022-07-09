@@ -1,11 +1,13 @@
+/* fonts */
+@import url("https://fonts.googleapis.com/css2?family=Cabin&family=Roboto+Condensed:wght@400;700&display=swap");
+
 *,
 ::after,
 ::before {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-
-/* fonts */
-@import url("https://fonts.googleapis.com/css2?family=Cabin&family=Roboto+Condensed:wght@400;700&display=swap");
 
 html {
   font-size: 100%;
@@ -50,7 +52,7 @@ html {
   --extra-small-text: 0.7em;
   /* rest of the vars */
   --backgroundColor: var(--grey-50);
-  --textColor: var(--grey-900);
+  --textColor: var(--black);
   --borderRadius: 0.25rem;
   --letterSpacing: 1px;
   --transition: 0.3s ease-in-out all;
@@ -73,7 +75,7 @@ body {
   background: var(--backgroundColor);
   font-family: var(--bodyFont);
   font-weight: 400;
-  line-height: 1.75;
+  line-height: 1.25;
   color: var(--textColor);
 }
 p {
