@@ -13,7 +13,6 @@ const initialState = {
     EntryDate: new moment().format("YYYY-MM-DD"),
     Description: "",
     Todos: "",
-    ThingsDone: "",
   },
   isErrorInput: {
     idProfile: false,
@@ -24,7 +23,6 @@ const initialState = {
     EntryDate: false,
     Description: false,
     Todos: false,
-    ThingsDone: false,
   },
   status: "pending",
   isEditing: false,
@@ -51,7 +49,6 @@ const journalSlice = createSlice({
   },
 });
 
-export const { setInput, setErrorInput, clearValues, setEdit } =
-  journalSlice.actions;
+export const { setInput, setErrorInput, clearValues, setEdit } = journalSlice.actions;
 
 export default journalSlice.reducer;

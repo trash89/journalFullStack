@@ -47,8 +47,8 @@ const Profiles = () => {
     <div>
       <TotalRows link="" count={data?.profiles?.count} />
 
-      <TableContainer component={Paper}>
-        <Table aria-label="profiles" size="small">
+      <TableContainer component={Paper} sx={{ maxHeight: 440, maxWidth: 1100 }}>
+        <Table aria-label="profiles" size="small" stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>

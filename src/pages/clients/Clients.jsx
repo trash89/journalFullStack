@@ -63,8 +63,8 @@ const Clients = () => {
   return (
     <div>
       <TotalRows link="/clients/newclient" count={data.clients.count} />
-      <TableContainer component={Paper}>
-        <Table aria-label="clients" size="small">
+      <TableContainer component={Paper} sx={{ maxHeight: 440, maxWidth: 1100 }}>
+        <Table aria-label="clients" size="small" stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
@@ -95,10 +95,7 @@ const Clients = () => {
                 client: item.Name.substring(0, 15),
                 description: item.Description.substring(0, 50),
                 StartDate: new moment(item.StartDate).format(dateFormat),
-                EndDate:
-                  item.EndDate === null
-                    ? ""
-                    : new moment(item.EndDate).format(dateFormat),
+                EndDate: item.EndDate === null ? "" : new moment(item.EndDate).format(dateFormat),
               };
               return (
                 <TableRow key={localItem.id}>

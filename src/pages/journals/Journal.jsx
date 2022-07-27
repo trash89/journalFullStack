@@ -32,7 +32,6 @@ const JOURNALS_QUERY = gql`
         EntryDate
         Description
         Todos
-        ThingsDone
         profile {
           idProfile
           Username
@@ -68,12 +67,7 @@ const Journal = () => {
     if (sc === "" || sc === '""') {
       return sc;
     }
-    if (
-      sc.includes('"') ||
-      sc.includes(",") ||
-      sc.includes("\n") ||
-      sc.includes("\r")
-    ) {
+    if (sc.includes('"') || sc.includes(",") || sc.includes("\n") || sc.includes("\r")) {
       return '"' + sc.replace(/"/g, '""') + '"';
     }
     return sc;
@@ -81,13 +75,7 @@ const Journal = () => {
 
   const makeCsvData = (columns, data) => {
     return data.reduce((csvString, rowItem) => {
-      return (
-        csvString +
-        columns
-          .map(({ accessor }) => escapeCsvCell(accessor(rowItem)))
-          .join(",") +
-        "\r\n"
-      );
+      return csvString + columns.map(({ accessor }) => escapeCsvCell(accessor(rowItem))).join(",") + "\r\n";
     }, columns.map(({ name }) => escapeCsvCell(name)).join(",") + "\r\n");
   };
 
@@ -109,7 +97,6 @@ const Journal = () => {
       { accessor: (item) => item.EntryDate, name: "EntryDate" },
       { accessor: (item) => item.Description, name: "Description" },
       { accessor: (item) => item.Todos, name: "Todos" },
-      { accessor: (item) => item.ThingsDone, name: "ThingsDone" },
       { accessor: (item) => item.client.Name, name: "Client" },
       { accessor: (item) => item.project.Name, name: "Project" },
       { accessor: (item) => item.subproject.Name, name: "Subproject" },
@@ -126,13 +113,9 @@ const Journal = () => {
   if (!data || data === undefined) return <></>;
   return (
     <div>
-      <TotalRows
-        link="/journals/newjournal"
-        count={data.journals.count}
-        download={handleDownloadCsv}
-      />
-      <TableContainer component={Paper}>
-        <Table aria-label="projects" size="small">
+      <TotalRows link="/journals/newjournal" count={data.journals.count} download={handleDownloadCsv} />
+      <TableContainer component={Paper} sx={{ maxHeight: 440, maxWidth: 1100 }}>
+        <Table aria-label="projects" size="small" stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>

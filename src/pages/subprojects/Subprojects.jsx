@@ -61,12 +61,9 @@ const Subprojects = () => {
   if (!data || data === undefined) return <></>;
   return (
     <div>
-      <TotalRows
-        link="/subprojects/newsubproject"
-        count={data.subprojects.count}
-      />
-      <TableContainer component={Paper}>
-        <Table aria-label="projects" size="small">
+      <TotalRows link="/subprojects/newsubproject" count={data.subprojects.count} />
+      <TableContainer component={Paper} sx={{ maxHeight: 440, maxWidth: 1100 }}>
+        <Table aria-label="projects" size="small" stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
@@ -108,10 +105,7 @@ const Subprojects = () => {
                 description: item.Description.substring(0, 50),
                 isDefault: item.isDefault === "Y" ? "Yes" : "No",
                 StartDate: new moment(item.StartDate).format(dateFormat),
-                EndDate:
-                  item.EndDate === null
-                    ? ""
-                    : new moment(item.EndDate).format(dateFormat),
+                EndDate: item.EndDate === null ? "" : new moment(item.EndDate).format(dateFormat),
                 Finished: item.Finished === "Y" ? "Yes" : "No",
               };
               return (

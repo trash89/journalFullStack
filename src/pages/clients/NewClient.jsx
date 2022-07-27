@@ -15,27 +15,11 @@ import Paper from "@mui/material/Paper";
 
 import { useIsMounted, useGetProfile } from "../../hooks";
 
-import {
-  setInput,
-  setErrorInput,
-  clearValues,
-} from "../../features/client/clientSlice";
+import { setInput, setErrorInput, clearValues } from "../../features/client/clientSlice";
 
 const CREATE_MUTATION = gql`
-  mutation createMutation(
-    $Name: String!
-    $Description: String!
-    $StartDate: DateTime!
-    $EndDate: DateTime
-  ) {
-    createClient(
-      client: {
-        Name: $Name
-        Description: $Description
-        StartDate: $StartDate
-        EndDate: $EndDate
-      }
-    ) {
+  mutation createMutation($Name: String!, $Description: String!, $StartDate: DateTime!, $EndDate: DateTime) {
+    createClient(client: { Name: $Name, Description: $Description, StartDate: $StartDate, EndDate: $EndDate }) {
       idProfile
       idClient
       Name
@@ -52,15 +36,11 @@ const NewClient = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((store) => store.user);
-  const { loading: loadingProfile, Username: UsernameConnected } =
-    useGetProfile(parseInt(user.idProfile));
+  const { loading: loadingProfile, Username: UsernameConnected } = useGetProfile(parseInt(user.idProfile));
 
-  const { input, isErrorInput, isLoading } = useSelector(
-    (store) => store.client
-  );
+  const { input, isErrorInput, isLoading } = useSelector((store) => store.client);
 
-  const [createRow, { loading: loadingCreate, error: createError }] =
-    useMutation(CREATE_MUTATION);
+  const [createRow, { loading: loadingCreate, error: createError }] = useMutation(CREATE_MUTATION);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,10 +49,7 @@ const NewClient = () => {
       if (input.Description && input.Description !== "") {
         if (input.StartDate && input.StartDate !== "") {
           const StartDateFormatted = new Date(input.StartDate).toISOString();
-          const EndDateFormatted =
-            !input.EndDate || input.EndDate === ""
-              ? null
-              : new Date(input.EndDate).toISOString();
+          const EndDateFormatted = !input.EndDate || input.EndDate === "" ? null : new Date(input.EndDate).toISOString();
           const result = await createRow({
             variables: {
               Name: input.Name,
@@ -103,13 +80,7 @@ const NewClient = () => {
 
   return (
     <Paper elevation={2}>
-      <Stack
-        direction="column"
-        justifyContent="flex-start"
-        alignItems="flex-start"
-        spacing={1}
-        padding={1}
-      >
+      <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={1} padding={1}>
         <Typography variant="h6" gutterBottom component="div">
           New client
         </Typography>
@@ -123,9 +94,7 @@ const NewClient = () => {
           label="Client Name"
           type="text"
           value={input.Name}
-          onChange={(e) =>
-            dispatch(setInput({ name: "Name", value: e.target.value }))
-          }
+          onChange={(e) => dispatch(setInput({ name: "Name", value: e.target.value }))}
           required
           variant="outlined"
         />
@@ -137,20 +106,12 @@ const NewClient = () => {
           label="Client Description"
           type="text"
           value={input.Description}
-          onChange={(e) =>
-            dispatch(setInput({ name: "Description", value: e.target.value }))
-          }
+          onChange={(e) => dispatch(setInput({ name: "Description", value: e.target.value }))}
           required
           variant="outlined"
           fullWidth
         />
-        <Stack
-          direction="column"
-          justifyContent="flex-start"
-          alignItems="flex-start"
-          spacing={0}
-          padding={0}
-        >
+        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
           <InputLabel error={isErrorInput.StartDate}>Start Date</InputLabel>
           <TextField
             error={isErrorInput.StartDate}
@@ -160,19 +121,11 @@ const NewClient = () => {
             type="date"
             value={input.StartDate}
             required
-            onChange={(e) =>
-              dispatch(setInput({ name: "StartDate", value: e.target.value }))
-            }
+            onChange={(e) => dispatch(setInput({ name: "StartDate", value: e.target.value }))}
             variant="outlined"
           />
         </Stack>
-        <Stack
-          direction="column"
-          justifyContent="flex-start"
-          alignItems="flex-start"
-          spacing={0}
-          padding={0}
-        >
+        <Stack direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={0} padding={0}>
           <InputLabel error={isErrorInput.EndDate}>End Date</InputLabel>
           <TextField
             error={isErrorInput.EndDate}
@@ -181,19 +134,11 @@ const NewClient = () => {
             id="EndDate"
             type="date"
             value={input.EndDate}
-            onChange={(e) =>
-              dispatch(setInput({ name: "EndDate", value: e.target.value }))
-            }
+            onChange={(e) => dispatch(setInput({ name: "EndDate", value: e.target.value }))}
             variant="outlined"
           />
         </Stack>
-        <Stack
-          direction="row"
-          justifyContent="flex-start"
-          alignItems="flex-start"
-          padding={0}
-          spacing={1}
-        >
+        <Stack direction="row" justifyContent="flex-start" alignItems="flex-start" padding={0} spacing={1}>
           <IconButton
             area-label="cancel"
             onClick={() => {
@@ -201,21 +146,15 @@ const NewClient = () => {
               navigate("/clients");
             }}
             size="small"
+            color="primary"
           >
             <CancelIcon />
           </IconButton>
-          <IconButton
-            area-label="save"
-            onClick={handleSubmit}
-            disabled={isLoading}
-            size="small"
-          >
+          <IconButton area-label="save" onClick={handleSubmit} disabled={isLoading} size="small" color="primary">
             <SaveIcon />
           </IconButton>
         </Stack>
-        {createError && (
-          <Typography color="error.main">{createError?.message}</Typography>
-        )}
+        {createError && <Typography color="error.main">{createError?.message}</Typography>}
       </Stack>
     </Paper>
   );

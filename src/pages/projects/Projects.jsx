@@ -67,8 +67,8 @@ const Projects = () => {
     <div>
       <TotalRows link="/projects/newproject" count={data.projects.count} />
 
-      <TableContainer component={Paper}>
-        <Table aria-label="projects" size="small">
+      <TableContainer component={Paper} sx={{ maxHeight: 440, maxWidth: 1100 }}>
+        <Table aria-label="projects" size="small" stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell component="th" scope="row" sx={{ fontWeight: "bold" }}>
@@ -106,10 +106,7 @@ const Projects = () => {
                 description: item.Description.substring(0, 50),
                 isDefault: item.isDefault === "Y" ? "Yes" : "No",
                 StartDate: new moment(item.StartDate).format(dateFormat),
-                EndDate:
-                  item.EndDate === null
-                    ? ""
-                    : new moment(item.EndDate).format(dateFormat),
+                EndDate: item.EndDate === null ? "" : new moment(item.EndDate).format(dateFormat),
                 Finished: item.Finished === "Y" ? "Yes" : "No",
               };
               return (

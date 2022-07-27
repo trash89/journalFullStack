@@ -15,13 +15,13 @@ const useGetProfile = (id) => {
   const { loading, error, data } = useQuery(QUERY, {
     variables: { idProfile: id },
   });
-  if (error)
-    return { loading: loading, idProfile: -1, Username: "", Is_Admin: "N" };
+  if (error) return { loading: loading, idProfile: -1, Username: "", Is_Admin: "N" };
   return {
     loading: loading,
     idProfile: data?.profile?.idProfile,
     Username: data?.profile?.Username,
     Is_Admin: data?.profile?.Is_Admin,
+    Keep: data?.profile?.Keep,
   };
 };
 
@@ -42,9 +42,7 @@ const useProfilesArray = () => {
 
   const { loading, error, data: profilesList } = useQuery(QUERY);
   if (error) return [];
-  const profilesArray = profilesList?.profiles?.list?.map(
-    (profile) => profile?.idProfile
-  );
+  const profilesArray = profilesList?.profiles?.list?.map((profile) => profile?.idProfile);
   return { loading: loading, list: profilesArray };
 };
 

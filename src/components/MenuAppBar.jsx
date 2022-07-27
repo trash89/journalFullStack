@@ -12,7 +12,6 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import NotesIcon from "@mui/icons-material/Notes";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../features/user/userSlice";
@@ -116,11 +115,7 @@ const MenuAppBar = () => {
               }}
             >
               {links.map((page) => (
-                <MenuItem
-                  key={page.id}
-                  onClick={handleCloseNavMenu}
-                  value={page.id}
-                >
+                <MenuItem key={page.id} onClick={handleCloseNavMenu} value={page.id}>
                   <Typography textAlign="center">{page.text}</Typography>
                 </MenuItem>
               ))}
@@ -146,12 +141,7 @@ const MenuAppBar = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {links.map((page) => (
-              <Button
-                key={page.id}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-                value={page.id}
-              >
+              <Button key={page.id} onClick={handleCloseNavMenu} sx={{ my: 2, color: "white", display: "block" }} value={page.id}>
                 {page.text}
               </Button>
             ))}
@@ -159,7 +149,7 @@ const MenuAppBar = () => {
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="User">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: "inherit" }}>
                 <AccountCircle />
                 {user && <>{user.Username}</>}
               </IconButton>
@@ -182,11 +172,7 @@ const MenuAppBar = () => {
             >
               {userLinks.map((link) => {
                 return (
-                  <MenuItem
-                    key={link.id}
-                    onClick={handleCloseUserMenu}
-                    value={link.id}
-                  >
+                  <MenuItem key={link.id} onClick={handleCloseUserMenu} value={link.id}>
                     <Typography textAlign="center">{link.text}</Typography>
                   </MenuItem>
                 );

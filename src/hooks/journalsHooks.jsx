@@ -12,7 +12,6 @@ const useGetJournal = (id) => {
         EntryDate
         Description
         Todos
-        ThingsDone
       }
     }
   `;
@@ -31,7 +30,6 @@ const useGetJournal = (id) => {
       EntryDate: "",
       Description: "",
       Todos: "",
-      ThingsDone: "",
     };
 
   return {
@@ -44,7 +42,6 @@ const useGetJournal = (id) => {
     EntryDate: data?.journal?.EntryDate,
     Description: data?.journal?.Description,
     Todos: data?.journal?.Todos,
-    ThingsDone: data?.journal?.ThingsDone,
   };
 };
 
